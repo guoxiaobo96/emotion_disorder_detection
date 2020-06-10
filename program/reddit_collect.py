@@ -7,6 +7,8 @@ reddit_isntance_args = {"client_id": "qOCFmW7rYl8P2A", "client_secret": "-RxOwpv
 
 bipolar_subreddit_list = ["bipolar", "bipolar2",
                           "BipolarReddit", "BipolarSOs", "bipolarart", "mentalhealth"]
+depression_subreddit_list = ["depression", "mentalhealth"]
+data_type_list = ['bipolar','depression','back']
 
 
 class GetFromReddit(object):
@@ -57,11 +59,13 @@ class GetUserComments(GetFromReddit):
         return self._comment_list
 
 def get_bipolar_data():
-    user_list = set()
-    with open('data/bipolar/user_list', mode='r', encoding='utf8') as file:
-        for line in file.readlines():
-            user_list.add(line.split(' [info] ')[0])
+    user_list = _get_check_user_list(data_type_list)
     get_comments(user_list, bipolar_subreddit_list)
+
+
+def get_depression_data():
+    user_list = _get_check_user_list(data_type_list)
+    get_comments(user_list, depression_subreddit_list)
 
 def get_comments(checked_user_list, subreddit_list):
     for subreddit_name in subreddit_list:
@@ -76,8 +80,8 @@ def get_comments(checked_user_list, subreddit_list):
             get_user_comments = GetUserComments(
                 **reddit_isntance_args, reddit_username=user)
             comment_list = get_user_comments.get_comments(comment_number=1000)
-            if _identify_bipolar(user, comment_list):
-                with open ('data/bipolar/'+user, mode='w', encoding='utf8') as fp:
+            if _identify_depression(user, comment_list):
+                with open ('data/depression/'+user, mode='w', encoding='utf8') as fp:
                     for comment in comment_list:
                         comment = json.dumps(comment)
                         fp.write(comment+'\n')
@@ -86,18 +90,42 @@ def get_comments(checked_user_list, subreddit_list):
 def _identify_bipolar(username, comment_list):
     identify_list = ["I am diagnosed with bipolar", "i am diagnosed with bipolar",
                      "I'm diagnosed with bipolar", "i'm diagnosed with bipolar", "I have been diagnosed with bipolar",
-                     "I was diagnosed with bipolar", "I've been diagnosed with bipolar"]
+                     "I was diagnosed with bipolar", "I've been diagnosed with bipolar","I was just diagnosed with bipolar"]
 
     for comment in comment_list:
         for key, value in comment.items():
             text = value['text']
             for sentence in identify_list:
                 if sentence in text:
-                    with open('data/bipolar/user_list', mode='a',encoding='utf8') as file:
+                    with open('data/user_list/bipolar_user_list', mode='a',encoding='utf8') as file:
                         file.write(username+' [info] '+text+'\n')
                     return True
     return False
 
+def _identify_depression(username, comment_list):
+    identify_list = ["I am diagnosed with depression", "i am diagnosed with depression",
+                     "I'm diagnosed with depression", "i'm diagnosed with depression", "I have been diagnosed with depression",
+                     "I was diagnosed with depression", "I've been diagnosed with depression","I was just diagnosed with depression"]
+
+    for comment in comment_list:
+        for key, value in comment.items():
+            text = value['text']
+            for sentence in identify_list:
+                if sentence in text:
+                    with open('data/user_list/depression_user_list', mode='a',encoding='utf8') as file:
+                        file.write(username+' [info] '+text+'\n')
+                    return True
+    return False
+
+def _get_check_user_list(check_list):
+    user_list = set()
+    for type in check_list:
+        with open('data/user_list/'+type+'_user_list', mode='r', encoding='utf8') as file:
+            for line in file.readlines():
+                user_list.add(line.split(' [info] ')[0])
+    return user_list
 
 if __name__ == '__main__':
-    get_bipolar_data()
+    for i in range(50):
+        get_bipolar_data()
+        get_depression_data()
