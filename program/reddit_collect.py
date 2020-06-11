@@ -15,7 +15,8 @@ depression_subreddit_list = ["depression", "mentalhealth"]
 data_type_list = ['bipolar', 'depression', 'back']
 
 begin_utc_time = 1546322461
-end_utc_time = 1591415999
+# end_utc_time = 1591415999
+end_utc_time = 1588036626
 #begin_utc_time is 2019.1.1
 #end_utc_time is 2019.6.5
 from_reddit=False
