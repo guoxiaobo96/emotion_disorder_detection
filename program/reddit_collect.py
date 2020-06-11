@@ -92,15 +92,15 @@ class GetPushShiftComments(object):
 
 def get_bipolar_data(from_reddit):
     user_list = _get_check_user_list(data_type_list)
-    get_comments(user_list, bipolar_subreddit_list, from_reddit=from_reddit, begin_utc_time=begin_utc_time,end_utc_time=end_utc_time)
+    get_comments(user_list, bipolar_subreddit_list, 'bipolar', from_reddit=from_reddit, begin_utc_time=begin_utc_time,end_utc_time=end_utc_time)
 
 
 def get_depression_data(from_reddit):
     user_list = _get_check_user_list(data_type_list)
-    get_comments(user_list, depression_subreddit_list, from_reddit=from_reddit, begin_utc_time=begin_utc_time,end_utc_time=end_utc_time)
+    get_comments(user_list, depression_subreddit_list, 'depression', from_reddit=from_reddit, begin_utc_time=begin_utc_time,end_utc_time=end_utc_time)
 
 
-def get_comments(checked_user_list, subreddit_list, from_reddit=True, begin_utc_time=None,end_utc_time=None):
+def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True, begin_utc_time=None,end_utc_time=None):
     utc_time = end_utc_time
     while utc_time > begin_utc_time:
         user_list = set()
@@ -128,9 +128,13 @@ def get_comments(checked_user_list, subreddit_list, from_reddit=True, begin_utc_
                 get_user_comments = GetUserComments(
                     **reddit_isntance_args, reddit_username=user)
                 comment_list = get_user_comments.get_comments(comment_number=1000)
-                if _identify_depression(user, comment_list):
+                if key_words == 'bipolar':
+                    check_function = _identify_bipolar
+                elif key_words == 'depression':
+                    check_function = _identify_depression
+                if check_function(user, comment_list):
                     checked_user_list.add(user)
-                    with open('data/depression/'+user, mode='w', encoding='utf8') as fp:
+                    with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
                         for comment in comment_list:
                             comment = json.dumps(comment)
                             fp.write(comment + '\n')
@@ -148,7 +152,7 @@ def _identify_bipolar(username, comment_list):
         for key, value in comment.items():
             text = value['text']
             for sentence in identify_list:
-                if sentence in text:
+                # if sentence in text:
                     with open('data/user_list/bipolar_user_list', mode='a', encoding='utf8') as file:
                         file.write(username+' [info] '+text+'\n')
                     return True
