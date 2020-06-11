@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 
 def main(config):
     prepare_dirs_and_logger(config)
-    data_loader = DataLoader(config)
+    data_loader = DataLoader(config) 
     trainer = Trainer(config, data_loader)
 
     if config.is_debug:

@@ -27,9 +27,9 @@ def classify(text_model, config):
                          out_put], name='Text')
 
     model.compile(optimizer=keras.optimizers.Adam(),
-                    loss=keras.losses.SparseCategoricalCrossentropy(
+                    loss=keras.losses.BinaryCrossentropy(
             from_logits=True),
-        metrics=[keras.metrics.SparseCategoricalAccuracy(name="acc")])
+        metrics=[keras.metrics.BinaryAccuracy(name="acc")])
 
     return model
 

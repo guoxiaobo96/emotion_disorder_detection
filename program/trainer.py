@@ -56,12 +56,9 @@ class Trainer(object):
         total_step = steps_per_epoch * self._config.max_epoch
 
         self.callback_list.append(self.learning_rate_schedule)
-
-        if self._config.alternative:
-            self.callback_list.append(self.trainable_schedlue)
         
 
-        tf.keras.backend.set_learning_phase(True)
+        # tf.keras.backend.set_learning_phase(True)
         history = self.model.fit(self._data_loader.train_dataset, epochs=self._config.max_epoch, steps_per_epoch=steps_per_epoch,
                                  validation_data=self._data_loader.valid_dataset, validation_steps=validation_steps, callbacks=self.callback_list)
         self.test()

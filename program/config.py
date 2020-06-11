@@ -53,7 +53,7 @@ misc_arg.add_argument('--root_dir',type=str,default='../')
 misc_arg.add_argument('--log_dir', type=str, default='log')
 misc_arg.add_argument('--load_path', type=str, default='')
 misc_arg.add_argument('--gpu_id', type=str, default='0')
-misc_arg.add_argument('--bert_model_dir', type=str, default='/home/xiaobo/pretrained-models/bert/wwm_cased_L-24_H-1024_A-16')
+misc_arg.add_argument('--bert_model_dir', type=str, default='/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16')
 misc_arg.add_argument('--is_debug',type=_str2bool,default=False)
 
 def get_config():
