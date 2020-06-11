@@ -3,6 +3,8 @@ import json
 import re
 import requests
 import os
+from multiprocessing import Pool
+
 reddit_isntance_args = {"client_id": "qOCFmW7rYl8P2A", "client_secret": "-RxOwpvQts9Y7lxmkFk-p9lleZc",
                         "password": "19960906", "user_agent": "testscript by /u/gxb_96",
                         "username": "gxb_96"}
@@ -59,13 +61,14 @@ class GetUserComments(GetFromReddit):
             subreddit_info = re.compile(r'r/[^ ]+')
             text = re.sub(subreddit_info, '', text)
             link_id = comment.link_id
+            time = comment.created_utc
             if not subreddit_list:
                 self._comment_list.append(
-                    {comment_id: {'text': text, 'link_id': link_id}})
+                    {comment_id: {'text': text, 'link_id': link_id,'time':time}})
             else:
                 if comment.subreddit.display_name in subreddit_list:
                     self._comment_list.append(
-                        {comment_id: {'text': text, 'link_id': link_id}})
+                        {comment_id: {'text': text, 'link_id': link_id,'time':time}})
         return self._comment_list
 
 
@@ -113,6 +116,7 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
                 for comment in comments_list:
                     if comment.author is not None and comment.author.name not in checked_user_list:
                         user_list.add(comment.author.name)
+                        checked_user_list.add(comment.author.name)
             else:
                 try:
                     get_pushshift_comments = GetPushShiftComments('bipolar', subreddit_name, utc_time)
@@ -120,6 +124,7 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
                     for comment in comments_list:
                         if comment['author'] is not None and comment['author'] not in checked_user_list:
                             user_list.add(comment['author'])
+                            checked_user_list.add(comment['author'])
                 except:
                     continue
         error_count = 0
@@ -158,7 +163,6 @@ def _identify_bipolar(username, comment_list):
                     return True
     return False
 
-
 def _identify_depression(username, comment_list):
     identify_list = ["I am diagnosed with depression", "i am diagnosed with depression",
                      "I'm diagnosed with depression", "i'm diagnosed with depression", "I have been diagnosed with depression",
@@ -174,7 +178,6 @@ def _identify_depression(username, comment_list):
                     return True
     return False
 
-
 def _get_check_user_list(check_list):
     user_list = set()
     for type in check_list:
@@ -183,13 +186,26 @@ def _get_check_user_list(check_list):
                 user_list.add(line.split(' [info] ')[0])
     return user_list
 
+def temp():
+    key_words='bipolar'
+    user_list = _get_check_user_list([key_words])
+    for index, user in enumerate(user_list):
+        get_user_comments = GetUserComments(
+            **reddit_isntance_args, reddit_username=user)
+        comment_list = get_user_comments.get_comments(comment_number=1000)
+        with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
+            for comment in comment_list:
+                comment = json.dumps(comment)
+                fp.write(comment + '\n')
 
 if __name__ == '__main__':
-    os.chdir('/home/xiaobo/emotion_disorder_detection')
-    if from_reddit:
-        for i in range(50):
-            get_bipolar_data()
-            get_depression_data()
-    else:
-        get_bipolar_data(from_reddit)
-        get_depression_data(from_reddit)
+    # os.chdir('/home/xiaobo/emotion_disorder_detection')
+    os.chdir('d:/research/emotion_disorder_detection')
+    temp()
+    # if from_reddit:
+    #     for i in range(50):
+    #         get_bipolar_data()
+    #         get_depression_data()
+    # else:
+    #     get_bipolar_data(from_reddit)
+    #     get_depression_data(from_reddit)
