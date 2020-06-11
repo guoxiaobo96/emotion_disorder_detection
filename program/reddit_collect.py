@@ -152,7 +152,7 @@ def _identify_bipolar(username, comment_list):
         for key, value in comment.items():
             text = value['text']
             for sentence in identify_list:
-                # if sentence in text:
+                if sentence in text:
                     with open('data/user_list/bipolar_user_list', mode='a', encoding='utf8') as file:
                         file.write(username+' [info] '+text+'\n')
                     return True
