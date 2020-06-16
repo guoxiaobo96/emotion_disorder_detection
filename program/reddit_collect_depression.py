@@ -6,7 +6,7 @@ import os
 from multiprocessing import Pool
 
 reddit_isntance_args = {"client_id": "qOCFmW7rYl8P2A", "client_secret": "-RxOwpvQts9Y7lxmkFk-p9lleZc",
-                        "password": "19960906", "user_agent": "testscript by /u/gxb_96",
+                        "password": "19960906", "user_agent": "testscript by /u/depression",
                         "username": "gxb_96"}
 
 bipolar_subreddit_list = ["bipolar", "bipolar2",
@@ -15,8 +15,7 @@ depression_subreddit_list = ["depression", "mentalhealth"]
 data_type_list = ['bipolar', 'depression', 'back']
 
 begin_utc_time = 1546322461
-# end_utc_time = 1591415999
-end_utc_time = 1588036626
+end_utc_time = 1591415999
 #begin_utc_time is 2019.1.1
 #end_utc_time is 2019.6.5
 from_reddit=False
@@ -120,7 +119,7 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
                         checked_user_list.add(comment.author.name)
             else:
                 try:
-                    get_pushshift_comments = GetPushShiftComments('bipolar', subreddit_name, utc_time)
+                    get_pushshift_comments = GetPushShiftComments(key_words, subreddit_name, utc_time)
                     comments_list, utc_time = get_pushshift_comments.get_comments()
                     for comment in comments_list:
                         if comment['author'] is not None and comment['author'] not in checked_user_list:
@@ -187,26 +186,11 @@ def _get_check_user_list(check_list):
                 user_list.add(line.split(' [info] ')[0])
     return user_list
 
-def temp():
-    key_words='bipolar'
-    user_list = _get_check_user_list([key_words])
-    for index, user in enumerate(user_list):
-        get_user_comments = GetUserComments(
-            **reddit_isntance_args, reddit_username=user)
-        comment_list = get_user_comments.get_comments(comment_number=1000)
-        with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
-            for comment in comment_list:
-                comment = json.dumps(comment)
-                fp.write(comment + '\n')
 
 if __name__ == '__main__':
-    # os.chdir('/home/xiaobo/emotion_disorder_detection')
-    os.chdir('d:/research/emotion_disorder_detection')
-    temp()
-    # if from_reddit:
-    #     for i in range(50):
-    #         get_bipolar_data()
-    #         get_depression_data()
-    # else:
-    #     get_bipolar_data(from_reddit)
-    #     get_depression_data(from_reddit)
+    os.chdir('/home/xiaobo/emotion_disorder_detection')
+    if from_reddit:
+        for i in range(50):
+            get_depression_data()
+    else:
+        get_depression_data(from_reddit)
