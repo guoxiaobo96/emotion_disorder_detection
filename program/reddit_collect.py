@@ -3,6 +3,8 @@ import json
 import re
 import requests
 import os
+import argparse
+import time
 from multiprocessing import Pool
 
 reddit_isntance_args = {"client_id": "qOCFmW7rYl8P2A", "client_secret": "-RxOwpvQts9Y7lxmkFk-p9lleZc",
@@ -15,9 +17,9 @@ depression_subreddit_list = ["depression", "mentalhealth"]
 data_type_list = ['bipolar', 'depression', 'back']
 
 begin_utc_time = 1514782800
-end_utc_time = 1538515613
+end_utc_time = 1592280000
+#end_utc_time is 2020.6.16
 #begin_utc_time is 2018.1.1
-#end_utc_time is 2019.1.1
 from_reddit=False
 
 
@@ -99,7 +101,6 @@ class GetUserCommentsFromPushshift(object):
         self._author = author
         self._url = None
         self._end_time = end_time
-        # self.build_URL(start_time)
 
     def build_URL(self,utc_time):
         self._url = 'https://api.pushshift.io/reddit/search/comment/?size=500&before=' + str(utc_time) + \
@@ -110,7 +111,7 @@ class GetUserCommentsFromPushshift(object):
             self.build_URL(self._end_time)
             data = requests.get(self._url)
             data = json.loads(data.text)['data']
-            if data is None:
+            if data == []:
                 break
             for item in data:
                 comment_id = item['id']
@@ -229,10 +230,27 @@ def _get_check_user_list(check_list):
     return user_list
 
 
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_type', type=str, default='depression')
+    args = parser.parse_args()
     os.chdir('/home/xiaobo/emotion_disorder_detection')
-    if from_reddit:
-        for i in range(50):
-            get_bipolar_data(from_reddit)
-    else:
-        get_bipolar_data(from_reddit)
+    key_words = args.data_type
+    # if from_reddit:
+    #     for i in range(50):
+    #         get_bipolar_data(from_reddit)
+    # else:
+    #     get_bipolar_data(from_reddit)
+    user_list = set()
+    with open('data/user_list/'+key_words+'_user_list', mode='r', encoding='utf8') as file:
+        for line in file.readlines():
+             user_list.add(line.split(' [info] ')[0])
+    for user in user_list:
+        get_user_comments = GetUserCommentsFromPushshift(user,end_utc_time)
+        comment_list = get_user_comments.get_comments()
+        with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
+            for comment in comment_list:
+                comment = json.dumps(comment)
+                fp.write(comment + '\n')
+        time.sleep(0.5)

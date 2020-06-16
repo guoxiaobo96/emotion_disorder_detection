@@ -11,8 +11,14 @@ with open('./data/user_list/depression_user_list',mode='r') as fp:
         else:
             for check_text in text_list:
                 if check_text in text:
-                    with open('./data/user_list/depression_user_list_new', mode='a') as new_fp:
+                    with open('./data/user_list/bipolar_user_list', mode='a') as new_fp:
                         new_fp.write(user + ' [info] ' + text)
-                    shutil.copyfile('./data/depression/'+user, './data/bipolar/'+user)
+                    try:
+                        shutil.copyfile('./data/depression/' + user, './data/bipolar/' + user)
+                    except:
+                        print('copy '+user+' failed')
                     break
-            os.remove('./data/depression/'+user)
+            try:
+                os.remove('./data/depression/' + user)
+            except:
+                print('delete '+user+' failed')
