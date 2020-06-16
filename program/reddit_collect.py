@@ -162,11 +162,12 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
                         if comment['author'] is not None and comment['author'] not in checked_user_list:
                             user_list.add(comment['author'])
                             checked_user_list.add(comment['author'])
+                    time.sleep(1)
                 except:
                     continue
         error_count = 0
         for index, user in enumerate(user_list):
-            # try:
+            try:
                 if from_reddit:
                     get_user_comments = GetUserCommentsFromReddit(
                         **reddit_isntance_args, reddit_username=user)
@@ -184,9 +185,10 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
                         for comment in comment_list:
                             comment = json.dumps(comment)
                             fp.write(comment + '\n')
-            # except:
-            #     error_count += 1
-            #     continue
+                time.sleep(1)
+            except:
+                error_count += 1
+                continue
         print(utc_time)
 
 def _identify_bipolar(username, comment_list):
@@ -237,20 +239,26 @@ if __name__ == '__main__':
     args = parser.parse_args()
     os.chdir('/home/xiaobo/emotion_disorder_detection')
     key_words = args.data_type
-    # if from_reddit:
-    #     for i in range(50):
-    #         get_bipolar_data(from_reddit)
-    # else:
-    #     get_bipolar_data(from_reddit)
-    user_list = set()
-    with open('data/user_list/'+key_words+'_user_list', mode='r', encoding='utf8') as file:
-        for line in file.readlines():
-             user_list.add(line.split(' [info] ')[0])
-    for user in user_list:
-        get_user_comments = GetUserCommentsFromPushshift(user,end_utc_time)
-        comment_list = get_user_comments.get_comments()
-        with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
-            for comment in comment_list:
-                comment = json.dumps(comment)
-                fp.write(comment + '\n')
-        time.sleep(0.5)
+    if key_words == 'bipolar':
+        get_data = get_bipolar_data
+    elif key_words == 'depression':
+        get_data = get_depression_data
+
+    if from_reddit:
+        for i in range(50):
+            get_data(from_reddit)
+    else:
+        get_data(from_reddit)
+
+    # user_list = set()
+    # with open('data/user_list/'+key_words+'_user_list', mode='r', encoding='utf8') as file:
+    #     for line in file.readlines():
+    #          user_list.add(line.split(' [info] ')[0])
+    # for user in user_list:
+    #     get_user_comments = GetUserCommentsFromPushshift(user,end_utc_time)
+    #     comment_list = get_user_comments.get_comments()
+    #     with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
+    #         for comment in comment_list:
+    #             comment = json.dumps(comment)
+    #             fp.write(comment + '\n')
+    #     time.sleep(0.5)
