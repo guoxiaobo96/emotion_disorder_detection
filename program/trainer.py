@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 import os
 import numpy as np
+import json
 from official.nlp.bert import tokenization
 
 
@@ -86,18 +87,43 @@ class Trainer(object):
         except:
             pass
 
-    def predict(self, data=None, steps=None, sample_number=8):
+    def label(self, target_dir, emotion_type, data=None, steps=None):
         init_checkpoint = os.path.join(os.path.join(
             self.load_model_dir, self.filepath))
         self.model.load_weights(init_checkpoint).expect_partial()
 
         if data is None:
-            data = self._data_loader.data
-        for user, user_data in data.items():
-            for item in user_data:
-                for sentence in item:
-                    label_list = self.model.predict(sentence)
-                    label = np.argmax(label_list,axis=1)[0]
+            data = self._data_loader.label_dataset
+        for user, text_data in data.items():
+            write_data = list()
+            target_file = os.path.join(target_dir,user)
+            with open(target_file, mode='r', encoding='utf8') as fp:
+                user_data = dict()
+                for line in fp.readlines():
+                    for id, value in json.loads(line.strip()).items():
+                        user_data[id] = value
+            for item in text_data:
+                sentence, id_list = item
+                label_list = self.model.predict(sentence)
+                label = np.argmax(label_list,axis=1)
+                id_list = id_list.numpy()
+                for index, id in enumerate(id_list):
+                    id = id.decode('utf8')
+                    if emotion_type not in user_data[id]:
+                        user_data[id][emotion_type] = 0
+                    else:
+                        user_data[id][emotion_type] = int(user_data[id][emotion_type])
+                    user_data[id][emotion_type] += label[index]
+            for key, value in user_data.items():
+                try:
+                    value[emotion_type] = str(value[emotion_type])
+                except:
+                    value[emotion_type] = '0'
+                write_data.append({key:value})
+            with open(target_file, mode='w', encoding='utf8') as fp:
+                for item in write_data:
+                    item = json.dumps(item)
+                    fp.write(item+'\n')
                     
     def roc_curve(self, data=None):
         init_checkpoint = os.path.join(os.path.join(

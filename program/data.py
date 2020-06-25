@@ -84,7 +84,7 @@ class DataLoaderFromReddit(object):
     def __init__(self, config):
         self._config = config
         self._data_path = config.data_path
-        self._user_data_path = os.path.join(config.user_data_path, config.data_type) + '_user_list_test'
+        self._user_data_path = os.path.join(config.user_data_path, config.data_type) + '_user_list'
         self._user_list = []
         self._data_feature_description = {
             'id': tf.io.FixedLenFeature([],tf.string),

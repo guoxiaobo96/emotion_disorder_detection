@@ -16,7 +16,7 @@ def main(config):
     prepare_dirs_and_logger(config)
     if config.task in ['train','roc_curve','test']:
         data_loader = DataLoader(config)
-    elif config.task == 'predict':
+    elif config.task in ['label','predict']:
         data_loader = DataLoaderFromReddit(config)
     trainer = Trainer(config, data_loader)
 
@@ -31,8 +31,8 @@ def main(config):
             #     raise Exception("[!] You should specify 'load_path' to load a pretrained model")
             if config.task=='test':
                 trainer.test()
-            elif config.task=='predict':
-                trainer.predict()
+            elif config.task=='label':
+                trainer.label(config.target_path,config.emotion_type)
             elif config.task=='f1_score':
                 trainer.calculate_f1_score()
             elif config.task == 'roc_curve':

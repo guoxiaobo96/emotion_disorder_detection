@@ -3,9 +3,11 @@ import json
 import re
 import tensorflow as tf
 import numpy as np
+import argparse
 
 from random import shuffle, choice, seed
 from official.nlp.bert import tokenization
+from nltk.tokenize import sent_tokenize
 
 # bert_model_dir = 'F:/pretrained-models/bert/wwm_cased_L-24_H-1024_A-16'
 bert_model_dir = '/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16'
@@ -246,9 +248,17 @@ def _prepare_text_id(text, tokenizer, max_seq_length):
 def _prepare_reddit_text_id(text, tokenizer, max_seq_length):
     data_list = []
     original_text_list = []
+    text_list = []
     text = ' '.join(text.split())
     text = text.strip()
-    text_list = text.split('. ')
+    text_list = sent_tokenize(text)
+    # for s_str in text.split('.'):
+    #     if '?' in s_str:
+    #         text_list.extend(s_str.split('?'))
+    #     elif '!' in s_str:
+    #         text_list.extend(s_str.split('!'))
+    #     else:
+    #         text_list.append(s_str)
     for text in text_list:
         if text == '':
             continue
@@ -306,6 +316,11 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    keywords = 'bipolar'
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_type', type=str, default='background')
+    args = parser.parse_args()
+    keywords = args.data_type
+
     os.chdir('/home/xiaobo/emotion_disorder_detection')
     build_text_tfrecord('./data/user_list/'+keywords+'_user_list','./data/reddit/'+keywords , './data/TFRecord/reddit_data/'+keywords)

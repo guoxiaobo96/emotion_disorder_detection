@@ -23,6 +23,8 @@ def prepare_dirs_and_logger(config):
     # data path
     config.data_path = os.path.join(config.data_dir, config.dataset)
     config.data_path = os.path.join(config.data_path, config.data_type)
+    if hasattr(config, 'target_dir'):
+        config.target_path = os.path.join(config.target_dir, config.data_type)
     # model path
         
 
