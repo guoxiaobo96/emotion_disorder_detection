@@ -94,6 +94,7 @@ class Trainer(object):
 
         if data is None:
             data = self._data_loader.label_dataset
+        count = 0
         for user, text_data in data.items():
             write_data = list()
             target_file = os.path.join(target_dir,user)
@@ -123,7 +124,10 @@ class Trainer(object):
             with open(target_file, mode='w', encoding='utf8') as fp:
                 for item in write_data:
                     item = json.dumps(item)
-                    fp.write(item+'\n')
+                    fp.write(item + '\n')
+            count += 1
+            if count % 50 == 0:
+                print(count) 
                     
     def roc_curve(self, data=None):
         init_checkpoint = os.path.join(os.path.join(
