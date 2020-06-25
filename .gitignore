@@ -1,6 +1,7 @@
-data/bipolar/*
-data/depression/*
 program/.vscode/settings.json
-log/tweet_multi_emotion/*/log/*
-log/tweet_multi_emotion/*/model/*
+log/*/*/log/*
+log/*/*/model/*
 .vscode/settings.json
+data/TFRecord/*/*
+program/*.sh
+data/reddit/*/*

@@ -14,13 +14,14 @@ reddit_isntance_args = {"client_id": "qOCFmW7rYl8P2A", "client_secret": "-RxOwpv
 bipolar_subreddit_list = ["bipolar", "bipolar2",
                           "BipolarReddit", "BipolarSOs", "bipolarart", "mentalhealth"]
 depression_subreddit_list = ["depression", "mentalhealth"]
-data_type_list = ['bipolar', 'depression', 'back']
+data_type_list = ['bipolar', 'depression', 'background']
 
 begin_utc_time = 1514782800
 end_utc_time = 1592280000
-#end_utc_time is 2020.6.16
-#begin_utc_time is 2018.1.1
-from_reddit=False
+# end_utc_time is 2020.6.16
+# begin_utc_time is 2018.1.1
+user_from_reddit = True
+comment_from_reddit = False
 
 
 class GetFromReddit(object):
@@ -66,11 +67,11 @@ class GetUserCommentsFromReddit(GetFromReddit):
             time = comment.created_utc
             if not subreddit_list:
                 self._comment_list.append(
-                    {comment_id: {'text': text, 'link_id': link_id,'time':time}})
+                    {comment_id: {'text': text, 'link_id': link_id, 'time': time}})
             else:
                 if comment.subreddit.display_name in subreddit_list:
                     self._comment_list.append(
-                        {comment_id: {'text': text, 'link_id': link_id,'time':time}})
+                        {comment_id: {'text': text, 'link_id': link_id, 'time': time}})
         return self._comment_list
 
 
@@ -83,7 +84,7 @@ class GetCommentsFromPushshift(object):
         self._url = None
         self.build_URL(start_time)
 
-    def build_URL(self,utc_time):
+    def build_URL(self, utc_time):
         self._url = 'https://api.pushshift.io/reddit/search/comment/?search=' + \
             self._query + '&size=500&before=' + str(utc_time) + \
             '&subreddit=' + self._subreddit
@@ -94,6 +95,7 @@ class GetCommentsFromPushshift(object):
         utc_time = self.comments[-1]['created_utc']
         return self.comments, utc_time
 
+
 class GetUserCommentsFromPushshift(object):
     def __init__(self, author, end_time):
         super().__init__()
@@ -102,7 +104,7 @@ class GetUserCommentsFromPushshift(object):
         self._url = None
         self._end_time = end_time
 
-    def build_URL(self,utc_time):
+    def build_URL(self, utc_time):
         self._url = 'https://api.pushshift.io/reddit/search/comment/?size=500&before=' + str(utc_time) + \
             '&author=' + self._author
 
@@ -122,7 +124,7 @@ class GetUserCommentsFromPushshift(object):
                 time = item['created_utc']
                 if not subreddit_list:
                     self._comment_list.append(
-                        {comment_id: {'text': text, 'link_id': link_id,'time':time}})
+                        {comment_id: {'text': text, 'link_id': link_id, 'time': time}})
                 else:
                     if item['subreddit'] in subreddit_list:
                         self._comment_list.append(
@@ -130,33 +132,44 @@ class GetUserCommentsFromPushshift(object):
             self._end_time = time
         return self._comment_list
 
-def get_bipolar_data(from_reddit):
+
+def get_bipolar_data():
     user_list = _get_check_user_list(data_type_list)
-    get_comments(user_list, bipolar_subreddit_list, 'bipolar', from_reddit=from_reddit, begin_utc_time=begin_utc_time,end_utc_time=end_utc_time)
+    get_comments(user_list, bipolar_subreddit_list, 'bipolar',
+                 begin_utc_time=begin_utc_time, end_utc_time=end_utc_time)
 
 
-def get_depression_data(from_reddit):
+def get_depression_data():
     user_list = _get_check_user_list(data_type_list)
-    get_comments(user_list, depression_subreddit_list, 'depression', from_reddit=from_reddit, begin_utc_time=begin_utc_time,end_utc_time=end_utc_time)
+    get_comments(user_list, depression_subreddit_list, 'depression',
+                 begin_utc_time=begin_utc_time, end_utc_time=end_utc_time)
 
 
-def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True, begin_utc_time=None,end_utc_time=None):
+def get_background_data():
+    user_list = _get_check_user_list(data_type_list)
+    get_comments(user_list, ['all'], 'background', data_type='hot',
+                 begin_utc_time=begin_utc_time, end_utc_time=end_utc_time)
+
+
+def get_comments(checked_user_list, subreddit_list, key_words, data_type='comment', begin_utc_time=None, end_utc_time=None):
     utc_time = end_utc_time
     while utc_time > begin_utc_time:
         user_list = set()
         for subreddit_name in subreddit_list:
-            if from_reddit:
+            if user_from_reddit:
                 utc_time = begin_utc_time
                 get_reddit_comments = GetCommentsFromReddit(
                     **reddit_isntance_args, subreddit_name=subreddit_name)
-                comments_list = get_reddit_comments.get_comments(1000)
+                comments_list = get_reddit_comments.get_comments(
+                    1000, type=data_type)
                 for comment in comments_list:
                     if comment.author is not None and comment.author.name not in checked_user_list:
                         user_list.add(comment.author.name)
                         checked_user_list.add(comment.author.name)
             else:
                 try:
-                    get_pushshift_comments = GetCommentsFromPushshift(key_words, subreddit_name, utc_time)
+                    get_pushshift_comments = GetCommentsFromPushshift(
+                        key_words, subreddit_name, utc_time)
                     comments_list, utc_time = get_pushshift_comments.get_comments()
                     for comment in comments_list:
                         if comment['author'] is not None and comment['author'] not in checked_user_list:
@@ -168,17 +181,21 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
         error_count = 0
         for index, user in enumerate(user_list):
             try:
-                if from_reddit:
+                if comment_from_reddit:
                     get_user_comments = GetUserCommentsFromReddit(
                         **reddit_isntance_args, reddit_username=user)
-                    comment_list = get_user_comments.get_comments(comment_number=1000)
+                    comment_list = get_user_comments.get_comments(
+                        comment_number=1000)
                 else:
-                    get_user_comments = GetUserCommentsFromPushshift(user,end_utc_time)
+                    get_user_comments = GetUserCommentsFromPushshift(
+                        user, end_utc_time)
                     comment_list = get_user_comments.get_comments()
                 if key_words == 'bipolar':
                     check_function = _identify_bipolar
                 elif key_words == 'depression':
                     check_function = _identify_depression
+                elif key_words == 'background':
+                    check_function = _identify_background
                 if check_function(user, comment_list):
                     checked_user_list.add(user)
                     with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
@@ -191,12 +208,13 @@ def get_comments(checked_user_list, subreddit_list, key_words, from_reddit=True,
                 continue
         print(utc_time)
 
+
 def _identify_bipolar(username, comment_list):
     identify_list = ["I am diagnosed with bipolar", "i am diagnosed with bipolar",
                      "I'm diagnosed with bipolar", "i'm diagnosed with bipolar", "I have been diagnosed with bipolar",
                      "I was diagnosed with bipolar", "I've been diagnosed with bipolar", "I was just diagnosed with bipolar",
                      "I was diagnosed with depression and anxiety", "I've been diagnosed with depression and anxiety",
-                     "I am diagnosed with depression and anxiety",]
+                     "I am diagnosed with depression and anxiety", ]
 
     for comment in comment_list:
         for key, value in comment.items():
@@ -207,6 +225,7 @@ def _identify_bipolar(username, comment_list):
                         file.write(username+' [info] '+text+'\n')
                     return True
     return False
+
 
 def _identify_depression(username, comment_list):
     identify_list = ["I am diagnosed with depression", "i am diagnosed with depression",
@@ -223,6 +242,14 @@ def _identify_depression(username, comment_list):
                     return True
     return False
 
+def _identify_background(username,comment):
+    if not _identify_bipolar(username,comment) and not _identify_depression(username,comment):
+        with open('data/user_list/background_user_list', mode='a', encoding='utf8') as file:
+            file.write(username+' [info] [text]\n')
+        return True
+    else:
+        return False
+
 def _get_check_user_list(check_list):
     user_list = set()
     for type in check_list:
@@ -232,10 +259,9 @@ def _get_check_user_list(check_list):
     return user_list
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_type', type=str, default='depression')
+    parser.add_argument('--data_type', type=str, default='background')
     args = parser.parse_args()
     os.chdir('/home/xiaobo/emotion_disorder_detection')
     key_words = args.data_type
@@ -243,12 +269,14 @@ if __name__ == '__main__':
         get_data = get_bipolar_data
     elif key_words == 'depression':
         get_data = get_depression_data
+    elif key_words == 'background':
+        get_data = get_background_data
 
-    if from_reddit:
-        for i in range(50):
-            get_data(from_reddit)
+    if user_from_reddit:
+        for i in range(1):
+            get_data()
     else:
-        get_data(from_reddit)
+        get_data()
 
     # user_list = set()
     # with open('data/user_list/'+key_words+'_user_list', mode='r', encoding='utf8') as file:

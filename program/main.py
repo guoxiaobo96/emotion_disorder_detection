@@ -1,8 +1,11 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+import logging
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
 from config import get_config
 from util import prepare_dirs_and_logger, save_config
-from data import DataLoader
+from data import DataLoader, DataLoaderFromReddit
 from trainer import Trainer
 import tensorflow as tf
 
@@ -11,7 +14,10 @@ warnings.filterwarnings('ignore')
 
 def main(config):
     prepare_dirs_and_logger(config)
-    data_loader = DataLoader(config) 
+    if config.task in ['train','roc_curve','test']:
+        data_loader = DataLoader(config)
+    elif config.task == 'predict':
+        data_loader = DataLoaderFromReddit(config)
     trainer = Trainer(config, data_loader)
 
     if config.is_debug:
@@ -27,8 +33,6 @@ def main(config):
                 trainer.test()
             elif config.task=='predict':
                 trainer.predict()
-            elif config.task=='analysis':
-                trainer.analysis()
             elif config.task=='f1_score':
                 trainer.calculate_f1_score()
             elif config.task == 'roc_curve':
