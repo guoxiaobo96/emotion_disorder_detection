@@ -15,6 +15,7 @@ def add_argument_group(name):
 # Data
 data_arg = add_argument_group('Data')
 data_arg.add_argument('--data_dir',type=str,default='./data/TFRecord')
+data_arg.add_argument('--target_dir',type=str,default='./data/reddit')
 # data_arg.add_argument('--dataset', type=str, default='tweet_trust')
 # data_arg.add_argument('--data_type',type=str,default='balanced')
 
@@ -54,12 +55,13 @@ train_arg.add_argument('--metrics', type=str, default='accuracy')
 
 # Misc
 misc_arg = add_argument_group('Misc')
-train_arg.add_argument('--task', type=str, default='test')
+train_arg.add_argument('--task', type=str, default='label')
 misc_arg.add_argument('--model_name',type=str,default='weighted')
 misc_arg.add_argument('--root_dir',type=str,default='/home/xiaobo/emotion_disorder_detection')
 misc_arg.add_argument('--log_dir', type=str, default='log')
-misc_arg.add_argument('--load_path', type=str, default='tweet_trust/weighted')
-misc_arg.add_argument('--gpu_id', type=str, default='1')
+misc_arg.add_argument('--load_path', type=str, default='tweet_trust/best')
+misc_arg.add_argument('--emotion_type', type=str, default='trust')
+misc_arg.add_argument('--gpu_id', type=str, default='0')
 misc_arg.add_argument('--bert_model_dir', type=str, default='/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16')
 misc_arg.add_argument('--is_debug',type=_str2bool,default=False)
 
