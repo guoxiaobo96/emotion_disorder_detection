@@ -1,10 +1,15 @@
 import os
+import logging
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
 import json
 import re
-import tensorflow as tf
+
 import numpy as np
 import argparse
 
+import tensorflow as tf
 from random import shuffle, choice, seed
 from official.nlp.bert import tokenization
 from nltk.tokenize import sent_tokenize
@@ -56,7 +61,6 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
     
     print('finish')
             
-
 def build_multi_class_tfrecord(data_path_list, record_path, type_list=["train", "valid", "test"]):
 
     bert_vocab_file = os.path.join(bert_model_dir, 'vocab.txt')
@@ -211,6 +215,64 @@ def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["
     with open(meta_file, mode='w', encoding='utf8') as fp:
         json.dump(meta_data, fp)
 
+def build_state(data_type,window,gap):
+    user_list_file = './data/user_list/' + data_type + '_user_list'
+    user_text_folder = os.path.join('./data/reddit', data_type)
+    user_state_folder = os.path.join('./data/state', data_type)
+    if not os.path.exists(user_state_folder):
+        os.makedirs(user_state_folder)
+    
+    user_list = []
+    with open(user_list_file, mode='r', encoding='utf8') as fp:
+        for line in fp.readlines():
+            user, _ = line.strip().split(' [info] ')
+            user_list.append(user)
+    for index, user in enumerate(user_list):
+        try:
+            user_info_file = os.path.join(user_text_folder, user)
+            state_info_file = os.path.join(user_state_folder,user)
+            curve_state = []
+            state_list = dict()
+            with open(user_info_file, mode='r', encoding='utf8') as fp:
+                for line in fp.readlines():
+                    info = json.loads(line)
+                    for key in info:
+                        value = info[key]
+                        states = [value["anger"],value["fear"], value["joy"],value["sadness"]]
+                        state_list[value['time']] = [min(int(state),1) for state in states]
+            time_list = sorted(state_list.keys())
+            start_time = time_list[0]
+            while start_time <= time_list[-1]:
+                end_time = start_time + window
+                state = [0, 0, 0, 0]
+                mark=False
+                for i, time in enumerate(time_list):
+                    if time >= start_time and time <= end_time:
+                        mark = True
+                        for state_index, s in enumerate(state_list[time]):
+                            state[state_index] += s
+                    elif time > end_time:
+                        break
+                if not mark:
+                    state = [-1, -1, -1, -1]
+                else:
+                    state = [min(s,1) for s in state]
+                curve_state.append(state)
+                start_time += gap
+            with open(state_info_file, mode='w', encoding='utf8') as fp:
+                for state in curve_state:
+                    fp.write(str(state[0]) + ',' + str(state[1]) + ',' + str(state[2]) + ',' + str(state[3]) + '\n')
+        except IndexError:
+            print(user)
+            continue
+    
+    user_list = []
+    with open(user_list_file, mode='r', encoding='utf8') as fp:
+        for line in fp.readlines():
+            user, _ = line.strip().split(' [info] ')
+            user_list.append(user)
+
+
 def _prepare_text_id(text, tokenizer, max_seq_length):
     text = ' '.join(text.split())
     text = text.strip()
@@ -319,8 +381,24 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', type=str, default='background')
+    parser.add_argument('--function_type', type=str, default='build_state')
+    parser.add_argument('--window_size', type=int)
+    parser.add_argument('--step_size', type=float)
+
     args = parser.parse_args()
     keywords = args.data_type
+    window_size = args.window_size
+    step_size = args.step_size
 
+    function = args.function_type
     os.chdir('/home/xiaobo/emotion_disorder_detection')
-    build_text_tfrecord('./data/user_list/'+keywords+'_user_list','./data/reddit/'+keywords , './data/TFRecord/reddit_data/'+keywords)
+    if function == 'build_state':
+        for keywords in ['bipolar', 'depression','background']:
+            build_state(keywords, window=window_size*60*60,gap=step_size*60*60)
+    elif function == 'build_text_tfrecord':
+        build_text_tfrecord('./data/user_list/'+keywords+'_user_list','./data/reddit/'+keywords , './data/TFRecord/reddit_data/'+keywords)
+    elif function == 'build_binary_tfrecod':
+        pass
+    elif function == 'build_multi_class_tfrecord':
+        pass
+

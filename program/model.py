@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 import os
 
-from model_util import build_bert_encoder
+from .model_util import build_bert_encoder
 
 
 def build_basic_text_model(config, max_seq_len, model_dir=None):

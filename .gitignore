@@ -5,3 +5,6 @@ log/*/*/model/*
 data/TFRecord/*/*
 program/*.sh
 data/reddit/*/*
+data/state/*/*
+log/hmm/*/*
+work.sh
