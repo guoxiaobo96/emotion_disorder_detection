@@ -114,7 +114,7 @@ class GetUserCommentsFromPushshift(object):
             self.build_URL(self._end_time)
             data = requests.get(self._url)
             while data.status_code == 429:
-                time.sleep(2)
+                time.sleep(1)
                 data = requests.get(self._url)
             data = json.loads(data.text)['data']
             if data == []:
@@ -126,13 +126,14 @@ class GetUserCommentsFromPushshift(object):
                 text = re.sub(subreddit_info, '', text)
                 link_id = item['link_id']
                 post_time = item['created_utc']
+                flair_text  = item['author_flair_text']
                 if not subreddit_list:
                     self._comment_list.append(
-                        {comment_id: {'text': text, 'link_id': link_id, 'time': post_time}})
+                        {comment_id: {'text': text, 'link_id': link_id, 'time': post_time,'author_flair':flair_text}})
                 else:
                     if item['subreddit'] in subreddit_list:
                         self._comment_list.append(
-                            {comment_id: {'text': text, 'link_id': link_id, 'time': post_time}})
+                            {comment_id: {'text': text, 'link_id': link_id, 'time': post_time,'author_flair':flair_text}})
             self._end_time = post_time
         return self._comment_list
 
@@ -184,7 +185,6 @@ def get_comments(checked_user_list, subreddit_list, key_words, data_type='commen
                         if comment['author'] is not None and comment['author'] not in checked_user_list:
                             user_list.add(comment['author'])
                             checked_user_list.add(comment['author'])
-                    time.sleep(1)
                 except:
                     continue
         error_count = 0
@@ -238,7 +238,6 @@ def _identify_bipolar(username, comment_list):
                     return True
     return False
 
-
 def _identify_depression(username, comment_list):
     identify_list = ["I am diagnosed with depression", "i am diagnosed with depression",
                      "I'm diagnosed with depression", "i'm diagnosed with depression", "I have been diagnosed with depression",
@@ -262,11 +261,14 @@ def _identify_anxiety(username, comment_list):
     for comment in comment_list:
         for key, value in comment.items():
             text = value['text']
+            flair_text = value['author_flair']
             for sentence in identify_list:
                 if sentence in text:
                     with open('data/user_list/anxiety_user_list', mode='a', encoding='utf8') as file:
                         file.write(username+' [info] '+text+'\n')
                     return True
+            if flair_text:
+                pass
     return False
 
 def _identify_background(username,comment):

@@ -39,23 +39,23 @@ class HMM(object):
             self._save_model()
 
 
-        n_component_list = [5 * i for i in range(1, 9)]
-        n_iter_list = [50 * i for i in range(1, 7)]
+        n_component_list = [5 * i for i in range(4, 7)]
+        n_iter_list = [50 * i for i in range(1, 5)]
         algorithm_list = ['viterbi', 'map']
         if self._model_type != 'MultinomialHMM':
             covariance_type_list = ["spherical", "diag", "full", "tied"]
         
-        for iter in range(3):
-            print('iteration : %d' % iter)
-            for n_component in n_component_list:
-                for n_iter in n_iter_list:
-                    for algorithm in algorithm_list:
-                        self._hyper_parameters['n_components'] = n_component
-                        self._hyper_parameters['n_iter'] = n_iter
-                        self._hyper_parameters['algorithm'] = algorithm
-                        if self._model_type != 'MultinomialHMM':
-                            for covariance_type in covariance_type_list:
-                                self._hyper_parameters['covariance_type'] = covariance_type
+        for n_component in n_component_list:
+            for n_iter in n_iter_list:
+                for algorithm in algorithm_list:
+                    self._hyper_parameters['n_components'] = n_component
+                    self._hyper_parameters['n_iter'] = n_iter
+                    self._hyper_parameters['algorithm'] = algorithm
+                    temp_best_acc = 0
+                    if self._model_type != 'MultinomialHMM':
+                        for covariance_type in covariance_type_list:
+                            self._hyper_parameters['covariance_type'] = covariance_type
+                            for iter in range(3):
 
                                 self._build_model()
                                 self.train_model()
@@ -67,9 +67,11 @@ class HMM(object):
                                         self._best_model['hyper_parameters'][key] = value
                                     self.test()
                                     self._save_model()
-                        else:
+                    else:
+                        for iter in range(3):
                             self._build_model()
                             self.train_model()
+                            temp_best_acc = max(self._metrics['accuracy'],temp_best_acc)
 
                             if self._metrics['accuracy'] >= self._best_model['metrics']['accuracy']:
                                 self.test()
@@ -78,7 +80,7 @@ class HMM(object):
                                 for key, value in self._hyper_parameters.items():
                                     self._best_model['hyper_parameters'][key] = value
                                 self._save_model()
-            
+                    print("n_component is %d and the n_iter is %d and the accuracy is %2f" % (n_component, n_iter,temp_best_acc))
     def train_model(self):
         for index, model in enumerate(self.model_list):
             data = self._train_data[index]['feature']
@@ -199,14 +201,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_type', type=str, choices=['GaussianHMM', 'MultinomialHMM'], default='MultinomialHMM')
     parser.add_argument('--model_path', type=str, default='./log/hmm')
-    parser.add_argument('--model_name', type=str, default='multinomial_bipolar-depression_background')
+    parser.add_argument('--model_name', type=str, default='multinomial_bipolar_background')
     args = parser.parse_args()
     model_type = args.model_type
     model_path = os.path.join(args.model_path, args.model_name)
-    data_type_list = [['bipolar','depression'],['background']]
+    data_type_list = [['bipolar'],['background']]
     
+    # data_loader = DataLoaderForState(
+    #     data_type_list=data_type_list, data_size=[400, 100, 200])
     data_loader = DataLoaderForState(
-        data_type_list=data_type_list,data_size = [400, 100, 200])
+        data_type_list=data_type_list,data_size = [200, 100, 100])
     model = HMM(model_type, data_loader, model_path, data_type_list, load_model=True)
     model.fit()
     # model.test()
