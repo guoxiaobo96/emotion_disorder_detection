@@ -1,8 +1,8 @@
 import warnings
-from trainer import Trainer
-from data import DataLoader, DataLoaderFromReddit
-from util import prepare_dirs_and_logger, save_config
-from config import get_config
+from .trainer import Trainer
+from .data import DataLoader, DataLoaderFromReddit
+from .util import prepare_dirs_and_logger, save_config
+from .config import get_config
 import logging
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"

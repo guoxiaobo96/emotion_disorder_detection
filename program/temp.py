@@ -1,24 +1,20 @@
 import os
 import shutil
-text_list = ["I was diagnosed with depression and anxiety", "I've been diagnosed with depression and anxiety",
-                     "I am diagnosed with depression and anxiety"]
-with open('./data/user_list/depression_user_list',mode='r') as fp:
+
+
+user_list = []
+delete_list = []
+with open('data/user_list/depression_user_list',mode='r') as fp:
     for line in fp.readlines():
-        user, text = line.split(' [info] ')
-        if 'anxiety' not in text:
-            with open('./data/user_list/depression_user_list_new', mode='a') as new_fp:
-                new_fp.write(user + ' [info] ' + text)
+        user, text = line.strip().split(' [info] ')
+        if 'bipolar' in text:
+            delete_list.append(user)
         else:
-            for check_text in text_list:
-                if check_text in text:
-                    with open('./data/user_list/bipolar_user_list', mode='a') as new_fp:
-                        new_fp.write(user + ' [info] ' + text)
-                    try:
-                        shutil.copyfile('./data/depression/' + user, './data/bipolar/' + user)
-                    except:
-                        print('copy '+user+' failed')
-                    break
-            try:
-                os.remove('./data/depression/' + user)
-            except:
-                print('delete '+user+' failed')
+            user_list.append(line)
+
+with open('data/user_list/depression_user_list_new', mode='w') as fp:
+    for line in user_list:
+        fp.write(line)
+for user in delete_list:
+    os.remove(os.path.join('data/state/depression', user))
+    os.remove(os.path.join('data/reddit/depression', user))

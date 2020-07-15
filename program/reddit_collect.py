@@ -14,13 +14,14 @@ reddit_isntance_args = {"client_id": "qOCFmW7rYl8P2A", "client_secret": "-RxOwpv
 bipolar_subreddit_list = ["bipolar", "bipolar2",
                           "BipolarReddit", "BipolarSOs", "bipolarart", "mentalhealth"]
 depression_subreddit_list = ["depression", "mentalhealth"]
+anxiety_subreddit_list = ["Anxiety", "mentalhealth","Anxietyhelp","socialanxiety"]
 data_type_list = ['bipolar', 'depression', 'background']
 
-begin_utc_time = 1514782800
+begin_utc_time = 1451624400
 end_utc_time = 1592280000
 # end_utc_time is 2020.6.16
-# begin_utc_time is 2018.1.1
-user_from_reddit = True
+# begin_utc_time is 2016.1.1 changed from 2018.1.1
+user_from_reddit = False
 comment_from_reddit = False
 
 
@@ -112,6 +113,9 @@ class GetUserCommentsFromPushshift(object):
         while self._end_time > begin_utc_time:
             self.build_URL(self._end_time)
             data = requests.get(self._url)
+            while data.status_code == 429:
+                time.sleep(2)
+                data = requests.get(self._url)
             data = json.loads(data.text)['data']
             if data == []:
                 break
@@ -121,15 +125,15 @@ class GetUserCommentsFromPushshift(object):
                 subreddit_info = re.compile(r'r/[^ ]+')
                 text = re.sub(subreddit_info, '', text)
                 link_id = item['link_id']
-                time = item['created_utc']
+                post_time = item['created_utc']
                 if not subreddit_list:
                     self._comment_list.append(
-                        {comment_id: {'text': text, 'link_id': link_id, 'time': time}})
+                        {comment_id: {'text': text, 'link_id': link_id, 'time': post_time}})
                 else:
                     if item['subreddit'] in subreddit_list:
                         self._comment_list.append(
-                            {comment_id: {'text': text, 'link_id': link_id, 'time': time}})
-            self._end_time = time
+                            {comment_id: {'text': text, 'link_id': link_id, 'time': post_time}})
+            self._end_time = post_time
         return self._comment_list
 
 
@@ -144,6 +148,11 @@ def get_depression_data():
     get_comments(user_list, depression_subreddit_list, 'depression',
                  begin_utc_time=begin_utc_time, end_utc_time=end_utc_time)
 
+
+def get_anxiety_data():
+    user_list = _get_check_user_list(data_type_list)
+    get_comments(user_list, anxiety_subreddit_list, 'anxiety',
+                 begin_utc_time=begin_utc_time, end_utc_time=end_utc_time)
 
 def get_background_data():
     user_list = _get_check_user_list(data_type_list)
@@ -194,11 +203,13 @@ def get_comments(checked_user_list, subreddit_list, key_words, data_type='commen
                     check_function = _identify_bipolar
                 elif key_words == 'depression':
                     check_function = _identify_depression
+                elif key_words == 'anxiety':
+                    check_function = _identify_anxiety
                 elif key_words == 'background':
                     check_function = _identify_background
                 if check_function(user, comment_list):
                     checked_user_list.add(user)
-                    with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
+                    with open('data/reddit/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
                         for comment in comment_list:
                             comment = json.dumps(comment)
                             fp.write(comment + '\n')
@@ -206,6 +217,7 @@ def get_comments(checked_user_list, subreddit_list, key_words, data_type='commen
             except:
                 error_count += 1
                 continue
+        print(error_count)
         print(utc_time)
 
 
@@ -242,6 +254,21 @@ def _identify_depression(username, comment_list):
                     return True
     return False
 
+def _identify_anxiety(username, comment_list):
+    identify_list = ["I am diagnosed with anxiety", "i am diagnosed with anxiety",
+                     "I'm diagnosed with anxiety", "i'm diagnosed with anxiety", "I have been diagnosed with anxiety",
+                     "I was diagnosed with anxiety", "I've been diagnosed with anxiety", "I was just diagnosed with anxiety"]
+
+    for comment in comment_list:
+        for key, value in comment.items():
+            text = value['text']
+            for sentence in identify_list:
+                if sentence in text:
+                    with open('data/user_list/anxiety_user_list', mode='a', encoding='utf8') as file:
+                        file.write(username+' [info] '+text+'\n')
+                    return True
+    return False
+
 def _identify_background(username,comment):
     if not _identify_bipolar(username,comment) and not _identify_depression(username,comment):
         with open('data/user_list/background_user_list', mode='a', encoding='utf8') as file:
@@ -258,10 +285,26 @@ def _get_check_user_list(check_list):
                 user_list.add(line.split(' [info] ')[0])
     return user_list
 
+def get_data_for_user(keyword):
+    user_list = set()
+    with open('data/user_list/'+keyword+'_user_list') as fp:
+        for line in fp.readlines():
+            user, _ = line.strip().split(' [info] ')
+            user_list.add(user)
+    for user in user_list:
+        get_user_comments = GetUserCommentsFromPushshift(
+            user, 1514782800)
+        comment_list = get_user_comments.get_comments()
+        with open('data/reddit/'+keyword+'/'+user, mode='a', encoding='utf8') as fp:
+            for comment in comment_list:
+                comment = json.dumps(comment)
+                fp.write(comment + '\n')
+    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_type', type=str, default='background')
+    parser.add_argument('--data_type', type=str, default='anxiety')
     args = parser.parse_args()
     os.chdir('/home/xiaobo/emotion_disorder_detection')
     key_words = args.data_type
@@ -269,6 +312,8 @@ if __name__ == '__main__':
         get_data = get_bipolar_data
     elif key_words == 'depression':
         get_data = get_depression_data
+    elif key_words == 'anxiety':
+        get_data = get_anxiety_data
     elif key_words == 'background':
         get_data = get_background_data
 
@@ -277,16 +322,5 @@ if __name__ == '__main__':
             get_data()
     else:
         get_data()
+    # get_data_for_user('anxiety')
 
-    # user_list = set()
-    # with open('data/user_list/'+key_words+'_user_list', mode='r', encoding='utf8') as file:
-    #     for line in file.readlines():
-    #          user_list.add(line.split(' [info] ')[0])
-    # for user in user_list:
-    #     get_user_comments = GetUserCommentsFromPushshift(user,end_utc_time)
-    #     comment_list = get_user_comments.get_comments()
-    #     with open('data/'+key_words+'/'+user, mode='w', encoding='utf8') as fp:
-    #         for comment in comment_list:
-    #             comment = json.dumps(comment)
-    #             fp.write(comment + '\n')
-    #     time.sleep(0.5)
