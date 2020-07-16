@@ -1,0 +1,9 @@
+accuracy : 0.8375
+micro_f1_score : 0.8375
+macro_f1_score : 0.8374176927069328
+confusion_matrix : [[163  37]
+ [ 28 172]]
+n_components : 0
+n_iter : 0
+algorithm : 
+class_number : 2
