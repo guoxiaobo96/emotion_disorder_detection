@@ -1,0 +1,751 @@
+{"fuvwk8t": {"text": "Hell yea", "link_id": "t3_h9234a", "time": 1592212995}}
+{"fto1gwn": {"text": "This release has introduced occasional screen tearing in my case.", "link_id": "t3_h079z9", "time": 1591853676}}
+{"ftmf19j": {"text": "im investing in this", "link_id": "t3_h0jc3e", "time": 1591821156}}
+{"ftme8qn": {"text": "Yea, I tried Proton-5.9-GE-2-MF but its still broken. Shame.", "link_id": "t3_gw1ue9", "time": 1591820779}}
+{"fte04uo": {"text": "Yep, same issue here. How's 5.9 gloriouseggroll version working for you?", "link_id": "t3_gw1ue9", "time": 1591637482}}
+{"ft82061": {"text": "Well that's good to hear! Thanks.", "link_id": "t3_f8v5rw", "time": 1591491972}}
+{"ft7zavw": {"text": "Do you think it'll be possible to ever be able to use the program without having to patch the kernel?", "link_id": "t3_f8v5rw", "time": 1591490710}}
+{"ft0o14n": {"text": "Would be sick if someone made a video guide.", "link_id": "t3_gxc6kj", "time": 1591394167}}
+{"ft0neie": {"text": "Same issue with NFS Rivals", "link_id": "t3_gwvk7z", "time": 1591393858}}
+{"fsvhbb7": {"text": "Crysis 3 just got added [https://store.steampowered.com/app/1282690/Crysis\\_3/](https://store.steampowered.com/app/1282690/Crysis_3/)", "link_id": "t3_gvwxan", "time": 1591287812}}
+{"fssaawb": {"text": "Thought maybe its something wrong on my end and may not affect others?", "link_id": "t3_gw1ue9", "time": 1591216033}}
+{"fr5hbpy": {"text": "I'll have to try that then. I almost automatically opted for the sitting method since she tends to hit the brakes when seeing a dog.", "link_id": "t3_gm6ol1", "time": 1589908568}}
+{"fr344s1": {"text": "Thanks, I'll take a look the course and see what i can learn!", "link_id": "t3_gmdjxw", "time": 1589849562}}
+{"fqz0kno": {"text": "i exhaled swiftly with my nose", "link_id": "t3_gljefz", "time": 1589757766}}
+{"fqu0emx": {"text": "in 2-ish months", "link_id": "t3_gk1kq8", "time": 1589649594}}
+{"fqr0qi9": {"text": "I'm all for HD but wish there'd been a mention of toggle. Now people probably think that the graphics will be replaced 100%?", "link_id": "t3_gk88jc", "time": 1589575445}}
+{"fqovtgz": {"text": "Try Sponsorblock", "link_id": "t3_gjy0jz", "time": 1589526397}}
+{"fqm8t3y": {"text": "Plus there have been 0 bans during Early Access testing.", "link_id": "t3_gjdxg4", "time": 1589473441}}
+{"fqhgqk2": {"text": "Hey, as a tip for OpenGL games, make sure u use \"mesa\\_glthread=true\" for performance boost on AMD GPUs", "link_id": "t3_gijrwc", "time": 1589376646}}
+{"fq630zu": {"text": "I also was a longtime lurker. I tried out Linux 2 years ago but back then it wasn't my cup of tea. However i kept following the developments that happened around Linux gaming and felt the urge to try it out again.Here I am a month later, still on Linux and enjoying it.", "link_id": "t3_gh1ln2", "time": 1589123448}}
+{"fq5kov0": {"text": "Minimizing the window once seems to work! Thanks.", "link_id": "t3_ggd0ty", "time": 1589109064}}
+{"fq5axws": {"text": "Do GE releases have better performance over regular Proton? Or do they just contain tweaks and fixes that Proton doesn't have?", "link_id": "t3_ggwqke", "time": 1589098532}}
+{"fq1pyma": {"text": "&gt;Why is it (still) that when new users ask a question in the majority of  Linux forums, they are automatically treated as if they've been a system  administrator or programmer for many years?amen", "link_id": "t3_gfmf6s", "time": 1589047918}}
+{"fq0346z": {"text": "Ahh, ok i got it. Changed my user-agent to win10 and attempted to join a server using battlelog. The game opens up but only shows a black screen. I tried launching using Lutris and I got the same error pop-up. Then launching from Origin somewhat works but the game window is funky and very glitchy and can't be set to fullscreen mode.", "link_id": "t3_ggd0ty", "time": 1589027129}}
+{"fq005rs": {"text": "Just out of curiosity. How does changing user agent affect the outcome? The downloaded script still remains the same right?", "link_id": "t3_ggd0ty", "time": 1589026182}}
+{"fpzoxef": {"text": "Hmm, I ran the script and updated origin but the issue still remains.", "link_id": "t3_ggd0ty", "time": 1589021411}}
+{"fpz8m47": {"text": "Site down for anyone else?", "link_id": "t3_gfxlp7", "time": 1589014977}}
+{"fpz5c1a": {"text": "Certainly glad you did though! Thanks for letting me know as well. To me it makes no sense why would having IPv6 disabled cause this...", "link_id": "t3_gcyezd", "time": 1589013802}}
+{"fpyvpt9": {"text": "Can confirm that re-enabling IPv6 has fixed the issue.", "link_id": "t3_gcyezd", "time": 1589009702}}
+{"fpqz5v7": {"text": "I'm on Manjaro GNOME. Haven't tried any other distro regarding this issue.", "link_id": "t3_gcyezd", "time": 1588836811}}
+{"fpqghu6": {"text": "Will do!", "link_id": "t3_gcyezd", "time": 1588822267}}
+{"fpngm7a": {"text": "Whatever you do, stay away from god awful Asus MOBOs.", "link_id": "t3_gecm6p", "time": 1588762198}}
+{"fpim18x": {"text": "Okay I got it right this time but I had to run: `while true; do inotifywait Origin.exe; chmod u+w Origin.exe; done`I got this as an output:`Setting up watches.``Watches established.``Origin.exe OPEN` But it still didn't work. The issue remained exactly the same.", "link_id": "t3_gcyezd", "time": 1588643715}}
+{"fpgyebc": {"text": "I love how there's constant improvements happening on Linux.", "link_id": "t3_gdbtac", "time": 1588611720}}
+{"fpgy79j": {"text": "Hello. I tried the workaround but according to my terminal. It's trying to watch Origin but says \"No such file or directory\".", "link_id": "t3_gcyezd", "time": 1588611621}}
+{"fp11s6d": {"text": "Where are you CPY", "link_id": "t3_ganufp", "time": 1588222114}}
+{"foyruy0": {"text": "Highly recommend.", "link_id": "t3_gabyrc", "time": 1588178019}}
+{"foyr2pc": {"text": "Wait", "link_id": "t3_gac5ry", "time": 1588177608}}
+{"foyed40": {"text": "Whenever I try Wayland, my games start up on the wrong monitor and I can't move them back to the main screen", "link_id": "t3_ga39g1", "time": 1588170990}}
+{"fovsu5f": {"text": "I'm speaking from the POV of a new Linux user. Ubuntu comes out as the biggest and most-recommended Distro to us new users who are learning about distros and options to choose from. Therefore Ubuntu is (probably) chosen more often as the first distro for many people.I used Ubuntu for a while and ran into countless issues when it came to installing tools and software that weren't in the software center or didn't have a .deb file. I could rarely get anything to work.On Manjaro however... you have access to AUR and a sweet lovely install button for literally everything. The distro does all the building and compiling blahblah... and you get your desired software and it WORKS. It's so god damn easy and smooth sailing on Manjaro.", "link_id": "t3_g9sy2u", "time": 1588106924}}
+{"fotiyfp": {"text": "Jagex pls dont put this down", "link_id": "t3_g9d73y", "time": 1588055358}}
+{"fosbqyj": {"text": "I'm seeing Manjaro everywhere which is great. Such a fantastic distro.", "link_id": "t3_g8s5ss", "time": 1588027619}}
+{"forj3wr": {"text": "So I thought. I've been trying plenty of cracks and its a 50/50 whether the game will work. I will try CPY's cracks from now on, thx!", "link_id": "t3_g95n4l", "time": 1588013095}}
+{"for8edx": {"text": "What are the benefits of using this Vulkan extension? I'm asking because i'm genuinely interested but can never find out an explanation of what these changes do.", "link_id": "t3_g8xh9h", "time": 1588007924}}
+{"fonjkbn": {"text": "Oh my god this sounds great! I\u2019ll give it a try and report back.", "link_id": "t3_g8h9og", "time": 1587920719}}
+{"fomwo1r": {"text": "They aren't present in Linux.", "link_id": "t3_g8dx9p", "time": 1587906148}}
+{"foleutj": {"text": "Similar to what Windows has with Radeon Software. Now of course we have great alternatives on Linux but it'd be awesome to see AMD bring their own software to Linux.I've settled in with CoreCtrl which does itch the scratch for Wattman-like GUI. Also, don't get me wrong, I do appreciate the work AMD is already putting into Linux!", "link_id": "t3_g7wgsz", "time": 1587860723}}
+{"fold1kg": {"text": "Wonder if they have any plans to ever bring us some software as well", "link_id": "t3_g7wgsz", "time": 1587859634}}
+{"fokkrtk": {"text": "I'm using two 144Hz displays and all u have to do is switch the Refresh Rate to 144Hz in ur distro's Display Settings.", "link_id": "t3_g7xlo2", "time": 1587843906}}
+{"fog55rg": {"text": "I also made the switch very recently. Hopefully we can get the Linux user numbers up!", "link_id": "t3_g77zdy", "time": 1587748028}}
+{"fof1e8f": {"text": "1. Manjaro. I haven't had to use terminal to type in weird gibberish to install programs like on Ubuntu.2. I had to do nothing on my AMD system. The distro just gave me a button to update everything.3. I doubt you'll have any issues.4. Games with anti-cheats.5. My performance has either been better OR the same as on windows.6. I think it's a good time now especially for a person who doesn't play games with major anti-cheats that don't work on Linux. Our numbers will go up and developers will see demand for Linux support.", "link_id": "t3_g6z3d5", "time": 1587722458}}
+{"fo8mn01": {"text": "I had so many issues on Ubuntu as well. Now on Manjaro and everything just works... it\u2019s amazing.", "link_id": "t3_g628zw", "time": 1587599552}}
+{"fo62lnh": {"text": "asking the real questions", "link_id": "t3_g4o2be", "time": 1587544167}}
+{"fo4n6d3": {"text": "Thanks to the latest improvements. My FPS is now either on-par or better on Linux", "link_id": "t3_g5od0o", "time": 1587507477}}
+{"fo4js93": {"text": "Like when u had to throw those things into the field on that Harry Potter game on ps2", "link_id": "t3_g5j9rm", "time": 1587505704}}
+{"fnwlg6e": {"text": "If you use Lutris to launch and play your games. I'd recommend that u go to System Preferences in Lutris and press Show advanced options, then u scroll down and there's \"Command prefix\" and there you put \"gamemoderun\" and save.", "link_id": "t3_g49ic9", "time": 1587320645}}
+{"fnk6xe4": {"text": "Update: I switched to Manjaro and grabbed gamemode and lib32-gamemode from AUR and now everything works just perfectly.", "link_id": "t3_g0wn6t", "time": 1587016806}}
+{"fnjliv8": {"text": "Mint was a distro I strongly considered as it was indeed \"good for beginners\" and I really wanted a... I believe a Debian-based distro so I could have my easy-to-install .deb files. Little did I know. AUR makes installing everything so nice. No more compiling, no more using weird commands that I have no idea what they do. In 2 days on Manjaro, I've only had one issue and that was completely on me. On Ubuntu, I would've already had plenty more issues.", "link_id": "t3_g1ng1a", "time": 1587001500}}
+{"fnjl3am": {"text": "Yep. By the looks of things, I also won't be switching distro any time soon.", "link_id": "t3_g1ng1a", "time": 1587001235}}
+{"fnjkzsg": {"text": "KDE looks quite pleasant. A thing I like about Linux is that, if I were to get bored of Gnome, I have more options to choose from.", "link_id": "t3_g1ng1a", "time": 1587001176}}
+{"fnhc7o3": {"text": "Glad to see another Gnome user! :)", "link_id": "t3_g1ng1a", "time": 1586959588}}
+{"fnhc6ms": {"text": "It is so amazing for real. Having access to AUR is so nice. Plus rolling release!", "link_id": "t3_g1ng1a", "time": 1586959572}}
+{"fnguoez": {"text": "Thanks! I am so glad i pulled the trigger on Manjaro.", "link_id": "t3_g1ng1a", "time": 1586945629}}
+{"fngt8dt": {"text": "The way your story explains how much of a hassle Windows is, is absolutely how I feel like. Also it's funny to hear others relating to how Ubuntu can turn into a very difficult journey when you need a software that you have to dig through from github. So far I've managed to find literally everything from AUR and it's just one-click install and its ready to go!I installed Firefox Nightly on Ubuntu and had no idea how to add it to the dock. In fact I never managed to figure it out...Installing it from AUR automatically treated it as a program and allowed me to just right-click and add to favorites. Extremely happy with Manjaro!", "link_id": "t3_g1ng1a", "time": 1586944088}}
+{"fngrxlq": {"text": "Stop, i can only get so erect.", "link_id": "t3_g1gx2d", "time": 1586942707}}
+{"fngmfqe": {"text": "CoreCtrl is so good!", "link_id": "t3_g1gx2d", "time": 1586937054}}
+{"fngmexi": {"text": "I just compared Far Cry 5 on Manjaro and Windows 10. I have a dual-boot system. Both had the same AVG FPS but Manjaro had a higher minimum FPS. Being 106 while windows was in the 90s.", "link_id": "t3_g1gx2d", "time": 1586937032}}
+{"fngma8t": {"text": "I WAS EATING SUSHI", "link_id": "t3_g1hngf", "time": 1586936903}}
+{"fng5u30": {"text": "I'll join you with your question. I just nuked Ubuntu and replaced it with Manjaro!", "link_id": "t3_g1kc68", "time": 1586923042}}
+{"fnfzus1": {"text": "I did this and noticed that it seems? to work on games that are installed on the same drive as Linux, in my case I have minecraft on the same SSD as my Linux is on because of the small game size. I launched Minecraft via Lutris and didn't get any errors indicating that Gamemode doesn't work.When I play a different game that's installed on a separate hard drive, that's when gamemode seems to fail to initiate.", "link_id": "t3_g0wn6t", "time": 1586919066}}
+{"fnecht9": {"text": "Thank you very much for translating! This is interesting. I like to hear about what the updates do but the kernel changelogs are often quite... very specific", "link_id": "t3_g13k43", "time": 1586886903}}
+{"fndkdbo": {"text": "Yeah my bad. AMD user on Linux is what i meant", "link_id": "t3_g13k43", "time": 1586871977}}
+{"fndcx5a": {"text": "What does this mean for a regular amd user?", "link_id": "t3_g13k43", "time": 1586866763}}
+{"fndccvv": {"text": "Great now i have to live knowing that i have witnessed this", "link_id": "t3_g123i1", "time": 1586866303}}
+{"fnd8d9s": {"text": "At the moment it says its inactive, when i'm playing a game, it reports itself as active and even shows up on System Monitor. Unfortunately Lutris logs claim otherwise.", "link_id": "t3_g0wn6t", "time": 1586862609}}
+{"fnd7l5m": {"text": "Hey. I purged my current installation of gamemode and rebooted my PC. Then followed your instructions and reinstalled it. Rebooted my PC and went to lutris and wrote in \"gamemoderun\" as a command prefix. Attempted to start a game and I'm still unfortunately receiving the exact same error.", "link_id": "t3_g0wn6t", "time": 1586861806}}
+{"fncuayf": {"text": "Great! Thanks a lot!", "link_id": "t3_g0zfbv", "time": 1586847450}}
+{"fncu3rb": {"text": "I managed to extract the tar and then dragged the \"firefox\" file in terminal and it finally opened Nightly. In about:support,  it says \"Compositing WebRender\" does that sound about right?", "link_id": "t3_g0zfbv", "time": 1586847255}}
+{"fncrmi0": {"text": "I noticed this is a tar file and I've never installed those. Dug around some instructions and i'm getting this: `sudo tar xzvf firefox-77.0a1.en-US.linux-x86_64.tar.bz2``tar (child): firefox-77.0a1.en-US.linux-x86_64.tar.bz2: Cannot open: No such file or directory``tar (child): Error is not recoverable: exiting now``tar: Child returned status 2``tar: Error is not recoverable: exiting now`Am I doing something wrong here?", "link_id": "t3_g0zfbv", "time": 1586844956}}
+{"fnckfwg": {"text": "I did when I tried to use a different method to get gamemode to run. It results in the same error code but with the actual path:&amp;#x200B;`ERROR: ld.so: object  'us from LD_PRELOAD cannot  be preloaded (cannot open shared object file): ignored.`", "link_id": "t3_g0wn6t", "time": 1586839038}}
+{"fn5xbos": {"text": "Worked for steam! Unfortunately OBS doesn't seem to have neither of the drives hidden anywhere.", "link_id": "t3_fzsh0a", "time": 1586679223}}
+{"fn5qoi4": {"text": "Now what kinda client is this?", "link_id": "t3_fzg7wf", "time": 1586672643}}
+{"fn4vywk": {"text": "Thanks a lot for the tip! I had no idea such thing even exists.", "link_id": "t3_fzkq85", "time": 1586650164}}
+{"fn4t52x": {"text": "&gt;mesa\\_glthread=trueLike this? [https://i.imgur.com/p8ENS6q.png](https://i.imgur.com/p8ENS6q.png)", "link_id": "t3_fzkq85", "time": 1586648402}}
+{"fn4sftr": {"text": "Got it. Simple but effective explanation, thanks!", "link_id": "t3_fzkq85", "time": 1586647966}}
+{"fn4j93q": {"text": "&gt;The vast majority of users have no idea what you just said. This assumes a lot of prerequisite knowledge. What are daemons? What\u2019s a systemctl? How do I open terminal? What\u2019s a kernel? It sounds like the point of this software is to be as user friendly as possible.This. I appreciate you acknowledging this!", "link_id": "t3_fyuqc7", "time": 1586642509}}
+{"fn4hhcu": {"text": "I agree. Having an official AMD control panel would be nice. Nvidia has one too.", "link_id": "t3_fyupqk", "time": 1586641483}}
+{"fn2kg64": {"text": "That\u2019s a huge shame! I hope he gets back on it soon or atleast does whatever updates are necessary. It\u2019s just such a nice program.", "link_id": "t3_fyuqc7", "time": 1586592319}}
+{"fn2a97j": {"text": "Wow. I had no idea there were that many of them. I always and only kept running into WattmanGTK and Radeon-Profile.", "link_id": "t3_fyupqk", "time": 1586582345}}
+{"fn27mgs": {"text": "That's awesome. I don't know why CoreCtrl is so... \"unknown\". It's seriously a fantastic program for a Linux newbie like me. The installation is so easy too even though u have to use terminal.", "link_id": "t3_fyuqc7", "time": 1586580114}}
+{"fn214qa": {"text": "Ubuntu 20.04. I needed the very latest since im using an RX5700 XT. No snags other than some minor issues that I really wish would be easy to fix. Like my washed out screen colors. Diving into Terminal isn't very pleasant.", "link_id": "t3_fyuqc7", "time": 1586575116}}
+{"fn20ynb": {"text": "I just really want to bring this out a bit. Its the kind of software that makes the switch from Windows to Linux a million times more pleasant.", "link_id": "t3_fyuqc7", "time": 1586574994}}
+{"fn16z67": {"text": "Does the software offer any nice tools?", "link_id": "t3_fynrif", "time": 1586556026}}
+{"fmxg2gd": {"text": "&gt;If you have a recent Navi GPU, using something like that can help. If you have something older, 20.04 should be recent enough for a good experience. You can still run Mesa-git and possibly benefit from it, with the additional risk of running alpha software, but it shouldn't be critical.I always thought that you'd have to use a PPA for AMD GPUs to get the very latest and greatest but it seems that i've undergone a misunderstanding.", "link_id": "t3_fxxhqp", "time": 1586464321}}
+{"fmtut4t": {"text": "Sorry for delay, this is the output of said command:`[ 34.273832] [drm] amdgpu kernel modesetting enabled.`  `[ 34.273958] amdgpu 0000:0c:00.0: remove_conflicting_pci_framebuffers: bar 0: 0xe0000000 -&gt; 0xefffffff`  `[ 34.273959] amdgpu 0000:0c:00.0: remove_conflicting_pci_framebuffers: bar 2: 0xf0000000 -&gt; 0xf01fffff`  `[ 34.273961] amdgpu 0000:0c:00.0: remove_conflicting_pci_framebuffers: bar 5: 0xfc900000 -&gt; 0xfc97ffff`  `[ 34.273962] fb0: switching to amdgpudrmfb from EFI VGA`  `[ 34.274111] amdgpu 0000:0c:00.0: vgaarb: deactivate vga console`  `[ 34.393769] amdgpu 0000:0c:00.0: No more image in the PCI ROM`  `[ 34.393804] amdgpu 0000:0c:00.0: VRAM: 8176M 0x0000008000000000 - 0x00000081FEFFFFFF (8176M used)`  `[ 34.393805] amdgpu 0000:0c:00.0: GART: 512M 0x0000000000000000 - 0x000000001FFFFFFF`  `[ 34.393883] [drm] amdgpu: 8176M of VRAM memory ready`  `[ 34.393884] [drm] amdgpu: 8176M of GTT memory ready.`  `[ 35.494034] amdgpu: [powerplay] smu driver if version = 0x00000033, smu fw if version = 0x00000035, smu fw version = 0x002a3200 (42.50.0)`  `[ 35.494035] amdgpu: [powerplay] SMU driver if version not matched`  `[ 37.738452] amdgpu: [powerplay] failed send message: EnableAllSmuFeatures (6) response 0xffffffc2`  `[ 37.738514] [drm:amdgpu_device_ip_init [amdgpu]] *ERROR* hw_init of IP block &lt;smu&gt; failed -62`  `[ 37.738516] amdgpu 0000:0c:00.0: amdgpu_device_ip_init failed`  `[ 37.738517] amdgpu 0000:0c:00.0: Fatal error during GPU init`  `[ 37.738527] [drm] amdgpu: finishing device.`  `[ 37.775816] WARNING: CPU: 5 PID: 524 at drivers/gpu/drm/amd/amdgpu/amdgpu_object.c:998 amdgpu_bo_unpin.cold+0x0/0x40 [amdgpu]`  `[ 37.775817] Modules linked in: amdgpu(+) amd_iommu_v2 snd_hda_codec_realtek snd_hda_codec_generic gpu_sched ledtrig_audio ttm snd_hda_codec_hdmi snd_hda_intel snd_intel_nhlt drm_kms_helper snd_hda_codec i2c_algo_bit fb_sys_fops snd_hda_core syscopyarea snd_oxygen edac_mce_amd snd_hwdep snd_oxygen_lib sysfillrect snd_mpu401_uart sysimgblt snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_pcm snd_seq_device joydev input_leds snd_timer ccp snd kvm soundcore eeepc_wmi k10temp asus_wmi sparse_keymap crct10dif_pclmul ghash_clmulni_intel video aesni_intel wmi_bmof crypto_simd mac_hid cryptd glue_helper sch_fq_codel parport_pc ppdev lp parport drm ip_tables x_tables autofs4 hid_generic usbhid hid crc32_pclmul i2c_piix4 r8169 nvme ahci realtek nvme_core libahci wmi gpio_amdpt gpio_generic`  `[ 37.775883] RIP: 0010:amdgpu_bo_unpin.cold+0x0/0x40 [amdgpu]`  `[ 37.775928] amdgpu_bo_free_kernel+0x73/0x120 [amdgpu]`  `[ 37.775971] gfx_v10_0_sw_fini+0xfc/0x210 [amdgpu]`  `[ 37.776020] amdgpu_device_fini+0x26b/0x4ac [amdgpu]`  `[ 37.776056] amdgpu_driver_unload_kms+0x52/0xa0 [amdgpu]`  `[ 37.776104] amdgpu_driver_load_kms.cold+0x39/0x5c [amdgpu]`  `[ 37.776146] amdgpu_pci_probe+0xf7/0x160 [amdgpu]`  `[ 37.776200] amdgpu_init+0x83/0x8d [amdgpu]`  `[ 37.776221] amdgpu 0000:0c:00.0: 000000008ad12cc6 unpin not necessary`  `[ 37.776418] Modules linked in: amdgpu(+) amd_iommu_v2 snd_hda_codec_realtek snd_hda_codec_generic gpu_sched ledtrig_audio ttm snd_hda_codec_hdmi snd_hda_intel snd_intel_nhlt drm_kms_helper snd_hda_codec i2c_algo_bit fb_sys_fops snd_hda_core syscopyarea snd_oxygen edac_mce_amd snd_hwdep snd_oxygen_lib sysfillrect snd_mpu401_uart sysimgblt snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_pcm snd_seq_device joydev input_leds snd_timer ccp snd kvm soundcore eeepc_wmi k10temp asus_wmi sparse_keymap crct10dif_pclmul ghash_clmulni_intel video aesni_intel wmi_bmof crypto_simd mac_hid cryptd glue_helper sch_fq_codel parport_pc ppdev lp parport drm ip_tables x_tables autofs4 hid_generic usbhid hid crc32_pclmul i2c_piix4 r8169 nvme ahci realtek nvme_core libahci wmi gpio_amdpt gpio_generic`  `[ 37.776477] amdgpu_vram_mgr_fini+0x31/0xb0 [amdgpu]`  `[ 37.776516] amdgpu_ttm_fini+0x76/0xd0 [amdgpu]`  `[ 37.776550] amdgpu_bo_fini+0x12/0x40 [amdgpu]`  `[ 37.776590] gmc_v10_0_sw_fini+0x33/0x40 [amdgpu]`  `[ 37.776640] amdgpu_device_fini+0x26b/0x4ac [amdgpu]`  `[ 37.776675] amdgpu_driver_unload_kms+0x52/0xa0 [amdgpu]`  `[ 37.776724] amdgpu_driver_load_kms.cold+0x39/0x5c [amdgpu]`  `[ 37.776765] amdgpu_pci_probe+0xf7/0x160 [amdgpu]`  `[ 37.776815] amdgpu_init+0x83/0x8d [amdgpu]`  `[ 37.776864] [drm] amdgpu: ttm finalized`  `[ 37.776877] Modules linked in: amdgpu(+) amd_iommu_v2 snd_hda_codec_realtek snd_hda_codec_generic gpu_sched ledtrig_audio ttm snd_hda_codec_hdmi snd_hda_intel snd_intel_nhlt drm_kms_helper snd_hda_codec i2c_algo_bit fb_sys_fops snd_hda_core syscopyarea snd_oxygen edac_mce_amd snd_hwdep snd_oxygen_lib sysfillrect snd_mpu401_uart sysimgblt snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_pcm snd_seq_device joydev input_leds snd_timer ccp snd kvm soundcore eeepc_wmi k10temp asus_wmi sparse_keymap crct10dif_pclmul ghash_clmulni_intel video aesni_intel wmi_bmof crypto_simd mac_hid cryptd glue_helper sch_fq_codel parport_pc ppdev lp parport drm ip_tables x_tables autofs4 hid_generic usbhid hid crc32_pclmul i2c_piix4 r8169 nvme ahci realtek nvme_core libahci wmi gpio_amdpt gpio_generic`  `[ 37.776930] amdgpu_ucode_sysfs_fini+0x18/0x20 [amdgpu]`  `[ 37.776978] amdgpu_device_fini+0x47a/0x4ac [amdgpu]`  `[ 37.777014] amdgpu_driver_unload_kms+0x52/0xa0 [amdgpu]`  `[ 37.777062] amdgpu_driver_load_kms.cold+0x39/0x5c [amdgpu]`  `[ 37.777103] amdgpu_pci_probe+0xf7/0x160 [amdgpu]`  `[ 37.777152] amdgpu_init+0x83/0x8d [amdgpu]`  `[ 37.777298] amdgpu: probe of 0000:0c:00.0 failed with error -62`", "link_id": "t3_fx6xrj", "time": 1586379383}}
+{"fmsh9be": {"text": "Hello. I am using kernel: 5.3.0-46-generic", "link_id": "t3_fx6xrj", "time": 1586355434}}
+{"fmq9khh": {"text": "I'll probably try out LTS unless someone else has any advice. Thanks!Edit: Tried out LTS version of Ubuntu. 18.04, same issue...", "link_id": "t3_fws2kq", "time": 1586295445}}
+{"fmmoavz": {"text": "I have a dedicated graphics card:RX 5700.", "link_id": "t3_fw6vp6", "time": 1586208962}}
+{"fmf6ubd": {"text": "I've been looking into popOS yeah. I should've mentioned that I am indeed using an all AMD build.", "link_id": "t3_fux7sm", "time": 1586021111}}
+{"fm8ah2y": {"text": "This is exactly what I was looking for, thank you!", "link_id": "t3_ftoj6u", "time": 1585845813}}
+{"flx3vck": {"text": "dude the same is happening to me rn", "link_id": "t3_fafydf", "time": 1585574428}}
+{"flsp2zh": {"text": "I like that there are two different options to choose from. Both are doing great!", "link_id": "t3_fqrngx", "time": 1585447298}}
+{"fl8z188": {"text": "Don't know if it'd be of help but there is a 2009 client on github that has a HD mode that also does shadows. (I saw u mentioning that shadows are a bit harder to do so maybe it would be of help?)", "link_id": "t3_ewtnit", "time": 1584936041}}
+{"fkyki6u": {"text": "Assuming that they had developer time for a not so necessary but cool feature. That'd be a cool idea!", "link_id": "t3_flcy4s", "time": 1584650543}}
+{"fkw85vr": {"text": "Don\u2019t know if you\u2019re knocking Unity with that \u201cStill using Unity?\u201d or not but just in case you are, Unity is a great engine limited only by the skill of the developer. Plenty of mainstream and highly praised games are made using Unity. Did you know that Cities:Skyline, Karbal Space Program, Escape From Tarkov, Cuphead, Ori and the Blind Forest, and Yooka-Laylee are all made using Unity, just to name a few? Because it offers a free licensed version to amateur developers it is highly accessible and anyone can start using it and making games, which is awesome, but with accessible software comes the reality that most people using it are not skilled or experienced developers. It\u2019s unfortunate that Unity has this reputation of being a terrible engine based on shovelware uploaded to Steam but you don\u2019t judge Photoshop or Ableton Live based on terrible art and music made with those, and neither should you with Unity.", "link_id": "t3_fkv50w", "time": 1584585713}}
+{"fkvqcd2": {"text": "\"Year of OSRS in HD\"Those are beautiful words", "link_id": "t3_fknx4i", "time": 1584574515}}
+{"fkuqv9l": {"text": "2 HD projects? Oh boy", "link_id": "t3_fknx4i", "time": 1584554445}}
+{"fknzik6": {"text": "When will the 2004 update roll out?DWM changes &lt;3", "link_id": "t3_fj0owk", "time": 1584377110}}
+{"fkf95vi": {"text": "That's the issue I have in SCP: Secret Laboratory", "link_id": "t3_fhxa9s", "time": 1584129487}}
+{"fkc03nj": {"text": "I'm also having weird issues ever since i updated Windows. Games crash, monitors go dark and sometimes flicker.Edit: Driver version wasn't changed, still on 20.2.2. Games are for some reason unable to cap at 144FPS and mouse movement even on desktop feels sluggy.", "link_id": "t3_fhlb7c", "time": 1584043188}}
+{"fk4dtta": {"text": "Not only Tidal but many others as well.", "link_id": "t3_fgcq7s", "time": 1583858492}}
+{"fk47mnd": {"text": "I used TunemyMusic. Very easy to use.", "link_id": "t3_fgcq7s", "time": 1583854968}}
+{"fk46xxh": {"text": "Oh god that was awful!", "link_id": "t3_fgcq7s", "time": 1583854569}}
+{"fk44eef": {"text": "Curious. What are they like?", "link_id": "t3_fgcq7s", "time": 1583853070}}
+{"fk3rg7d": {"text": "I'm currently trying out Tidal (transferring my 4000+ song playlist from spotify). They both cost the same where I live and I'll still get lossless streaming on Tidal.If my playlist transfers nicely and majority of the songs are on Tidal, i'll cancel my Spotify subscription.", "link_id": "t3_fgcq7s", "time": 1583844252}}
+{"fk3cob6": {"text": "A Blue Drake", "link_id": "t3_fg6370", "time": 1583827029}}
+{"fjjhjpa": {"text": "Had my fair share of experience with Asus products and its safe to say that there are far better alternatives. Don't waste money on their products.", "link_id": "t3_fdffk4", "time": 1583396355}}
+{"fj2cd5k": {"text": "I work as a consumer and I love companies who have good communication :\\^)", "link_id": "t3_favtfv", "time": 1582940041}}
+{"fj0s4h7": {"text": "I am glad you guys are closely communicating here with people. Hopefully the new drivers work for many.", "link_id": "t3_favtfv", "time": 1582906617}}
+{"fiyeotj": {"text": "Lad's an absolute champ.", "link_id": "t3_fahc7v", "time": 1582837961}}
+{"fivqb9o": {"text": "im replying just to let u know that i appreciate this wonderful comment", "link_id": "t3_f9vuic", "time": 1582765678}}
+{"fiuxobw": {"text": "Thats unfortunate! I haven't crashed even once. I wonder if it could be due to outdated addons?", "link_id": "t3_f9wtsv", "time": 1582750141}}
+{"fiux55u": {"text": "I'd like to know as well.", "link_id": "t3_f9x1tp", "time": 1582749876}}
+{"fiudbsn": {"text": "For sure. I well notice it in the behaviour of Votan's Adaptive Settings. It no longer even has to kick in so often to improve my framerates. Whereas before it'd kick in majority of the time.", "link_id": "t3_f9wtsv", "time": 1582739262}}
+{"fiud5wn": {"text": "If you're willing to redownload the game due to the update then I'd recommend atleast checking it out.I suffered from performance issues just like many else and Update 25 has improved the experience significantly.Along the memory leak patch that came out a month ago i believe. No longer crippled performance after an hour or two of gaming!", "link_id": "t3_f9wtsv", "time": 1582739182}}
+{"firx7rw": {"text": "I'll try to pay attention to distance more. Thanks!", "link_id": "t3_f9da9d", "time": 1582672906}}
+{"fi11hla": {"text": "I wouldn't mind considering my terrible experience with their MOBOs.", "link_id": "t3_f5v5ep", "time": 1582048783}}
+{"fi11d2n": {"text": "I did yes.I'd say its still worth a try since its such a quick tweak.", "link_id": "t3_f5s1ls", "time": 1582048716}}
+{"fi0zko1": {"text": "Testing this out and will report whether it worked or not. RX5700.", "link_id": "t3_f5s1ls", "time": 1582047777}}
+{"fhwr7qn": {"text": "Disabling Steam Overlay helped quite a bit depending on the game.", "link_id": "t3_f4r5ha", "time": 1581926345}}
+{"fhsz4ul": {"text": "Will try, thanks!", "link_id": "t3_f4r5ha", "time": 1581867654}}
+{"fhrzv35": {"text": "Does it have Wattman?", "link_id": "t3_f4k78p", "time": 1581846749}}
+{"fhbq8c1": {"text": "Yes I did. I'm definitely getting the volume that I want but would probably go for something else if availability is not an issue. No complaints, its a good amp but there are probably better ones out there for the same price.In case you're planning to get one.", "link_id": "t3_dympr4", "time": 1581447559}}
+{"fgrlpsb": {"text": "Did he? Where?", "link_id": "t3_ezycy7", "time": 1581050095}}
+{"fgblxpy": {"text": "Super hyped for \"HD\" altho, would still love to hear Jagex's thoughts.", "link_id": "t3_exmfwq", "time": 1580663541}}
+{"fg4l2to": {"text": "he does have one, check his twitter bio", "link_id": "t3_ewtnit", "time": 1580505501}}
+{"fg4kcac": {"text": "dude, i am speechless.", "link_id": "t3_ewtnit", "time": 1580505050}}
+{"ffb9ypr": {"text": "he's right tho?", "link_id": "t3_eskdim", "time": 1579756747}}
+{"ff8mw39": {"text": "Someone is working on a \"HD\" project", "link_id": "t3_ehe7lg", "time": 1579686503}}
+{"ff2w7yd": {"text": "Sir, take this to the finish line i beg.", "link_id": "t3_eq7zmt", "time": 1579526504}}
+{"ff1pre1": {"text": "1. Sapphire RX5700 Blower edition2. ASUS TUF B450 PRO-GAMING3. Ryzen 5 2600X4. G.SKILL Ripjaws V 16GB (2x8GB)", "link_id": "t3_eqx5bt", "time": 1579483458}}
+{"fejdxl6": {"text": "Alphaville - Forever Young", "link_id": "t3_ep7tm4", "time": 1579169328}}
+{"feivfnq": {"text": "D.O.C.P would probably be the wisest option for me. I would've preferred to get some more juice out of my RAM as i've already reached a solid overclock on both my CPU and GPU. Can't always get what ya want tho!", "link_id": "t3_epauh5", "time": 1579148282}}
+{"feibmzz": {"text": "In fact I have not, I'll definitely try it out! See RAM timings I don't handle very well.", "link_id": "t3_epauh5", "time": 1579134717}}
+{"febxkbx": {"text": "I don't mind having a person who isn't as \"skilled\" in terms of PvE in my group. Especially if they let the rest of the group know about it and then we all know to sort of look after the person and take our time. Personally I also prefer runs where we get to take our time with making sure someone gets comfortable with the dungeon and don't mind if the DPS isn't as high as ours. The run in general ends up being far more wholesome and enjoyable.Now unfortunately, using the dungeon finder might end up with you grouping up with not so nice people but if you ever do end up being talked bad about, just ignore it and continue playing the game the way you enjoy.", "link_id": "t3_eoarrx", "time": 1578963927}}
+{"fear127": {"text": "DPS here. As someone else mentioned, I've also went from 30 mins to around 5\\~", "link_id": "t3_eo4ld4", "time": 1578951446}}
+{"fdqvu05": {"text": "Lil' shawty lmao", "link_id": "t3_emrjv2", "time": 1578675605}}
+{"fdqqa09": {"text": "Twice I've reported a bug. Both times it's been fixed.", "link_id": "t3_emn1f4", "time": 1578672568}}
+{"fdpnj1u": {"text": "&amp;#x200B;* Radeon Software may close or may experience a crash upon resuming from sleep.Finally, thanks!", "link_id": "t3_emgy5p", "time": 1578633764}}
+{"fdmi6b6": {"text": "Animals rights seems to know how to traumatize a puppy.", "link_id": "t3_em4gkc", "time": 1578550776}}
+{"fdk7ren": {"text": "Where could I find pictures of these new visualizations?", "link_id": "t3_elkx5n", "time": 1578498013}}
+{"fdh4740": {"text": "On behalf of many DDs, we appreciate the heals and the orbs we can pop for more stam/mag.", "link_id": "t3_eldaly", "time": 1578415012}}
+{"fdaewhy": {"text": "Educate me (\u00b0 \u035c\u0296 \u00b0)", "link_id": "t3_ekcbwe", "time": 1578245278}}
+{"fdaaan6": {"text": "Depth of Field yes. The \"blur\" effect you see on the image.", "link_id": "t3_ekcbwe", "time": 1578243607}}
+{"fd9e9l0": {"text": "Say what y'all want. I wish there was a DoF option in the game. Not only for cutscenes.", "link_id": "t3_ekcbwe", "time": 1578232121}}
+{"fd53jiu": {"text": "Nice, i began to feel hungry.", "link_id": "t3_ejwom9", "time": 1578173858}}
+{"fd2fz68": {"text": "Coming from a windows user. I hope u keep making more benchmarks as things evolve! These are great.", "link_id": "t3_ejtag2", "time": 1578146675}}
+{"fcq7ief": {"text": "Here's just one more tip. If you installed the addon, make sure u limit max view distance to 75. That's also one big factor that helped me to reach more tolerable framerates.", "link_id": "t3_ei7egy", "time": 1577880386}}
+{"fcoe6kf": {"text": "It\u2019s an addon that basically lowers the graphics when the game becomes hard to run and then turns them back up when you\u2019re in a less-busy area. U can find it by simply looking for \u201dvotans adaptive video settings\u201d very easy to install and totally worth it. Also look into turning water reflections on low.", "link_id": "t3_ei7egy", "time": 1577830062}}
+{"fco6eg3": {"text": "I didn't notice a difference. I'm also using Votan's adaptive settings tho and that's helped me with FPS quite a lot back when I used to have performance issues.", "link_id": "t3_ei7egy", "time": 1577824953}}
+{"fco19iu": {"text": "If i use the ReShade DLL. Daybreak doesn't work, but if I use the daybreak DLL, then the reshade doesnt work.I think i'm just unlucky here and might have to create my own preset.", "link_id": "t3_ei7egy", "time": 1577822262}}
+{"fcko7t6": {"text": "It was definitely all the hype and the attention it got that gave me high expectations", "link_id": "t3_ehjc4t", "time": 1577729600}}
+{"fck1pc1": {"text": "The nun and probably Bird Box", "link_id": "t3_ehjc4t", "time": 1577713892}}
+{"fc2l0ja": {"text": "I absolutely have to agree.", "link_id": "t3_efu0f9", "time": 1577365428}}
+{"fbxh6ij": {"text": "The what i would call healthy part of my mind also feels the part of being left out", "link_id": "t3_ef00ou", "time": 1577187262}}
+{"fbxh5f9": {"text": "it hurts the most when they start reaching after u, like just leave me suffer pls.", "link_id": "t3_ef00ou", "time": 1577187220}}
+{"fbxh402": {"text": "Dont know. Some part of me just finds it as a punishment that i should experience.", "link_id": "t3_ef00ou", "time": 1577187162}}
+{"fbxar45": {"text": "Reading this got me to realize that I often run ahead to attack before our tank does. Although mostly in situations where I know I can handle the incoming damage.Regardless tho, this'll be something for me to fix.", "link_id": "t3_eeo26n", "time": 1577177407}}
+{"fbix34l": {"text": "Ah I had no idea that they're already planning it to be available for every game. That's awesome news tho!", "link_id": "t3_edn99x", "time": 1576918140}}
+{"fbblw1h": {"text": "I don't play the game but if something is crooked in a game, I'd also take 1-2years of no updates to have things modernized and patched to receive higher quality updates later on combined with a stable high quality game.", "link_id": "t3_ecg6tt", "time": 1576703163}}
+{"fbbdxvi": {"text": "I am sorry but I just got one on my 3rd ever run yesterday!", "link_id": "t3_ecc0bf", "time": 1576698443}}
+{"fb9yjrt": {"text": "This.", "link_id": "t3_ebz5vk", "time": 1576655366}}
+{"fal4gle": {"text": "Thank you.  was the one and only sub that came to my mind at first.", "link_id": "t3_e9r7fs", "time": 1576178236}}
+{"fah9nu5": {"text": "I did yes. I ran 3DMark firestrike and got similar scores which would indicate that the UV/OC is active? Issue is that WattMan doesn't show the correct values i think.", "link_id": "t3_e98pv6", "time": 1576082066}}
+{"fafvzlf": {"text": "Might be a coincidence but i lost 2 warts by upping my water intake", "link_id": "t3_e8syr0", "time": 1576033278}}
+{"fafir8k": {"text": "I'll keep that in mind. What do think about DT770 PROs?", "link_id": "t3_e8z4mb", "time": 1576023772}}
+{"fadyhm0": {"text": "So i've read yes. My current amp is \"Pro-Ject Box-Design Head Box S2\".If you know stuff about amps, could you please suggest me a low impedance amp?&amp;#x200B;#", "link_id": "t3_e8gv4d", "time": 1575989581}}
+{"fadqup1": {"text": "Hey, i tried them on my phone and they do sound slightly better than on my PC with no equalizer enabled. They didn't sound so weak.", "link_id": "t3_e8gv4d", "time": 1575983562}}
+{"faapie1": {"text": "I'm also a Wood Elf Nightblade with bows... sure it might not be the best DPS but I enjoy it :PPlay what u enjoy", "link_id": "t3_e8aryp", "time": 1575911857}}
+{"fa0gb08": {"text": "Its so dark", "link_id": "t3_e7g88e", "time": 1575754751}}
+{"f9ez99o": {"text": "Thanks for the tips! I'll send u a pic later on today.", "link_id": "t3_e4f0io", "time": 1575255421}}
+{"f9ez6hn": {"text": "Did not even think about this! Thanks!", "link_id": "t3_e4f0io", "time": 1575255363}}
+{"f9ez2xi": {"text": "I'll look into it!", "link_id": "t3_e4f0io", "time": 1575255289}}
+{"f9ez21w": {"text": "This is the exact feedback i was looking for as i don't exactly know how a dog's brain works. I will begin from little steps instead and keep in mind to not push her for failure.", "link_id": "t3_e4f0io", "time": 1575255270}}
+{"f98pms6": {"text": "I have planned to indeed take it slow and make sure she gets to know it on her own. She's only 7 months old so it'd probably greatly benefit her in the future.", "link_id": "t3_e3xn9y", "time": 1575181259}}
+{"f97twn5": {"text": "&gt;Crating your dog is humane. It keeps them safe and out of trouble.Sounds like i'll try it then!", "link_id": "t3_e3xn9y", "time": 1575170218}}
+{"f9190zl": {"text": "I've tried leaving the tv on, that seems to help a bit for sure. The comment above also suggest Thundershirt which also seems like a great idea!", "link_id": "t3_e36025", "time": 1574984549}}
+{"f8xe86z": {"text": "It does seem that one comes with the unit! I'll give it a shot.", "link_id": "t3_e2r4qp", "time": 1574916034}}
+{"f8xav1a": {"text": "I was actually thinking about this: [https://www.amazon.de/dp/B07MB8VCWQ/ref=sr\\_1\\_3?keywords=dac&amp;qid=1574913084&amp;sr=8-3](https://www.amazon.de/dp/B07MB8VCWQ/ref=sr_1_3?keywords=dac&amp;qid=1574913084&amp;sr=8-3)A ton of good ratings. Then again, if it wouldn't fix a thing, the price wouldn't hurt bad.", "link_id": "t3_e2r4qp", "time": 1574913161}}
+{"f8r8hsx": {"text": "Good boy", "link_id": "t3_e1p4w7", "time": 1574734476}}
+{"f8lxfd8": {"text": "For me its the water monster in Jak 3", "link_id": "t3_e11bi8", "time": 1574626236}}
+{"f8fw0ft": {"text": "The guy sounds like greek at the beginning", "link_id": "t3_e0j22i", "time": 1574550162}}
+{"f8cxg3y": {"text": "Kick is more ass", "link_id": "t3_dzxlw4", "time": 1574472099}}
+{"f8chfqn": {"text": "How do I nominate someone else's video for an academy award?", "link_id": "t3_e03ww0", "time": 1574460303}}
+{"f8ch6wi": {"text": "Getting there..", "link_id": "t3_e061o2", "time": 1574460154}}
+{"f8c26gq": {"text": "Videos yes, I like it, no complaints! I'm also starting to get used to the strong treble and enjoy it.", "link_id": "t3_dzrrol", "time": 1574450704}}
+{"f8bj345": {"text": "I prefer performance. Games already look great enough without ray-tracing.", "link_id": "t3_e024p3", "time": 1574438067}}
+{"f8ar96i": {"text": "Is that the grudge evolving", "link_id": "t3_dzw01m", "time": 1574407923}}
+{"f89r9wb": {"text": "I will definitely hold onto them. I love their wide soundstage. But DT990s feel more punchy to me, as if the \"speakers\" were closer to my ears.", "link_id": "t3_dzrrol", "time": 1574378371}}
+{"f85wzr3": {"text": "I actually tried to find a lot of the recommended Amps including ones from Schiit and FiiO but I cant get them unless shipped from the U.S with high cost. So for now, I'm hoping the AMP i bought will handle its job.I got this one: [https://www.project-audio.com/en/product/head-box-s2/](https://www.project-audio.com/en/product/head-box-s2/)", "link_id": "t3_dz2t8e", "time": 1574285002}}
+{"f8563bv": {"text": "I'll turn u on", "link_id": "t3_dyxhvt", "time": 1574268413}}
+{"f84xeaj": {"text": "That's good to hear!", "link_id": "t3_dz2t8e", "time": 1574262959}}
+{"f84659y": {"text": "This one: Pro-Ject Box-Design Head Box S2[https://www.project-audio.com/en/product/head-box-s2/](https://www.project-audio.com/en/product/head-box-s2/)If you know anything about amps. Could you please tell me if this is any good?", "link_id": "t3_dys1n9", "time": 1574232389}}
+{"f833e5q": {"text": "Sweet, thanks!", "link_id": "t3_dys1n9", "time": 1574203517}}
+{"f833dq8": {"text": "I've tried setting it higher yes. But unfortunately I have to max out every application in order to get just below the amount of volume that I want if i really want to vibe with the songs or whatever im doing.", "link_id": "t3_dys1n9", "time": 1574203510}}
+{"f826fbr": {"text": "I'd love to but the availability for this and many other amps i've looked for is really bad here in Finland.", "link_id": "t3_dympr4", "time": 1574184962}}
+{"f7u3vdp": {"text": "I actually just ordered DT990 for testing. Will look into the Philips ones as well, thanks!", "link_id": "t3_dxl2kh", "time": 1574010300}}
+{"f7si7r5": {"text": "I have HD 598SR's and don't really like them. To me they sound very muffled and weak although that can be fixed with heavy EQ adjustments", "link_id": "t3_dxciag", "time": 1573995007}}
+{"f7ny90v": {"text": "Has he tried the key on both Steam and ESO site? Maybe get in contact with the reseller. I've always had my keys whether refunded or replaced with working ones from the sellers I've bought from. Mainly Kinguin.", "link_id": "t3_dx5x1l", "time": 1573917422}}
+{"f7ic37f": {"text": "Nice to eat you", "link_id": "t3_dwbhd7", "time": 1573756942}}
+{"f7ibwp7": {"text": "Mmmm pudding", "link_id": "t3_dwbhd7", "time": 1573756850}}
+{"f6ydib4": {"text": "Lmao", "link_id": "t3_dtc743", "time": 1573275689}}
+{"f6w4e1v": {"text": "Yep exactly", "link_id": "t3_dtc743", "time": 1573215959}}
+{"f6vo3ym": {"text": "Why do so many people prefer manual overclocking over PBO? Is the performance gain bigger?", "link_id": "t3_dswm3c", "time": 1573192849}}
+{"f6hcq47": {"text": "Voted", "link_id": "t3_dr1rq9", "time": 1572843233}}
+{"f5lb1vh": {"text": ".", "link_id": "t3_do7nle", "time": 1572276268}}
+{"f5b95b6": {"text": "Yeah... this is ridiculous :c", "link_id": "t3_dnik5k", "time": 1572118724}}
+{"f52hogt": {"text": "Perfect, thanks!", "link_id": "t3_dmjxc7", "time": 1571950399}}
+{"f4zglmp": {"text": ".", "link_id": "t3_dm8i5y", "time": 1571906635}}
+{"f4q6ufe": {"text": "I tried installing Pop\\_OS! and couldn't get my second monitor working.RX5700.", "link_id": "t3_dl4a9b", "time": 1571748883}}
+{"f4pvysy": {"text": "Well glad to hear that I'm not the only one with the issue. Certainly hope they get it fixed!", "link_id": "t3_dlg1oz", "time": 1571743843}}
+{"f4g6nip": {"text": "Ok thanks!", "link_id": "t3_dkh4k9", "time": 1571578053}}
+{"f4fnm5h": {"text": "So even if both of my screens are 144Hz freesync supported, I can't use it if i'm going to watch something while gaming, right?", "link_id": "t3_dkh4k9", "time": 1571572325}}
+{"f3xlow9": {"text": "I'd like to know as well.", "link_id": "t3_dipz6y", "time": 1571240284}}
+{"f3vomj9": {"text": "Relieving to read your comment! Certainly hope the separation anxiety gets better with time, we live in an apartment and her noisiness worries me. Normally she behaves very well and stays quiet no matter what.", "link_id": "t3_di3d1k", "time": 1571180993}}
+{"f3dw4k4": {"text": "I mean addons like ActionDurationReminder and Advanced UI, MapPins etc", "link_id": "t3_dgnx1l", "time": 1570848811}}
+{"f3dvi6m": {"text": "Do addons work?", "link_id": "t3_dgnx1l", "time": 1570848274}}
+{"f3dvhwn": {"text": "Thanks, exactly what I was looking for.", "link_id": "t3_dgnx1l", "time": 1570848267}}
+{"f2z3eey": {"text": "This might peepee the simu poopoo glitching", "link_id": "t3_deplar", "time": 1570505268}}
+{"f2tay1x": {"text": "Should I use the JVM flags even if im using a shared host?", "link_id": "t3_de826n", "time": 1570392702}}
+{"f2t9x5e": {"text": "Will check those out, thanks!", "link_id": "t3_de826n", "time": 1570392356}}
+{"f2t9ukm": {"text": "We're currently using 5 as our view distance", "link_id": "t3_de826n", "time": 1570392322}}
+{"f13nnr6": {"text": "If things go bad, i'll just die", "link_id": "t3_d7q0rs", "time": 1569162786}}
+{"f13mz82": {"text": "Its just the map is still loading", "link_id": "t3_d7nkx2", "time": 1569162541}}
+{"f13m8pt": {"text": "That is so nice of post malone!", "link_id": "t3_d7o61f", "time": 1569162265}}
+{"f0vg9ew": {"text": "This helped, thanks!", "link_id": "t3_d6hbuv", "time": 1568980598}}
+{"f0rpz5c": {"text": "Did u have to enable GPU scaling in order for it to work?", "link_id": "t3_d4la5j", "time": 1568890128}}
+{"f0pg65a": {"text": "Same", "link_id": "t3_d5wdsz", "time": 1568834029}}
+{"f0lx0b9": {"text": "I also wear shoes for diving.", "link_id": "t3_d5geql", "time": 1568731589}}
+{"f0ia7qn": {"text": "That's the one.", "link_id": "t3_d4veap", "time": 1568638596}}
+{"f0hmt87": {"text": "U should watch Fragile. Make those nightshifts more exciting.", "link_id": "t3_d4veap", "time": 1568626100}}
+{"f0hjqkb": {"text": "I'd like to know as well", "link_id": "t3_d4tk5u", "time": 1568623707}}
+{"f08cd0y": {"text": "Same", "link_id": "t3_d46t4m", "time": 1568479352}}
+{"ezsxen8": {"text": "Funk you up", "link_id": "t3_d1x2hs", "time": 1568114172}}
+{"ezs5uf6": {"text": "Thenthase", "link_id": "t3_d1to4x", "time": 1568083301}}
+{"ezax6du": {"text": "Ahh that explains a lot. thanks!", "link_id": "t3_d0nkbv", "time": 1567809047}}
+{"eyky332": {"text": "Good to hear. thanks!", "link_id": "t3_cxfxgs", "time": 1567171384}}
+{"eyhpnp1": {"text": "That is super odd, I use the same version with some shader settings even turned up and i'm getting 120-180FPS", "link_id": "t3_cwzl0r", "time": 1567090830}}
+{"eyhpiiw": {"text": "What error code were you getting? 19.8.2 also gave me plenty BSODs.", "link_id": "t3_cwrar8", "time": 1567090766}}
+{"eydgbes": {"text": "How do i check whether its Samsung or Micron? I'm sitting at 960MHz and it's stable.", "link_id": "t3_cwnbxx", "time": 1567018155}}
+{"ey9d332": {"text": "Yes please, the official client needs some love.", "link_id": "t3_cw4wsb", "time": 1566940570}}
+{"ey981sl": {"text": "Bricked a motherboard whilst updating BIOS, didn't even need a storm to do it...", "link_id": "t3_cw716d", "time": 1566937316}}
+{"ey8rq5p": {"text": "Anyone else with 19.8.2 who gets BSOD with the error msg \"kernel heap mode corruption\" ?", "link_id": "t3_cw5gtn", "time": 1566926820}}
+{"ey7wyd7": {"text": "I managed to get .960mV and 1780MHz with a memory clock of 960MHz. Very happy with my blower 5700.", "link_id": "t3_cvyeaf", "time": 1566904155}}
+{"ey69bv2": {"text": "&gt;System  instability may be experienced on Radeon RX 5700 series graphics  products when performing memory overclocking while a 3D application is  running.How did this come out as like?", "link_id": "t3_cvry5c", "time": 1566850356}}
+{"ey3r7hl": {"text": "Thanks a lot! I've been playing with the settings and found a nice balance between undervolting and OCing both memory and core clock. I have a random question. A lot of people seem to prefer doing undervolting and then doing a small overclock with whatever they can do. Does the undervolting somewhat negate the degrade of lifespan that an overclock causes?I'm just curious. I know that most undervolt to make their GPUs more power efficient and quieter, but could it also have other benefits such as the one i mentioned above?", "link_id": "t3_cvabea", "time": 1566771594}}
+{"ey3cmbx": {"text": "Sure please i'd like a guide! Are you doing this all on a reference 5700 or an AIB version?", "link_id": "t3_cvabea", "time": 1566761031}}
+{"ey3aabv": {"text": "How is he able to get an OC that high. My WattMan's only letting me do 1850MHz", "link_id": "t3_cvabea", "time": 1566759353}}
+{"ext3wo1": {"text": "I have to admit that I am very happy with my reference 5700. I managed to push 100+ core clock and cut down the voltage from 1020mV to 1000mV. With a slightly stronger fan curve the card doesn't go past 75C and I can't even hear it through my open-back headphones.", "link_id": "t3_cu7imt", "time": 1566562366}}
+{"exocvc9": {"text": "Well I managed to get it from 1750MHz and 1020mV to 1850MHz 1000mV while maintaining quietness and decent temps. I'm very satisfied with the results.Is adjusting the memory clock worth it?", "link_id": "t3_ctcs66", "time": 1566474166}}
+{"exo5bnc": {"text": "Are there any regular Navi wallpapers?", "link_id": "t3_ctt2lo", "time": 1566470259}}
+{"exo59lu": {"text": "Ohh i see! Was just slightly confusing at first. Thanks!", "link_id": "t3_ctcs66", "time": 1566470220}}
+{"exnzog2": {"text": "Arent i going to have performance loss if i were to lower the end of the graph? With my old RX580 this was easier as I could just change the p-states for both voltage and core clock individually.", "link_id": "t3_ctcs66", "time": 1566466961}}
+{"exnoti7": {"text": "Yes that's what Sapphire does with its Trixx Boost right?", "link_id": "t3_ctirq7", "time": 1566460726}}
+{"exnneb3": {"text": "Resetting fixed it. Thanks!", "link_id": "t3_cttm41", "time": 1566459941}}
+{"exmjh0n": {"text": "Very interesting to hear. Reddit is an amazing place.", "link_id": "t3_ctmlrd", "time": 1566433164}}
+{"exmjes0": {"text": "This was a very interesting to read!", "link_id": "t3_ctmlrd", "time": 1566433122}}
+{"exlib2i": {"text": "With AMD I often hear \"let it do the rest\" and I absolutely love it.", "link_id": "t3_ctkd7w", "time": 1566413541}}
+{"exlhw8k": {"text": "Oh, thanks!", "link_id": "t3_ctkd7w", "time": 1566413315}}
+{"exlfhp0": {"text": "Huhh I tried messing with the fan curve and also got flickering.", "link_id": "t3_cd61ap", "time": 1566412031}}
+{"exldgfq": {"text": "Is that really it? There's no slider or anything to choose the amount of sharpening thats done?", "link_id": "t3_ctkd7w", "time": 1566410875}}
+{"exi3019": {"text": "This hurts", "link_id": "t3_ct0xje", "time": 1566319991}}
+{"exi255n": {"text": "That's an armful to process", "link_id": "t3_ct1uh6", "time": 1566319454}}
+{"exhofjq": {"text": "Huh I see, I'll give it a try thanks!", "link_id": "t3_csx9km", "time": 1566310337}}
+{"exhn6pr": {"text": "Desktop. Windows 10.", "link_id": "t3_csx9km", "time": 1566309456}}
+{"exhmpob": {"text": "I don't even have an option to like/dislike the songs on the playlist and i'm using the latest version.", "link_id": "t3_csx9km", "time": 1566309117}}
+{"exhfd9y": {"text": "That's exactly whats going on here on my side as well. Zero interest in 90% of the songs that get played.", "link_id": "t3_csx9km", "time": 1566303531}}
+{"exf2bo9": {"text": "How old can one glacier be?", "link_id": "t3_csebjq", "time": 1566231036}}
+{"exezwz8": {"text": "Not all of the work, absolutely not. Just some of the main QoL features that RuneLite offers.&amp;#x200B;OR just like you said they could figure out a way but that seems undo-able although I've no clue whether it actually is or not. I'd rather have it be doable and that way everyone would hopefully be happy with the outcome as there would be no cheatclients.", "link_id": "t3_cs2ntf", "time": 1566229415}}
+{"exefnsg": {"text": "holy shit", "link_id": "t3_cse3ls", "time": 1566213456}}
+{"exednuc": {"text": "I could give zero fucks about ray-tracing, games in 2019 already look great without it. Therefore, AMD is the way to go for me.", "link_id": "t3_csdkai", "time": 1566210954}}
+{"exe07vg": {"text": "Jagex should just sweep these clients under the rug and push QoL updates hard on their own client.", "link_id": "t3_cs2ntf", "time": 1566192825}}
+{"exdilip": {"text": "Have you ever had issues with second hand cards?", "link_id": "t3_cs2a07", "time": 1566177653}}
+{"exc7m8w": {"text": "Can u imagine tripping and falling on the ground there", "link_id": "t3_crw528", "time": 1566144962}}
+{"ex0ykk8": {"text": "WHAT", "link_id": "t3_cr068i", "time": 1565925502}}
+{"ex0eptf": {"text": "Can u imagine getting stuck underneath that", "link_id": "t3_cqu08d", "time": 1565911214}}
+{"ewvl9nc": {"text": "Hell yea", "link_id": "t3_cqc4np", "time": 1565808632}}
+{"ewvjif8": {"text": "Same here, I could get a non-xt reference for 350\u20ac or an AIB model for 420\u20ac minimum.", "link_id": "t3_cq92qd", "time": 1565807547}}
+{"ewt3hle": {"text": "Clearly the clearest lake i've seen", "link_id": "t3_cpycrv", "time": 1565739787}}
+{"ewt2jf1": {"text": "I used to encounter a few in my old room. They'd always just stare at me and follow my movements.", "link_id": "t3_cpye0t", "time": 1565739129}}
+{"ewq6njc": {"text": "he's doing a sikh favor for his mates", "link_id": "t3_cpjtx9", "time": 1565658152}}
+{"ewq4777": {"text": "So like how does she possibly sit down or such?", "link_id": "t3_cphyza", "time": 1565656419}}
+{"ewkr4it": {"text": "What the fuck", "link_id": "t3_coo2d6", "time": 1565492138}}
+{"ewkn0j9": {"text": "All my friends are online, have 0 irl and will keep it that way", "link_id": "t3_conwxe", "time": 1565488835}}
+{"ewjh412": {"text": "How about no", "link_id": "t3_cojxwi", "time": 1565466571}}
+{"ewgv8nk": {"text": "Are you me?", "link_id": "t3_co91bi", "time": 1565391130}}
+{"ewgtrzy": {"text": "If i had the shinies, I'd gift you.", "link_id": "t3_co6bet", "time": 1565390211}}
+{"ewdsojn": {"text": "Thank you!", "link_id": "t3_cntp27", "time": 1565306807}}
+{"ewdso6j": {"text": "Thanks!", "link_id": "t3_cntp27", "time": 1565306801}}
+{"ewdsnvv": {"text": "Got it, thanks!", "link_id": "t3_cntp27", "time": 1565306796}}
+{"ewbq2u3": {"text": "Holy fuck, i come by with $20 a week", "link_id": "t3_cnjy5o", "time": 1565270582}}
+{"ew4csob": {"text": "okeeyy bois who wants to go down first?", "link_id": "t3_cmq6je", "time": 1565107871}}
+{"ew49fh2": {"text": "Just wow", "link_id": "t3_cmnexl", "time": 1565105813}}
+{"ew40vy3": {"text": "What if you're short and also look like an ugly ogre?", "link_id": "t3_cmmodf", "time": 1565100162}}
+{"ew3smu2": {"text": "Doesn't work.", "link_id": "t3_cmnexl", "time": 1565093546}}
+{"evz6xh8": {"text": "Ok this one got me", "link_id": "t3_cm0h9h", "time": 1564950438}}
+{"evy4oju": {"text": "dude wat", "link_id": "t3_clsol8", "time": 1564922299}}
+{"evxtm3h": {"text": "You're not alone...", "link_id": "t3_clpr9e", "time": 1564907104}}
+{"evxl6pq": {"text": "How about the scene from The Grudge where the woman's hair goes like that as her face pops up on the screen.", "link_id": "t3_clpr9e", "time": 1564896411}}
+{"evw882h": {"text": "Ah yes, my bad, my eyes were tricking me!", "link_id": "t3_cllmba", "time": 1564857588}}
+{"evw6lwh": {"text": "Someone please do correct me but aren't the bottom fans meant to take air in?", "link_id": "t3_cllmba", "time": 1564856437}}
+{"evw1z95": {"text": "My man with the salt lamp right on the same spot I have mine!", "link_id": "t3_cldxow", "time": 1564853102}}
+{"evvifc0": {"text": "How's your sex life?", "link_id": "t3_clhbd0", "time": 1564837971}}
+{"evtgq3j": {"text": "I don't even have a 5700 or use Linux at the moment but this still got me excited.", "link_id": "t3_cl7lxs", "time": 1564770028}}
+{"evtgkkx": {"text": "Agh!", "link_id": "t3_cl6nl1", "time": 1564769934}}
+{"evs5j60": {"text": "Sweet! More benchmarks in terms of gaming on Linux vs Windows please.", "link_id": "t3_ckz1r6", "time": 1564730911}}
+{"evs0c7w": {"text": "Me too", "link_id": "t3_cktevl", "time": 1564724649}}
+{"evo2dxz": {"text": "Exactly!", "link_id": "t3_ckag2f", "time": 1564637082}}
+{"evk6xho": {"text": "Is there a site where I could possibly check out some benchmarks between different Proton versions?", "link_id": "t3_cjzdm0", "time": 1564576655}}
+{"evettfy": {"text": "I tried 19.5.2 but it made alt-tabbing extremely slow :/ RX580 here.", "link_id": "t3_cjfw56", "time": 1564478718}}
+{"evbbvtf": {"text": "Is that real?", "link_id": "t3_cj2nku", "time": 1564372007}}
+{"ev8sv2q": {"text": "The scheduler is often the explanation i see. Thanks for correcting and explaining!", "link_id": "t3_cipltn", "time": 1564290273}}
+{"ev7im07": {"text": "This deserves an upvote", "link_id": "t3_cii953", "time": 1564260196}}
+{"euwadep": {"text": "sniper the guy?", "link_id": "t3_chljzx", "time": 1564072896}}
+{"eut3e68": {"text": "I like this way of comparing things!", "link_id": "t3_chgfoo", "time": 1564019023}}
+{"eusvsf6": {"text": "The GPU side is what i've been drifting to as well.", "link_id": "t3_chgfoo", "time": 1564014549}}
+{"eurbvf4": {"text": "Soaking it is then! Thanks!", "link_id": "t3_chak6n", "time": 1563992123}}
+{"euqz27u": {"text": "Thank you!", "link_id": "t3_chak6n", "time": 1563987350}}
+{"euqz0fq": {"text": "They are dry.", "link_id": "t3_chak6n", "time": 1563987329}}
+{"euoj8f3": {"text": "Who wants kebab?", "link_id": "t3_cgz9gr", "time": 1563942444}}
+{"euemmoe": {"text": "Ah, now I hate it even more.But love its colors.", "link_id": "t3_cg2yn1", "time": 1563748216}}
+{"euekbd7": {"text": ":^(", "link_id": "t3_cg2tll", "time": 1563746498}}
+{"euegdlb": {"text": "Yeah uh, looking at it is already a hint big enough itself to stay the fuck away.", "link_id": "t3_cg2yn1", "time": 1563743710}}
+{"eu9qq4f": {"text": "Does anyone have a needle to pop that with?", "link_id": "t3_cfdgnj", "time": 1563588023}}
+{"eu2fmpb": {"text": "Newborn here, im crying", "link_id": "t3_ceevs1", "time": 1563389069}}
+{"ety1iqe": {"text": "big pp", "link_id": "t3_ce2su3", "time": 1563311598}}
+{"etrs17t": {"text": " \ud83e\udd80\ud83e\udd80 111K crabs coming at u  \ud83e\udd80\ud83e\udd80", "link_id": "t3_cd48g6", "time": 1563127868}}
+{"etbys98": {"text": "Oh god", "link_id": "t3_cauuop", "time": 1562668603}}
+{"etblm0z": {"text": "Do AIBs cost more than reference cards usually?", "link_id": "t3_catck3", "time": 1562651162}}
+{"et14v2y": {"text": "F", "link_id": "t3_c9oygi", "time": 1562391758}}
+{"esvydob": {"text": "1.13.2 Server", "link_id": "t3_c9cb10", "time": 1562306107}}
+{"esoasyp": {"text": "Thats awesome to hear! I'm almost eager to see how mine will work out.", "link_id": "t3_c8ntmo", "time": 1562163685}}
+{"esfc76d": {"text": "Awesome, thanks!", "link_id": "t3_c7hfc5", "time": 1561922422}}
+{"esdge5d": {"text": "Big machine nom nom vroom vroom thing and people angry", "link_id": "t3_c7423i", "time": 1561856652}}
+{"esbsgob": {"text": "Uh huh...", "link_id": "t3_c6wn5l", "time": 1561809363}}
+{"es3nnvx": {"text": "Nothing about emailing and the ratings seem good as well. Still feeling very suspicious.", "link_id": "t3_c5rwr0", "time": 1561566665}}
+{"es1u6nk": {"text": "Shit", "link_id": "t3_c5f6r6", "time": 1561505874}}
+{"es1olw6": {"text": "My future plans are very depressing and that i've been seeing a mental health professional for 2 years.", "link_id": "t3_c56tib", "time": 1561501791}}
+{"eryaxnp": {"text": "Talking about PSUs, is Seasonic 550W FOCUS+ 550 GOLD any good?I'm planning to switch from my current Corsair CX600", "link_id": "t3_c4p532", "time": 1561404458}}
+{"ery89lt": {"text": "Absolutely!", "link_id": "t3_c4ssr8", "time": 1561402691}}
+{"ervlpyo": {"text": "Unfortunately I haven't found any settings in my bios that could affect the performance or how much power PBO is allowed to use. Or they're just very oddly named.", "link_id": "t3_c49gd6", "time": 1561319050}}
+{"erqt1n8": {"text": "I've had one of those for months and I've never cleaned it....**f u c k**", "link_id": "t3_c3b6i0", "time": 1561151341}}
+{"ern9pz2": {"text": "", "link_id": "t3_c2xntm", "time": 1561047815}}
+{"erjszmy": {"text": "**WHAT THE FUCK**", "link_id": "t3_c2fkm1", "time": 1560945831}}
+{"erdvvj2": {"text": "Thats what I did last time but then my sense of hearing decided to step up its game D:", "link_id": "t3_c1kyzq", "time": 1560760518}}
+{"ercuwuq": {"text": "Could you enlighten me with why should I disable them?", "link_id": "t3_c19ddp", "time": 1560722646}}
+{"erb8gro": {"text": "&gt; She's going to dump him a find a nice 6k+ streamer to latch onto. Calling it now lmfao", "link_id": "t3_aaw1o5", "time": 1560666309}}
+{"era8aob": {"text": "....adoption? Perhaps", "link_id": "t3_c10is8", "time": 1560637835}}
+{"er714gu": {"text": "If I could react to these things with logic. I'd have gotten far in life oh boy. I have trouble bringing up my thoughts and you just explained something super complex and relatable that i've always been trying to put together.", "link_id": "t3_c0rvzj", "time": 1560563636}}
+{"er6eazx": {"text": "Regardless of my original comment. I love Jagex and the content updates they've pushed and I hope the upcoming efforts put into account security are good.", "link_id": "t3_c0mgvu", "time": 1560545796}}
+{"er6d94m": {"text": "You're right. I'm just frustrated and angry with people losing their items and hours grinded to get those. Like you shouldn't just DC after pulling out a few billions from the bank and trading someone. Although I don't know how secure OP has kept his account/computer to prevent it. But it just shouldn't happen like that.", "link_id": "t3_c0mgvu", "time": 1560545133}}
+{"er6ao4m": {"text": "How fucked is it that Jagex doesn't recover items  back to the real owners.", "link_id": "t3_c0mgvu", "time": 1560543528}}
+{"er4ee8y": {"text": "3200MHz 16CL", "link_id": "t3_c0bj2e", "time": 1560488777}}
+{"er4bmnv": {"text": "Don't touch my asussssssssssss\\~ 2080TI", "link_id": "t3_c0cfcr", "time": 1560486200}}
+{"er3n71j": {"text": "Super odd...", "link_id": "t3_c0bj2e", "time": 1560467386}}
+{"er3mr12": {"text": "Is ur GPU overclocked? Its reaching higher core clocks than mine. The CPU is something that weirds me out a lot.", "link_id": "t3_c0bj2e", "time": 1560467037}}
+{"er3jvoq": {"text": "Apparently today's update broke it and they're fixing it", "link_id": "t3_c0bc2t", "time": 1560464900}}
+{"er3ih67": {"text": "That's the main thing that keeps me going.", "link_id": "t3_c0934u", "time": 1560463963}}
+{"er39mui": {"text": "A lot of people have told me the same unfortunately and I can see where the opinion is coming from.", "link_id": "t3_c0934u", "time": 1560458648}}
+{"er33k7i": {"text": "I understand a lot of people say that graphics don't matter and to a point, I agree.. but it does help with the immersion and ofc makes the game overall more enjoyable.", "link_id": "t3_c0934u", "time": 1560455200}}
+{"er2v0qc": {"text": "I turned on Hibernation mode and turned off Sleep mode. Is this the correct way to do it or should I keep them both on and set to perform at the same time? I'm afraid they'd conflict with each other.", "link_id": "t3_c06o6x", "time": 1560450301}}
+{"er2uvhg": {"text": "To a controller that is then connected to the PSU and a 4-pin RGB header on the MoBo", "link_id": "t3_c06o6x", "time": 1560450218}}
+{"er2d7e4": {"text": "I'll take a look at this unless hibernation mode won't fix another issue with mine. Cause this certainly would.", "link_id": "t3_c06o6x", "time": 1560443034}}
+{"er264mv": {"text": "No I want to have it shut down after a certain amount of inactivity. Right now it just goes to sleep mode.", "link_id": "t3_c06o6x", "time": 1560440668}}
+{"eqt7awo": {"text": "My combined score went down from 5 215  to  4 943    hmm.", "link_id": "t3_bzkbxa", "time": 1560304164}}
+{"eqkm02r": {"text": "Were you ever offered group meetings with other people with similar issues? I am being offered such and can't tolerate the idea of it. It fires up my anxiety. That's just to put it short.I'm not completely denying the idea of it but I feel like its being pushed upon me too hard at the moment.", "link_id": "t3_byqwi6", "time": 1560126177}}
+{"eqbsi42": {"text": "Petition to have spooky stories once a week!", "link_id": "t3_bxu8y8", "time": 1559955524}}
+{"eqbqq5b": {"text": "Lived in the middle of a forest and one dark winter night was taking my dog out. Got about 20 meters from the front door and i saw a clear pair of two red things looking exactly like eyes staring at me. I want to remind you that it truly is nearly pitch black outside in the rural areas during winter nights. I ran back inside with my poor dog.", "link_id": "t3_bxu8y8", "time": 1559953947}}
+{"eqbmmyz": {"text": "It looks like an ice cream container with 3 flavours", "link_id": "t3_bxxkxh", "time": 1559951366}}
+{"eqa120u": {"text": "Lmaooo", "link_id": "t3_bxswe1", "time": 1559922633}}
+{"eq97awi": {"text": "I wonder if they've acknowledged that there is a bug. I've seen quite plenty of these posts but nothing has been done so far.", "link_id": "t3_bxmfvu", "time": 1559891320}}
+{"eq73tcv": {"text": "Song?", "link_id": "t3_bxalrd", "time": 1559840049}}
+{"eq3wopn": {"text": "Me too", "link_id": "t3_bx4q0s", "time": 1559764495}}
+{"eq3vxvl": {"text": "Im not crying.. u are!", "link_id": "t3_bx5o6d", "time": 1559764085}}
+{"eptwto0": {"text": "A year or two ago, there was that skull thing right before the halloween event.Really cool little spice-ups.", "link_id": "t3_bvw7yx", "time": 1559499209}}
+{"eprfki0": {"text": "U just gave me big spooks for imagining that", "link_id": "t3_bvhgjk", "time": 1559423662}}
+{"eppxxpt": {"text": "What is that stuff that geta spread on u before the skin gets cut?", "link_id": "t3_bvblny", "time": 1559394769}}
+{"ephimwc": {"text": "Biting into a slice of pizza after fasting for several days", "link_id": "t3_buqbn7", "time": 1559227187}}
+{"eph3kmu": {"text": "Forza Horizons hopefully!", "link_id": "t3_busyk9", "time": 1559221914}}
+{"epegudj": {"text": "Whatever version the bat downgrades your spotify to. I think [1.1.4.xxx](https://1.1.4.xxx)", "link_id": "t3_buf4pq", "time": 1559182547}}
+{"epbkffm": {"text": "What would you estimate the shipping cost to be?", "link_id": "t3_brx2y5", "time": 1559143823}}
+{"ep548es": {"text": "I actually use the program version of it and have set my audio quality to highest possible in settings. This doesn't really bother me, its just odd.", "link_id": "t3_btxlh9", "time": 1559050304}}
+{"ep4cxn6": {"text": "I'm using an Asus Xonar DGX and no, I watch streams on browser.", "link_id": "t3_btxlh9", "time": 1559037838}}
+{"eopbdq6": {"text": "Mmm its like a care-package in a way", "link_id": "t3_bsqayv", "time": 1558759489}}
+{"eooxror": {"text": "Even if they could come into your apartment, they most likely wouldn't cause... you know finns.", "link_id": "t3_brputc", "time": 1558750242}}
+{"eoov5q8": {"text": "It ends up feeling the best when you know that someone is doing it genuinely. Not just the casual \"how have you been\".", "link_id": "t3_bslp9x", "time": 1558748587}}
+{"eoov232": {"text": "I've read a lot of stuff on this subreddit that I can relate to but this is the first time I come up to anything about things feelings pointless and oh man. I thought i was all alone with this.&amp;#x200B;What i mean is that usually when i find something relate-able, i see a bunch of people relate to it as well.I suck at explaining things!", "link_id": "t3_bsn7jv", "time": 1558748524}}
+{"eooub13": {"text": "That is pretty much along the lines of what my new psychiatrist is telling me and tbh... it just makes it worse.", "link_id": "t3_bsjsu4", "time": 1558748054}}
+{"eoocayk": {"text": "Does anyone know how long do i have to approximately play one of these games?", "link_id": "t3_bsk13n", "time": 1558735063}}
+{"eon2a2m": {"text": "Yep! Absolutely agree.", "link_id": "t3_bsbfrp", "time": 1558702284}}
+{"eolikp7": {"text": "That is probably the best way to word it. \"The night protects me\".", "link_id": "t3_bsbfrp", "time": 1558671434}}
+{"eokwinz": {"text": "Funny enough. My only hope is that perhaps a miracle will happen.", "link_id": "t3_bsb2fb", "time": 1558662650}}
+{"eokrpl6": {"text": "I fucking hate those..... so much!", "link_id": "t3_bs9nqv", "time": 1558660868}}
+{"eohwxhs": {"text": "Adrenalin 2019 Edition 19.4.1", "link_id": "t3_broe5h", "time": 1558600585}}
+{"eohwvn5": {"text": "I appreciate the offer but no thank you.", "link_id": "t3_brx2y5", "time": 1558600496}}
+{"eohwul6": {"text": "Oh my dude they're more than awesome", "link_id": "t3_brx2y5", "time": 1558600443}}
+{"eogy6p6": {"text": "I've been in a nostalgic state for months now. Keep thinking back to how i met tons of friends online and didnt want to leave them behind when i had to. I was happy with them and leaving them gave me the feeling that i am now lingering in 24/7.", "link_id": "t3_brs1u9", "time": 1558568404}}
+{"eo4semj": {"text": "Games are way smoother now.Ryzen 5 2600X 4.2GHzRX 580 8GB", "link_id": "t3_bq7kro", "time": 1558284047}}
+{"eo2g2mv": {"text": "Hello. Should I also disable Game Mode after ticking the box? I heard Game Mode can reduce input lag.", "link_id": "t3_bq7kro", "time": 1558219919}}
+{"eo0z509": {"text": " \ud83e\udd80\ud83e\udd80 BOSS IS POWERLESS AGAINST EMPLOYEES WANTING TO QUIT  \ud83e\udd80\ud83e\udd80", "link_id": "t3_bpwdfw", "time": 1558187928}}
+{"enz0obj": {"text": "Thats what it feels like when your group of friends start roasting u", "link_id": "t3_bprjul", "time": 1558139617}}
+{"enwcy2n": {"text": " \ud83e\udd80  \ud83e\udd80 CRAB MAT K IS GONE  \ud83e\udd80  \ud83e\udd80", "link_id": "t3_bpmurf", "time": 1558094755}}
+{"envs9l0": {"text": "Atleast we got dat 106 contained.", "link_id": "t3_bpkgx3", "time": 1558082908}}
+{"envrs1z": {"text": "After 10 million tries of trying to receive a security code in order to confirm my account removal request without the code \"expiring\" due to their slow ass system, I was finally able to do it and hopefully my account will be gone soon.", "link_id": "t3_bpnerx", "time": 1558082601}}
+{"enmhjg4": {"text": "The amount of spiders in there", "link_id": "t3_boy8sa", "time": 1557931880}}
+{"enifx5w": {"text": "I'm trying to delete my account but I'm not receiving the security code... \\*sigh\\*", "link_id": "t3_bofm7n", "time": 1557865309}}
+{"enhjdm6": {"text": "How long does it take from being unveiled to becoming buyable? I'm so excited!", "link_id": "t3_boio71", "time": 1557852589}}
+{"engl4dd": {"text": "Absolutely not risking it.", "link_id": "t3_boi1s8", "time": 1557837042}}
+{"engiq2h": {"text": "My pc restarted and my monitors died too for some reason. Everything was plugged into that cord. I've turned it off and unplugged it and will get rid of it but I'd still like to know the potential danger i might've been in.", "link_id": "t3_boi1s8", "time": 1557835873}}
+{"en92edm": {"text": "Ohh! Congratulations!", "link_id": "t3_bnqmp8", "time": 1557693686}}
+{"en92c1v": {"text": "Yup", "link_id": "t3_bnpzdo", "time": 1557693655}}
+{"en91adu": {"text": "Why not wait for navi? I've been having my eyes on a Nitro+ Vega 64 for 400\u20ac and i'm getting impatient here waiting.Don't get me wrong man, that's an absolute beast card and i'm glad you get to enjoy it! :) I keep trying my best to not pull a trigger on this Vega 64...", "link_id": "t3_bnqmp8", "time": 1557693147}}
+{"en76dj6": {"text": "Should probably get earplugs then. I'd never move into a streamer house expecting people to be quiet in the middle of the night.", "link_id": "t3_bnmyj3", "time": 1557651557}}
+{"en769vi": {"text": "On a saturday night too LULW", "link_id": "t3_bnmzna", "time": 1557651456}}
+{"en1tmhx": {"text": "Imagine diving between those", "link_id": "t3_bn11xf", "time": 1557518861}}
+{"emxoiou": {"text": "My bad, it's actually 399\u20ac.", "link_id": "t3_bmmao0", "time": 1557421443}}
+{"emwbvjx": {"text": "You all are just whore flowers for your lovers. Except for me I\u2019m a sunflower \ud83c\udf3b", "link_id": "t3_bmdpff", "time": 1557382447}}
+{"emn5hax": {"text": "Wonder how much FPS the special attack adds", "link_id": "t3_blaxi8", "time": 1557148013}}
+{"emmhyhv": {"text": "\"Peppah\" \"Warning: Loud\" ...not again", "link_id": "t3_bkxnj8", "time": 1557123582}}
+{"emk80b1": {"text": "Now a days", "link_id": "t3_bkw846", "time": 1557066513}}
+{"emjmwa4": {"text": "Well atleast there's two of us.", "link_id": "t3_bksp0a", "time": 1557036860}}
+{"emhc2j0": {"text": "1Head Looongneck", "link_id": "t3_bkaqpu", "time": 1556973811}}
+{"em77c4t": {"text": "\ud83e\udd80\ud83e\udd80\ud83e\udd80 11 years in prison \ud83e\udd80\ud83e\udd80\ud83e\udd80", "link_id": "t3_bj3vky", "time": 1556683873}}
+{"em287y2": {"text": "Mine was only a few months old too.", "link_id": "t3_ba4bsp", "time": 1556549407}}
+{"elz6fpt": {"text": "Does this work in other games?", "link_id": "t3_bi4agq", "time": 1556454654}}
+{"elybvjs": {"text": "Nope. That's color banding.", "link_id": "t3_bi1k7b", "time": 1556415998}}
+{"elxmw9m": {"text": "Ground tile blending", "link_id": "t3_bi1k7b", "time": 1556396325}}
+{"elxcmbk": {"text": "Got it, thanks!", "link_id": "t3_bi1qce", "time": 1556388592}}
+{"eloj9y9": {"text": "Lmaoooo", "link_id": "t3_bgwqm6", "time": 1556133403}}
+{"elo1rwv": {"text": " Warhammer: Vermintide 2 - Collectors EditionThanks &lt;3", "link_id": "t3_bgvn18", "time": 1556123011}}
+{"elm7ti6": {"text": "What are those white-ish spots at the bottom right corner in the sea?", "link_id": "t3_bggbqx", "time": 1556064597}}
+{"elkrcmi": {"text": "Well i'm glad its working out for you cause it's a nice looking case after all. I did try and upgrade my cooling which did not help so i just ended up buying a whole new case. Plus Cylon's USB3 ports were broken too.", "link_id": "t3_bgdjee", "time": 1556030793}}
+{"elkehsv": {"text": "That case turned my pc into a hot oven. The front intake is absolutely miserable.", "link_id": "t3_bgdjee", "time": 1556021607}}
+{"eld3r4x": {"text": "Good. thanks!", "link_id": "t3_bfewdi", "time": 1555782767}}
+{"elcwuuk": {"text": "Nothing seems to work. I tried to re-install new drivers from Asus' site and the installer said that it didn't find any devices to install the driver onto.", "link_id": "t3_bfdxxw", "time": 1555777981}}
+{"el54g8t": {"text": "I feel u brother...", "link_id": "t3_bec91f", "time": 1555540567}}
+{"ekxm5fy": {"text": "Good to know! I replaced mine with a Corsair one, this one doesnt rattle either.", "link_id": "t3_ba4bsp", "time": 1555328175}}
+{"ekuya3e": {"text": "Edit the XML document of your WattMan profile and change \\`&lt;FEATURE ID=\"17\" Enabled=\"False\"&gt;\\` to \\`&lt;FEATURE ID=\"17\" Enabled=\"True\"&gt;\\`Then save the file.Thats what I was guided to do.", "link_id": "t3_bcygjw", "time": 1555230433}}
+{"ekuwz6k": {"text": "Not like I was gonna eat this pizza anyway....", "link_id": "t3_bcyy6o", "time": 1555228256}}
+{"ekpa64i": {"text": "I've had the same happen to me so many times", "link_id": "t3_bcbaoj", "time": 1555062572}}
+{"ekp1itv": {"text": "&gt;I'd like to use PBO but my single-core performance is way worse with that.", "link_id": "t3_bc3k9x", "time": 1555052287}}
+{"eko11wo": {"text": "You turned shockingly stiff", "link_id": "t3_bc34ih", "time": 1555020890}}
+{"eknwsmm": {"text": "Sapphire RX 580 Nitro+I'd appreciate it a lot thanks!", "link_id": "t3_bbywzp", "time": 1555018050}}
+{"ekk9b31": {"text": "Ah, I didn't know that as I'm fairly new to WattMan, thanks though!", "link_id": "t3_bbof8m", "time": 1554917804}}
+{"ekb3pf9": {"text": "Pls stop. It hurts aaaaahh", "link_id": "t3_baey46", "time": 1554638016}}
+{"ekb2139": {"text": "D:", "link_id": "t3_baayd1", "time": 1554635382}}
+{"ek9juk5": {"text": "Let me know if u find anything there. Not sure if i want to get another one of these anymore.", "link_id": "t3_ba4bsp", "time": 1554577120}}
+{"ek99sbw": {"text": "This is a MasterLiquid Lite 120 from Coolermaster", "link_id": "t3_ba4bsp", "time": 1554569809}}
+{"ek7koxz": {"text": "Nastiest range attack i've ever witnessed ", "link_id": "t3_b9w9tu", "time": 1554503001}}
+{"ek65r9c": {"text": "Very well explained, thanks!", "link_id": "t3_b991mr", "time": 1554466145}}
+{"ek3npzm": {"text": "Surprise attacc!", "link_id": "t3_b9aq74", "time": 1554386616}}
+{"ek31wgx": {"text": "Now that I think about it.. i'm not sure hmm. Atleast I now know someone else has the same thing with seeing dreams as I do!", "link_id": "t3_b991mr", "time": 1554359126}}
+{"ejq7gdf": {"text": "Your birb's battery seems to be at 100%", "link_id": "t3_b79lls", "time": 1553947123}}
+{"ejq2n2d": {"text": "When casting a movie to VLC, how can I get subtitles?", "link_id": "t3_ayxery", "time": 1553939502}}
+{"ejq2alp": {"text": "ringshitting aint fun", "link_id": "t3_b78k75", "time": 1553938902}}
+{"ejq27a2": {"text": "a cracking experience for sure", "link_id": "t3_b784lg", "time": 1553938742}}
+{"ejmbhnl": {"text": "All in all its just another seat in the wall ", "link_id": "t3_b6l136", "time": 1553817581}}
+{"ejma3di": {"text": "Perhaps he should ask them to moooooooo-ve ", "link_id": "t3_b6nmv9", "time": 1553816593}}
+{"ejle6gz": {"text": "One could say... His cooking skills are on fire ", "link_id": "t3_b6l1jy", "time": 1553797446}}
+{"ejldr4r": {"text": "Thats a wheely stupid idea ", "link_id": "t3_b6l17g", "time": 1553797196}}
+{"ejk9su4": {"text": "Not so sweet of an ending", "link_id": "t3_b6e4e1", "time": 1553768178}}
+{"ejk9ksy": {"text": "When ur relatives are over ", "link_id": "t3_b6f9al", "time": 1553767874}}
+{"ejk9e3p": {"text": "Tell us how you've cracked the case ", "link_id": "t3_b6f3uo", "time": 1553767620}}
+{"ejihja7": {"text": "Ok this one gave me the physical cringe..", "link_id": "t3_b65470", "time": 1553711903}}
+{"ejh2mlh": {"text": "Ah, good old me vs my responsibilities ", "link_id": "t3_b5x5as", "time": 1553660152}}
+{"ejdvpuv": {"text": "Donut let down the gift carrier ", "link_id": "t3_b5fela", "time": 1553563539}}
+{"ejcg9ge": {"text": "You don't have to but i'd advise you to give it a shot. I played 1 and 2 after playing the third game and really loved the first one. The combat is bad but the game has a certain feel to it that i like. The second one is a bit boring but not as long as the two other games.", "link_id": "t3_b59tr0", "time": 1553529016}}
+{"ejcdkp3": {"text": "What case is that?", "link_id": "t3_b597wl", "time": 1553527168}}
+{"ej82bqu": {"text": "I've been looking for a song on YouTube that has this picture on it as a background... ", "link_id": "t3_b4m1g1", "time": 1553376468}}
+{"ej55jzs": {"text": "Huron thin ice young one!", "link_id": "t3_b48zby", "time": 1553283999}}
+{"eip2yks": {"text": "Such a cool idea!", "link_id": "t3_b1s0iz", "time": 1552780049}}
+{"eii13ci": {"text": "People talk about ghosting and receiving bad quality products. Now i'm looking into getting an MSI Optix MAG271CR and so far this one seems like a bulletproof choice. ", "link_id": "t3_b0xxig", "time": 1552561688}}
+{"ei9fg0p": {"text": "This is terrifying :/", "link_id": "t3_azpesx", "time": 1552286521}}
+{"ei6o5hr": {"text": " My brother used to do this and well.. monkey see monkey do", "link_id": "t3_az3urn", "time": 1552188363}}
+{"eheo0v3": {"text": "^ GPUs", "link_id": "t3_avc9ft", "time": 1551286837}}
+{"eh15gie": {"text": ":DDDDDDDDDDDDDDD", "link_id": "t3_asmwzx", "time": 1550846421}}
+{"eh13w9z": {"text": "Skyrim!", "link_id": "t3_aths19", "time": 1550845123}}
+{"eh10doe": {"text": "I found 2 boring, the first one was amazing!", "link_id": "t3_atfv5i", "time": 1550841963}}
+{"eh0prfn": {"text": "this is a bomb", "link_id": "t3_atadnn", "time": 1550827074}}
+{"egy76w8": {"text": "The new Enderal mod for Skyrim", "link_id": "t3_at128n", "time": 1550753155}}
+{"egy2vhm": {"text": "There parents", "link_id": "t3_asvbvs", "time": 1550747307}}
+{"egy2ftg": {"text": "The fuck", "link_id": "t3_asz5tx", "time": 1550746589}}
+{"egwrqi7": {"text": "Are u hear?", "link_id": "t3_asrbme", "time": 1550700616}}
+{"egtl8td": {"text": "I feel u", "link_id": "t3_ascbwa", "time": 1550603415}}
+{"egshxm0": {"text": "eNgInE wOrK", "link_id": "t3_as6u7y", "time": 1550568285}}
+{"egqqooy": {"text": "&gt;e future.  Heck, Google Photos is literally free.I have low expectations in terms of my luck but i'll try that program, thanks!", "link_id": "t3_arztwv", "time": 1550512638}}
+{"egmwfrk": {"text": "Step by step", "link_id": "t3_aress5", "time": 1550369002}}
+{"egmjp73": {"text": "Delicioussssssssss", "link_id": "t3_ardix6", "time": 1550357712}}
+{"egkt4bx": {"text": "Should've paid rent accordingly.. ", "link_id": "t3_ar2t8y", "time": 1550288530}}
+{"egc83k0": {"text": "Im in", "link_id": "t3_apxizg", "time": 1550010258}}
+{"egbxvze": {"text": "RE2 please &lt;3", "link_id": "t3_apwfjx", "time": 1550003655}}
+{"egb41le": {"text": "RE2 please", "link_id": "t3_aprj6x", "time": 1549983215}}
+{"egb2ckt": {"text": "You died", "link_id": "t3_apsp62", "time": 1549981845}}
+{"egahnky": {"text": "I have my RX 580 manually overclocked to 1500mhz, would i gain more boost by possibly undervolting it? As im not sure whether this is only effective on Vega cards.", "link_id": "t3_apqbux", "time": 1549954024}}
+{"egaguw7": {"text": "I was thinking of skellige", "link_id": "t3_apnx1p", "time": 1549953027}}
+{"egagk2j": {"text": "Resident evil 2. Thank you!", "link_id": "t3_apo2dp", "time": 1549952669}}
+{"eg9fovs": {"text": "Thanks for the giveaway! Forza Horizon 4 ", "link_id": "t3_apjpz9", "time": 1549924315}}
+{"efvxslu": {"text": "Would be cool if they collaborated with a 3rd party client regarding this.", "link_id": "t3_anti97", "time": 1549478413}}
+{"efvv558": {"text": "I can't get anyone to play this game without mentioning the trash graphics.. personally I dont mind them but would be open for an update...", "link_id": "t3_anti97", "time": 1549476645}}
+{"efvodxm": {"text": "There", "link_id": "t3_anq2wo", "time": 1549472111}}
+{"eflrxng": {"text": "we bout to have full void soon", "link_id": "t3_amexz2", "time": 1549130953}}
+{"efljf6c": {"text": "Nice", "link_id": "t3_amdij1", "time": 1549124269}}
+{"effuzg6": {"text": "Keep it up!", "link_id": "t3_alp3m7", "time": 1548943190}}
+{"effp3l4": {"text": "Achieving stuff", "link_id": "t3_aln7ir", "time": 1548939100}}
+{"efdlyzt": {"text": "Got it, thanks!", "link_id": "t3_aleylr", "time": 1548872734}}
+{"efdk9op": {"text": "Does anyone know whats the case on AMD freesync support?", "link_id": "t3_aleylr", "time": 1548871678}}
+{"efcmy7b": {"text": "**You Died**", "link_id": "t3_al89h5", "time": 1548849870}}
+{"efckw8t": {"text": "the plugin just showed u exactly what you'd see on ur screen...", "link_id": "t3_alat13", "time": 1548847665}}
+{"efcee6o": {"text": "where can i buy one?", "link_id": "t3_al7xx9", "time": 1548841224}}
+{"efael79": {"text": "Thats so wholesome...", "link_id": "t3_al17h9", "time": 1548790467}}
+{"ef9n621": {"text": "Yarrrrr", "link_id": "t3_al0y1l", "time": 1548775781}}
+{"ef98124": {"text": "The Grudge girl is here", "link_id": "t3_aky1y4", "time": 1548765442}}
+{"ef8rg9y": {"text": "I would've gladly bought this since I enjoyed the two first games a lot... &amp;#x200B;&amp;#x200B;", "link_id": "t3_akx8on", "time": 1548745971}}
+{"ef8j13c": {"text": "This.. exactly this", "link_id": "t3_akw149", "time": 1548738113}}
+{"ef2qo9j": {"text": "Ok thats too close pal", "link_id": "t3_ak4qm0", "time": 1548568116}}
+{"ef0nax9": {"text": "Poor water", "link_id": "t3_ajzghu", "time": 1548515189}}
+{"ef02722": {"text": "No dont delete!", "link_id": "t3_ajz4qo", "time": 1548493081}}
+{"eezehv3": {"text": "I bought a 3-pack of these couple months ago. They work great and have a huge support range. ", "link_id": "t3_ajt9pc", "time": 1548470257}}
+{"eewxvvs": {"text": "In my case it could jump all the way up to 3GBs... sucks", "link_id": "t3_ajngg8", "time": 1548410431}}
+{"eeweiqi": {"text": "Film it this is a must see!", "link_id": "t3_ajchb6", "time": 1548388474}}
+{"eevjbqm": {"text": "I already saw incredible performance in Resident Evil 2 from the benchmarks I watched... and now there's a 7% boost to that already existing great performance.  Wow!", "link_id": "t3_ajgbsb", "time": 1548365564}}
+{"eerpz9d": {"text": "BGS spec on a minion", "link_id": "t3_aiz156", "time": 1548256044}}
+{"eeqge0v": {"text": "I was so excited until I found out AMD cards weren't supported :( Regardless this is so far the best looking GUI I've seen and hope you keep us updated on development!", "link_id": "t3_ainb63", "time": 1548205750}}
+{"eeftmtc": {"text": "Yea you're waking everyone up", "link_id": "t3_ahlwuf", "time": 1547906579}}
+{"eec05qs": {"text": "Max hit?", "link_id": "t3_ah5tr7", "time": 1547789352}}
+{"ee1wzo5": {"text": "Yup that was it! Scored 1447 with relive turned off!", "link_id": "t3_afu1d0", "time": 1547481301}}
+{"ee1wswq": {"text": "That's an interesting one... i'll try.", "link_id": "t3_afu1d0", "time": 1547481156}}
+{"ee1wsj7": {"text": "Yes I've made sure its running as intended. ", "link_id": "t3_afu1d0", "time": 1547481148}}
+{"edy3xcj": {"text": "Are you me?", "link_id": "t3_afbpdb", "time": 1547348854}}
+{"eduhhbw": {"text": "I created a Wallpaper Engine version of it: [https://i.imgur.com/fIxKJxj.gifv](https://i.imgur.com/fIxKJxj.gifv)", "link_id": "t3_aewly4", "time": 1547246485}}
+{"edqkqwm": {"text": "Lots of ppl seem to go with 15", "link_id": "t3_aekurt", "time": 1547149526}}
+{"edp8rs4": {"text": "Oh thanks! I'll use this and make a few improvements to the animation.", "link_id": "t3_ae8zft", "time": 1547114132}}
+{"ednvi2d": {"text": "I'm trying to upload it to steam workshop but it's giving me an error. Will reply once i've got it up!", "link_id": "t3_ae8zft", "time": 1547068382}}
+{"ednlonf": {"text": "I'll do it once i find a 1920x1080 one", "link_id": "t3_ae8zft", "time": 1547061768}}
+{"ed7jhqu": {"text": "Cause u stare at that damn phone all day", "link_id": "t3_ace5vt", "time": 1546584766}}
+{"ed75j5h": {"text": "Thought of accidentally stumbling into one fires up my anxiety", "link_id": "t3_ac7okx", "time": 1546571735}}
+{"ed567kl": {"text": "na im good", "link_id": "t3_ac4rzh", "time": 1546515377}}
+{"ed55i8d": {"text": "I own a pair of Sennheiser HD 598SRs and switched from on-board to an Asus Xonar DGX, the difference is as clear as day and night. &amp;#x200B;On-board:  Realtek ALC887 ", "link_id": "t3_ac1q09", "time": 1546514481}}
+{"ed4aa93": {"text": "f", "link_id": "t3_abu8xv", "time": 1546478208}}
+{"ed1wl8x": {"text": "Felt surprisingly nice to read that. Never seen anyone direct such towards men. ", "link_id": "t3_abm58v", "time": 1546394888}}
+{"ecz6z88": {"text": "I went for a Coolermaster MasterLiquid Lite 120!&amp;#x200B;", "link_id": "t3_ab7x32", "time": 1546297453}}
+{"ecxwqfm": {"text": "It's called [UserBenchmark](https://www.userbenchmark.com/)", "link_id": "t3_ab6609", "time": 1546260924}}
+{"ecucxrp": {"text": "I've never heard of such.. so i googled it and oh boy how relatable all of this sounds like.", "link_id": "t3_aardpf", "time": 1546135141}}
+{"ecua3yx": {"text": "Thats exactly how i feel like. Keeping distance for their benefit.", "link_id": "t3_aamcry", "time": 1546132896}}
+{"ecmp5wj": {"text": "Second rate citizen... Relatable!", "link_id": "t3_a9qkho", "time": 1545878601}}
+{"ec7k2e1": {"text": "Poor Radeon card ", "link_id": "t3_a82sit", "time": 1545343358}}
+{"ec22m15": {"text": "!RemindMe 24 hours", "link_id": "t3_a7bcp9", "time": 1545155812}}
+{"ebxt69d": {"text": "thats a thicc one", "link_id": "t3_a6sgyc", "time": 1544998701}}
+{"ebszu3m": {"text": " The Elder Scrolls Online: Tamriel Unlimited   thanks!", "link_id": "t3_a66lc7", "time": 1544824387}}
+{"ebrjuvl": {"text": "enjoy ur power ", "link_id": "t3_a64ck1", "time": 1544792672}}
+{"ebq5zmm": {"text": "oh hell yes", "link_id": "t3_a5jnky", "time": 1544738177}}
+{"ebq5gpp": {"text": "sometimes life hits u in the face", "link_id": "t3_a5x9y7", "time": 1544737771}}
+{"eboognu": {"text": "Unfortunately it does not. At first i tried using PBO on its own but was left somewhat unsatisfied. ", "link_id": "t3_a5ld3k", "time": 1544684399}}
+{"eboof1p": {"text": "This is what i did at first obviously and i believe its a fantastic way for someone who doesn't want to fiddle around with overclocking to get a bit of extra performance.", "link_id": "t3_a5ld3k", "time": 1544684330}}
+{"ebnhwxi": {"text": "Absolutely", "link_id": "t3_a5jnky", "time": 1544645620}}
+{"ebmbunb": {"text": "Reminds me of this: [The Abyss - SOMA](https://gyazo.com/35723fc5be9875c4717ee77c4a71b665)", "link_id": "t3_a5ferk", "time": 1544603163}}
+{"ebhz6l3": {"text": "ah i've heard of this and tried it before.. unfortunately it broke a lot of sites for me :/ happy cake day btw", "link_id": "t3_a4uqjq", "time": 1544454933}}
+{"ebhi1o9": {"text": "This... this really got me&gt;  I looked below and saw a long endless chain travel from the ball down to the depths below &amp;#x200B;", "link_id": "t3_a4t6g1", "time": 1544429867}}
+{"ebhasvn": {"text": "Thats not how u solve bugs", "link_id": "t3_a4mnr6", "time": 1544419469}}
+{"ebc5c12": {"text": "read the title... said \"what?!\"", "link_id": "t3_a44qd6", "time": 1544243182}}
+{"eb9ipg8": {"text": "Hmm.. there are clan chats you can join that are full of people looking for partners/groups to do activities with. I am in a streamer's clan chat.. just to give myself the feeling of being in a group although i still do most of my activities all alone, thats just what i enjoy. Very often there are people preparing to go kill a boss in a group etc, you can also rank up in these clan chats depending on how dedicated you are. Higher rank = higher trust. ", "link_id": "t3_a3unrh", "time": 1544152290}}
+{"eb9i8mp": {"text": "Looser.... Your?", "link_id": "t3_a3vflp", "time": 1544151899}}
+{"eb9eyn1": {"text": "Old School Runescape", "link_id": "t3_a3unrh", "time": 1544149107}}
+{"eb1p36e": {"text": "Decreased input lag is what I've heard that it can do", "link_id": "t3_a2s7t0", "time": 1543893790}}
+{"eau5y2g": {"text": "Thats cold man", "link_id": "t3_a1x0xi", "time": 1543641985}}
+{"eau5ay6": {"text": "Ikr, that one I could almost feel deep inside... ", "link_id": "t3_a1yzjt", "time": 1543641231}}
+{"eau4xxa": {"text": "So many dreams were shattered that day...", "link_id": "t3_a1z6k6", "time": 1543640807}}
+{"eaqlikp": {"text": "u sound like a tier 3 sub + mod", "link_id": "t3_a1hogd", "time": 1543522049}}
+{"eapzv8i": {"text": "I've heard great of the card. Although personally i'm rocking an RX580 ", "link_id": "t3_a1asrz", "time": 1543506654}}
+{"eaopqj3": {"text": "Nothing depressing when u got dat finewine technology ", "link_id": "t3_a1asrz", "time": 1543457113}}
+{"eao3bgs": {"text": "Can't tolerate stutter at all either. Moodbreaker at its best!", "link_id": "t3_a1a3o9", "time": 1543440218}}
+{"eao184o": {"text": "It is a well-known issue regarding to how Windows 10's DWM works. On windows 7 this could be fixed by disabling Aero.", "link_id": "t3_a1a3o9", "time": 1543438812}}
+{"eao13o2": {"text": "Nice! Eager to see it myself soon", "link_id": "t3_a1a3o9", "time": 1543438727}}
+{"eana2x4": {"text": "I have the same issue. ", "link_id": "t3_a16ge1", "time": 1543419866}}
+{"eaj5s4b": {"text": "I got it fixed! Thanks for the help!", "link_id": "t3_a0l76g", "time": 1543270746}}
+{"eaj5s0w": {"text": "I got it fixed! Thanks for the help!", "link_id": "t3_a0lau3", "time": 1543270744}}
+{"eaj00ny": {"text": "Bios has been updated, also my ram wasn't listed on the site. I'm not sure how to check the XMP, I'll go have a look at the bios again.", "link_id": "t3_a0l76g", "time": 1543266483}}
+{"e9y5bng": {"text": "Good job man!", "link_id": "t3_9y33a5", "time": 1542531595}}
+{"e9xllej": {"text": "Than*", "link_id": "t3_9xzf70", "time": 1542508102}}
+{"e9w802s": {"text": "no one likes a nagger ", "link_id": "t3_9xxbjb", "time": 1542474848}}
+{"e9vo7yv": {"text": "vroom vroom", "link_id": "t3_9xnoiy", "time": 1542460718}}
+{"e9tgeye": {"text": "Doesn't work in Linux yet.", "link_id": "t3_9xmp4a", "time": 1542380758}}
+{"e9t85pu": {"text": "Multiple keys bought from there, one occasion where the key was incorrect and I received a new one by getting in contact with Kinguin support. Didn't pay for any \"shield\" either.", "link_id": "t3_9xlnjh", "time": 1542371848}}
+{"e9su8m6": {"text": "I am father yes", "link_id": "t3_9xdpur", "time": 1542348828}}
+{"e9stghb": {"text": "My depressed yes", "link_id": "t3_9xguno", "time": 1542347745}}
+{"e9r4vfd": {"text": "Woah, very impressive regardless!", "link_id": "t3_9x8frh", "time": 1542297825}}
+{"e9qh7br": {"text": "BF1 online?", "link_id": "t3_9x8frh", "time": 1542269086}}
+{"e9jecj8": {"text": "I saw your other comment, pardon me I got a feeling at the end that you weren't up for assistance. Any way, I tried scenegames, downloaded a game, the setup wouldnt run unless i set my wine to Windows XP mode which wasnt a problem, the game worked perfectly afterwards. So thank you!", "link_id": "t3_9vn27p", "time": 1542001804}}
+{"e9gfqrd": {"text": "Waaaaaah...waaaaaahhhhh ", "link_id": "t3_9vzb06", "time": 1541899829}}
+{"e9gf36o": {"text": "My 10... Yes", "link_id": "t3_9vw4ht", "time": 1541899164}}
+{"e9g8ejk": {"text": "Yes", "link_id": "t3_9vttgg", "time": 1541892640}}
+{"e9dfjri": {"text": "I've heard a lot good about Nord, their 3year plan isnt too pricey either. I'm from EU and their servers seem to work here perfectly.", "link_id": "t3_9vmn1f", "time": 1541787670}}
+{"e9dfi9u": {"text": "Yea windows games through wine and some with Proton.", "link_id": "t3_9vmn1f", "time": 1541787637}}
+{"e9cmddc": {"text": "Dudes who tight the NNN", "link_id": "t3_9viwqw", "time": 1541758682}}
+{"e9cks6x": {"text": "Its not filled with unneeded shit", "link_id": "t3_9veizb", "time": 1541755932}}
+{"e9ccyon": {"text": "[https://www.reddit.com/", "link_id": "t3_9vfuyx", "time": 1541743360}}
+{"e9a40xq": {"text": "I in fact noticed it was much better on Linux and while I absolutely loved my Ubuntu setup. I think i've got to give it couple more years to evolve before i switch back. A lot of the software and utilities i wanted was simply impossible to acquire and they had no alternatives.", "link_id": "t3_9v59n2", "time": 1541663414}}
+{"e99i0w4": {"text": "&gt;the linux one is MUCH better, to the point some things like cemu can run more than twice as fast using wineThat's what i noticed too on my ubuntu test-run.", "link_id": "t3_9v59n2", "time": 1541638826}}
+{"e99h8l7": {"text": "&gt;neraly ok just to leave on its default settings. You can play around with fan speeds in gaming/global settiings/global whatman if theres any kind of cooling issue. Theres is a lot you can do just a matter of trying differI looked into enhanced sync and it certainly looks interesting, do I have to enable vsync in-game or how does it work?", "link_id": "t3_9v2zeh", "time": 1541637998}}
+{"e91fqa1": {"text": "Could you try Project CARS 2?", "link_id": "t3_9u4fvs", "time": 1541349608}}
+{"e8z7myh": {"text": "Unfortunately not", "link_id": "t3_9tnijg", "time": 1541257140}}
+{"e8ye2xp": {"text": "Sorry but how do i exactly do that?", "link_id": "t3_9tnijg", "time": 1541212761}}
+{"e8yde90": {"text": "After pasting this `amdgpu.ppfeaturemask=0xffffffff\"`as guided on the site, and updating grub, I get artifacts and glitching on my monitors when it finally boots into Ubuntu.", "link_id": "t3_9tnijg", "time": 1541212051}}
+{"e8wbqc8": {"text": "Its updated! One last thing, do i have to uninstall AMDGPU? Steam doesn't seem to want to launch without it.", "link_id": "t3_9tfi95", "time": 1541136772}}
+{"e8waf86": {"text": "I added the ppa into my system via `sudo add-apt-repository ppa:paulo-miguel-dias/pkppa` and then of course followed with an apt-get update. What now?", "link_id": "t3_9tfi95", "time": 1541134878}}
+{"e8w7r34": {"text": "`OpenGL core profile version string: 4.5 (Core Profile) Mesa 18.1.0-rc4`This is what i got", "link_id": "t3_9tfi95", "time": 1541131495}}
+{"e8w6bm4": {"text": "I most certainly made changes. I remember only installing AMDGPU and doing benchmarks. Uninstalling AMDGPU results in my steam not launching anymore. Therefore im looking for the original source where i could get the drivers i'm meant to have.", "link_id": "t3_9tfi95", "time": 1541129899}}
+{"e8vy7rk": {"text": "&gt;AIK Stock AMD Drivers for Ubuntu are trashThat's what I've been reading when looking for info about drivers, what would you suggest?", "link_id": "t3_9tfi95", "time": 1541122456}}
+{"e8t2vva": {"text": "Can't complain, very pleasant surprise.", "link_id": "t3_9t189p", "time": 1541014811}}
+{"e8snge4": {"text": "`~$ sudo apt install winehq-staging``[sudo] password for slay:` `Reading package lists... Done``Building dependency tree`       `Reading state information... Done``Some packages could not be installed. This may mean that you have``requested an impossible situation or if you are using the unstable``distribution that some required packages have not yet been created``or been moved out of Incoming.``The following information may help to resolve the situation:`&amp;#x200B;`The following packages have unmet dependencies:` `winehq-staging : Depends: wine-staging (= 3.19.0~bionic)``E: Unable to correct problems, you have held broken packages.`I really have no idea why its saying that. Synaptic finds no broken packages.&amp;#x200B;&amp;#x200B;", "link_id": "t3_9sy5ff", "time": 1541002500}}
+{"e8se8vj": {"text": "&amp;#x200B;So the package winehq-stable seems to be broken according to synaptic, i then proceeded to attempt to let synaptic fix this. `E: Error, pkgProblemResolver::Resolve generated breaks, this may be caused by held packages.``E: Unable to correct dependencies`&amp;#x200B;", "link_id": "t3_9sy5ff", "time": 1540994702}}
+{"e8sdr5l": {"text": "So i tried to do sudo apt install wine-hqstable 3.0.3\\~bionic, which resulted to this `$ sudo apt install winehq-stable 3.0.3~bionic``Reading package lists... Done``Building dependency tree`       `Reading state information... Done``E: Unable to locate package 3.0.3~bionic``E: Couldn't find any package by glob '3.0.3~bionic'``E: Couldn't find any package by regex '3.0.3~bionic'`Sudo apt install wine results to this  `sudo apt install wine``Reading package lists... Done``Building dependency tree`       `Reading state information... Done``Package wine is a virtual package provided by:`  `winehq-staging 3.19.0~bionic`  `winehq-stable 3.0.3~bionic`  `winehq-devel 3.19.0~bionic`  `wine-development 3.6-1``You should explicitly select one to install.`&amp;#x200B;&amp;#x200B;", "link_id": "t3_9sy5ff", "time": 1540994244}}
+{"e8scl5k": {"text": "&gt;sudo apt install wine32  Still says `The following packages have unmet dependencies:` `wine32:i386 : Depends: libwine:i386 (= 3.0-1ubuntu1) but it is not going to be installed``E: Unable to correct problems, you have held broken packages.`&amp;#x200B;", "link_id": "t3_9sy5ff", "time": 1540993128}}
+{"e8sce9i": {"text": "Yes please! This looks fantastic!", "link_id": "t3_9sueh9", "time": 1540992937}}
+{"e8rn1wl": {"text": "I just went through the same switch!", "link_id": "t3_9sukx2", "time": 1540953987}}
+{"e8n2cc8": {"text": "Where chats?", "link_id": "t3_9s7wq3", "time": 1540779028}}
+{"e8byy51": {"text": "My fat ass wouldn't make it far regardless having 99 agility", "link_id": "t3_9qtfyn", "time": 1540342398}}
+{"e8br8wr": {"text": "I don't necessarily think i'd treat them bad... I tend to think that they're much better off without me because i'm a mess and can be a difficult person to deal with. I've been diagnosed with depression and anxiety. I kind of automatically get these thoughts of them having an unpleasant time dealing with me and then tend to act weirdly and start to distance myself.", "link_id": "t3_9qtqrj", "time": 1540335074}}
+{"e8bqqsj": {"text": "is", "link_id": "t3_9qsy7e", "time": 1540334592}}
+{"e8bagby": {"text": "Recent newer medication i'm taking is quetiapine but during my research, i couldnt find anything about similar effects.", "link_id": "t3_9qq0x6", "time": 1540320923}}
+{"e8bae5c": {"text": "Can't argue with the idea of that.", "link_id": "t3_9qq0x6", "time": 1540320877}}
+{"e8axhie": {"text": "4years ago", "link_id": "t3_9qq0x6", "time": 1540310615}}
+{"e8afyk4": {"text": "Most people dont find obesity attractive? Basic knowledge. ", "link_id": "t3_9qk2oe", "time": 1540291959}}
+{"e80lw5r": {"text": "18.10 only works with the 4.15 kernel version for me. Not the 4.18 one.", "link_id": "t3_9pawo3", "time": 1539890064}}
+{"e7q73yo": {"text": "Why do i feel so happy but incredibly sad from seeing him struggle and still smile so joyfully at the end...", "link_id": "t3_9nwcn0", "time": 1539484264}}
+{"e7mnxlu": {"text": "I just had a friend try out OSRS and swiftly got turned off by poor render distance and black void surrounding the player.", "link_id": "t3_9nj0cl", "time": 1539342161}}
+{"e7ch2zx": {"text": "&gt;MouseI fell for him, i came upon this thread now from researching for his name. Call me stupid all u want cause i sure am.", "link_id": "t3_8dl3ky", "time": 1538937385}}
+{"e7cg3cy": {"text": "Excuse me, how can i combine my top bar with the bottom one like in the picture?", "link_id": "t3_9m5snh", "time": 1538936628}}
+{"e76d2m2": {"text": "Someone had the same issue im currently having and got it fixed. [https://imgur.com/a/GEKYu1W](https://imgur.com/a/GEKYu1W) Apparently i have to download libavresample-dev but idk where from... there are tens of them", "link_id": "t3_9lcs8e", "time": 1538687274}}
+{"e76ay6c": {"text": "I'll look into this! Thanks.", "link_id": "t3_9lcs8e", "time": 1538685522}}
+{"e75x7qq": {"text": "My apologies, i'll head over there!", "link_id": "t3_9lbs6z", "time": 1538674494}}
+{"e75h5re": {"text": "Do my settings look right though?", "link_id": "t3_9lbs6z", "time": 1538661421}}
+{"e6mumwt": {"text": "Managed to overclock my card. Thanks!", "link_id": "t3_9irh80", "time": 1537910236}}
+{"e6lnbv4": {"text": "That's literally the only way i noticed it. ", "link_id": "t3_9ij53z", "time": 1537867728}}
+{"e6k0zcl": {"text": "A delay it is then. My account had not been logged into yet? for some reason. But thats only good", "link_id": "t3_9ij53z", "time": 1537806266}}
+{"e6fv707": {"text": "Xonar Audio Center allows the user to switch on 7.1 virtual surround on the fly and it also has an easy-to-use equalizer and a separate setting with multiple options for how much power it should give to the headphones.", "link_id": "t3_9hzmw6", "time": 1537631075}}
+{"e52dfwg": {"text": "Wonderful story! Thanks bro, was needed, also good luck on ur second cape!", "link_id": "t3_9bclik", "time": 1535584573}}
+{"e521j7v": {"text": "That's very well done! I've got to triple jads twice now in a week.", "link_id": "t3_9bclik", "time": 1535574093}}
+{"e521hpy": {"text": "&gt;But 2 weeks to a month daily runs is probably around normal.Must've felt good when u eventually got it tho", "link_id": "t3_9bclik", "time": 1535574060}}
+{"e4ysd5j": {"text": "my crying", "link_id": "t3_9avmj6", "time": 1535449500}}
+{"e4e5xio": {"text": "What do you think of these? Pioneer SE-MS7BT-K. They're currently in sale where i live. ", "link_id": "t3_984jq9", "time": 1534563513}}
+{"e4e5nlg": {"text": "I just ordered them! I've always used \"gaming\" headsets and would like to move on to something better so im eager to find out how these ones sound like.", "link_id": "t3_984jq9", "time": 1534563169}}
+{"e4c5o4i": {"text": "might not wanna cut your hands on that \"razor\" mouse", "link_id": "t3_97rkb2", "time": 1534482092}}
+{"e484z9d": {"text": "Understandable!", "link_id": "t3_97bith", "time": 1534330129}}
+{"e4838jq": {"text": "The amount of typos man... come on", "link_id": "t3_97bith", "time": 1534326543}}
+{"e42cr0q": {"text": "dat english doe", "link_id": "t3_96pp7w", "time": 1534091025}}
+{"e416ig1": {"text": "This is what i was thinking too, just couldnt put my finger on it.", "link_id": "t3_96k74l", "time": 1534030065}}
+{"e3zcipr": {"text": "\"Better not ask me to buy any membership thingie again after this one\" ", "link_id": "t3_96bzps", "time": 1533945075}}
+{"e3wutae": {"text": "1. Very lively2. Lots of activities3. Try ironman mode4. Game's only growing and growing and we have a wholesome group of devs who are close with the community regarding a lot of things", "link_id": "t3_960nnv", "time": 1533850274}}
+{"e3v9n21": {"text": "if my dying what?", "link_id": "t3_95ryet", "time": 1533787136}}
+{"e3s46wt": {"text": "Up", "link_id": "t3_95eq0e", "time": 1533670047}}
+{"e3rszfn": {"text": "where roaming zones", "link_id": "t3_95cxya", "time": 1533661145}}
+{"e3lzdjx": {"text": "then", "link_id": "t3_94m0is", "time": 1533413609}}
+{"e3lb2x6": {"text": "should of could of kek", "link_id": "t3_94ifix", "time": 1533387550}}
+{"e3cpc0t": {"text": "Probably cause you were touching it ;) ", "link_id": "t3_93ey2t", "time": 1533048152}}
+{"e3cdfos": {"text": "my kicked from friends list", "link_id": "t3_93de49", "time": 1533033873}}
+{"e3c6ii6": {"text": "then ur head what?", "link_id": "t3_93b5eb", "time": 1533020056}}
+{"e3a7bxx": {"text": "my a idiot yes engrish me first languge", "link_id": "t3_932bzu", "time": 1532946676}}
+{"e3a7biy": {"text": "would of", "link_id": "t3_932bzu", "time": 1532946652}}
+{"e38or0w": {"text": "could have*", "link_id": "t3_92veyc", "time": 1532879061}}
+{"e35n2li": {"text": "if my a pleb what?", "link_id": "t3_92ga9f", "time": 1532730286}}
+{"e32lyi6": {"text": "My gonna add it what?", "link_id": "t3_921443", "time": 1532617540}}
+{"e32634i": {"text": "Thats what they said about OSHD. Konduit, RuneLite and OSB are all safe and sound if u want to use them. ", "link_id": "t3_920pyu", "time": 1532597871}}
+{"e325p5b": {"text": "They wont approve a single client apart from their own one but they wont ban anyone for using a 3rd party client.", "link_id": "t3_920pyu", "time": 1532597054}}
+{"e31oe6v": {"text": "We're*", "link_id": "t3_91yarj", "time": 1532571739}}
+{"e2zmslq": {"text": "My DHing", "link_id": "t3_91on9r", "time": 1532493268}}
+{"e2yfs2x": {"text": "Tell em to eat shit", "link_id": "t3_91i59z", "time": 1532453639}}
+{"e2v9j9t": {"text": "\"There shit together\" where?", "link_id": "t3_913vue", "time": 1532319017}}
+{"e2rtey2": {"text": "Looks like the one that gets updates once a year, konduit", "link_id": "t3_90npc3", "time": 1532160041}}
+{"e2rfl3m": {"text": "you're*", "link_id": "t3_90kyba", "time": 1532139553}}
+{"e2qmomg": {"text": "Imagine motorboating those bad babies ", "link_id": "t3_90ieih", "time": 1532111782}}
+{"e2ma3sy": {"text": "imagine running the phases there", "link_id": "t3_8zy4hq", "time": 1531939170}}
+{"e2m7f1m": {"text": "My a tool what?", "link_id": "t3_8zxqvp", "time": 1531936998}}
+{"e2m72fw": {"text": "Lmao, actually dying reading this. ", "link_id": "t3_8zxqvp", "time": 1531936723}}
+{"e2m2c5d": {"text": "RuneLite will most likely make graphical enhancements once OSRS gets the GPU-Renderer which should come sometime after mobile. So please dont listen to the people who simply deny the fact of enhanced graphics cause they hate the idea.", "link_id": "t3_8zx4nn", "time": 1531932959}}
+{"e2jrio1": {"text": "Regardless ", "link_id": "t3_8zm9ww", "time": 1531844291}}
+{"e2jl2ui": {"text": "Shadows, extending the view distance, skyboxes etc. Not necessarily textures which they would have to create by themselves. ", "link_id": "t3_8zi6xk", "time": 1531838863}}
+{"e2jk3t1": {"text": "Once GPU rendering does come reality, would it be easier for RuneLite contributors to do graphical changes to the game? ", "link_id": "t3_8zi6xk", "time": 1531837991}}
+{"e2iavff": {"text": "Where?", "link_id": "t3_8zety4", "time": 1531779723}}
+{"e2i9f31": {"text": "Moto G4 Play ", "link_id": "t3_8zf440", "time": 1531778416}}
+{"e2i8xb7": {"text": "Calls people retards....can't speak proper English. \ud83d\ude02\ud83d\udc4d\ud83d\ude02\ud83d\udc4d\ud83d\ude02\ud83d\udc4d\ud83d\ude02\ud83d\udc4d\ud83d\ude02\ud83d\udc4d\ud83d\ude02\ud83d\udc4d\ud83d\ude02\ud83d\udc4d", "link_id": "t3_8zf48e", "time": 1531777981}}
+{"e2hntsm": {"text": "Hopefully eventually", "link_id": "t3_8zchsb", "time": 1531760258}}
+{"e2gftm3": {"text": "too*", "link_id": "t3_8z6hls", "time": 1531701647}}
+{"e2g214r": {"text": "\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02", "link_id": "t3_8z4nyo", "time": 1531687140}}
+{"e2ebsk1": {"text": "no? lol ", "link_id": "t3_8y4tta", "time": 1531606682}}
+{"e2dh9ge": {"text": "Yess finally, i've been waiting too", "link_id": "t3_8yo8ix", "time": 1531574236}}
+{"e29c2et": {"text": "\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02", "link_id": "t3_8yaczr", "time": 1531408456}}
+{"e27wfw9": {"text": "Atleast some graphical enhancements would be nice...", "link_id": "t3_8y3odw", "time": 1531346133}}
+{"e25p3c3": {"text": "You're a saviour", "link_id": "t3_8xsziw", "time": 1531262849}}
+{"e1zy8oz": {"text": "SEPPO", "link_id": "t3_8x0dyr", "time": 1531050038}}
+{"e1ys84k": {"text": "FeelsBadMan", "link_id": "t3_8wvube", "time": 1530993335}}
+{"e1pnojf": {"text": "Rn that tiny light at the end of the tunnel for me is possibly finding a working SSRI/SNRI. I've been trying different ones for 7 months now and im just starting to run out of energy...", "link_id": "t3_8vrcgy", "time": 1530618528}}
+{"e1pn11g": {"text": "I wonder if mixing up sleeping pills with those would work", "link_id": "t3_8vrcgy", "time": 1530617483}}
+{"e1pmr4y": {"text": "Every day just feels so miserable", "link_id": "t3_8vrcgy", "time": 1530617027}}
+{"e1nbubl": {"text": "gets* you've*", "link_id": "t3_8vgu6l", "time": 1530521749}}
+{"e1n43ma": {"text": "Imagine this instead of DMM", "link_id": "t3_8vfz8p", "time": 1530507658}}
+{"e1mib4s": {"text": "Than*", "link_id": "t3_8v92nq", "time": 1530483052}}
+{"e1kpst5": {"text": "Where chat?", "link_id": "t3_8v4r3q", "time": 1530399477}}
+{"e1jlv52": {"text": "I'd say you need high-end stats and gear for it but not necessarily max both. Obviously havent done it though since im a loner ", "link_id": "t3_8v0gx8", "time": 1530347804}}
+{"e1jlqoh": {"text": "I'd suggest u to try all the content u havent tried yet, such as raids and pvm bosses u havent done before. Thats what has kept me even more hooked ", "link_id": "t3_8v0gx8", "time": 1530347514}}
+{"e0v1xqc": {"text": "Why's it that these designs from community are always way better looking than the OSRS ones", "link_id": "t3_8rwhak", "time": 1529313582}}
+{"e0nb5l4": {"text": "Wish membership cards cleaned my room too", "link_id": "t3_8qz8rq", "time": 1528957694}}
+{"e0n548o": {"text": "They do sell coffee/tea cups too. I kind of understand him there but personally wouldnt mind having something that i dont have to take outside for everyone to see necessarily. Think he'd like that?", "link_id": "t3_8qyh66", "time": 1528948718}}
+{"e0n3cjj": {"text": "Draw him fanart and maybe get some merch from the store!", "link_id": "t3_8qyh66", "time": 1528946585}}
+{"dzz39l4": {"text": "This would be cool as heck as animated for Wallpaper Engine", "link_id": "t3_8nxdg8", "time": 1527904814}}
+{"dzo3hol": {"text": "Thats jagex for u right there", "link_id": "t3_8mjpes", "time": 1527446093}}
+{"dzdnzpk": {"text": "\"may of\" kek", "link_id": "t3_8l8qua", "time": 1526984093}}
+{"dzd4pux": {"text": "\"Use theres\" kids should spend more time learning basic English.", "link_id": "t3_8l5t8h", "time": 1526953100}}
+{"dz9al6v": {"text": "It is possible, someone just needs to claim the throne. Considering that this specific person would end up being quite praised afterwards.", "link_id": "t3_8koolj", "time": 1526770511}}
+{"dz991nh": {"text": "They really should add something like that and not rely on \"Jagex's OpenGL\"", "link_id": "t3_8kojlm", "time": 1526768610}}
+{"dz97686": {"text": "Too*", "link_id": "t3_8ko0yd", "time": 1526766332}}
+{"dz96mtr": {"text": "Most likely up to the 3rd party clients when it comes to renovating the graphics.", "link_id": "t3_8ko9hn", "time": 1526765697}}
+{"dz4pp06": {"text": "What do u think how many overloads and prayer enhancers i'd need for olm? When i solo i only need 4 doses of each for the entire olm fight.", "link_id": "t3_8k4gar", "time": 1526566138}}
+{"dyvttz8": {"text": "It is possible if anyone who knows how to do it is willing to take the job.", "link_id": "t3_8izm45", "time": 1526166958}}
+{"dyvk4xr": {"text": "It's not bad, completely playable. I get a stable 50FPS regardless where i am. I have a GTX1060 3GB with the newest drivers. Just moving around with the scroll wheel doesnt feel as fast and as responsive. This is not really a biggie to me but I just thought if there could be some slight tweak that could be done about it.", "link_id": "t3_8ivpiu", "time": 1526156034}}
+{"dyvjnyq": {"text": "&gt; folder The problem still exists in the official branch altho it is not a big problem, it still feels \"odd\". As if it was more unresponsive than non-opengl mode.", "link_id": "t3_8ivpiu", "time": 1526155517}}
+{"dyvj3m9": {"text": "OSBuddy version: 3.1.17Operating system: Windows 10Architecture: amd64Java version: 1.8.0_172Total CPU threads: 4Max memory: 518979584Free memory: 170591304Total memory: 384512000CPU identifier: Intel64 Family 6 Model 60 Stepping 3, GenuineIntelLocales: en_GB, en_GB, en_GBLanguage: en, eng, English, en-GB, enCountry: GB, United Kingdom, GBR, US", "link_id": "t3_8ivpiu", "time": 1526154893}}
+{"dystnai": {"text": "What have they thrown?", "link_id": "t3_8iiy9z", "time": 1526026231}}
+{"dydo7y4": {"text": "More eyecandies as animation smoothing was absolutely loved!", "link_id": "t3_8gq36k", "time": 1525353051}}
+{"dy8u42l": {"text": "Fog of war? ", "link_id": "t3_8g4hn5", "time": 1525138457}}
+{"dy5wtj6": {"text": "That's what exactly what im thinking. These devs also take stuff seriously instead of slacking and waiting weeks/months for fixing shit.", "link_id": "t3_8frgm1", "time": 1525013635}}
+{"dy2txck": {"text": "Can confirm, made the game way smoother for me too.", "link_id": "t3_8fb2qg", "time": 1524858408}}
+{"dy24qy6": {"text": "It lets you customize the prayer book.", "link_id": "t3_8f3mhj", "time": 1524836392}}
+{"dxr544s": {"text": "You could? I asked whether there would be graphical improvements made and they said they aren't working on any atm but wouldn't stop anyone from doing so.", "link_id": "t3_8dyq01", "time": 1524352309}}
+{"dxqseop": {"text": "What are u waiting for!?", "link_id": "t3_8duou6", "time": 1524337668}}
+{"dxqnpoq": {"text": "Cya OSBuddy", "link_id": "t3_8duou6", "time": 1524332416}}
+{"dxhlfao": {"text": "Been using them since last thursday, no problems.", "link_id": "t3_8csok3", "time": 1523931153}}
+{"dxel257": {"text": "\"Should of\" ...downvote here we go", "link_id": "t3_8cbry7", "time": 1523806690}}
+{"dxbqzrs": {"text": "I'll*", "link_id": "t3_8bvrcg", "time": 1523659913}}
+{"dx91gy2": {"text": "It is safe. They also released smooth animations in their most recent update which looks really nice and is safe to use.", "link_id": "t3_8brjv3", "time": 1523551338}}
+{"dwwogr1": {"text": "All of these are something I've considered. Your comment just brings me closer to trying them out. Should i wait for the remastered version of dark souls 1 to come out before trying them out?", "link_id": "t3_8a8r4l", "time": 1523014987}}
+{"dw0d9iy": {"text": "Than*", "link_id": "t3_85rl1m", "time": 1521573905}}
+{"dvkjslq": {"text": "Off*", "link_id": "t3_83tje7", "time": 1520855166}}
+{"dv0elb0": {"text": "To*", "link_id": "t3_8137yu", "time": 1519904974}}
+{"duwlh25": {"text": "Should have* ", "link_id": "t3_80men7", "time": 1519740163}}
+{"duqb4a2": {"text": "Agreed. ", "link_id": "t3_7yqxbx", "time": 1519424667}}
+{"duluqws": {"text": "I wish something like this could ever  be made real in OSRS.", "link_id": "t3_7z6vaa", "time": 1519235152}}
+{"dtowcav": {"text": "Much appreciated for the answer, i assume i just got slightly unlucky. Have a good weekend mate", "link_id": "t3_7v1zib", "time": 1517692597}}
+{"drr2gcq": {"text": "Im sure quite a few people would love some kind of \"little updates\" on how things are going on, including me.", "link_id": "t3_7m3e53", "time": 1514235928}}
+{"dqyn3s9": {"text": "Holy shit someone make this real!", "link_id": "t3_7if8k9", "time": 1512757991}}
+{"dpwiprl": {"text": "Awesome! Definitely excited for the updates and yes its good that the team is taking their time on making sure everything's working properly.", "link_id": "t3_7d89il", "time": 1510830847}}
