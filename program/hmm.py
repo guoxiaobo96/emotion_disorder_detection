@@ -232,11 +232,13 @@ def main():
                         choices=['GaussianHMM', 'MultinomialHMM'], default='MultinomialHMM')
     parser.add_argument('--model_path', type=str, default='./log/hmm')
     parser.add_argument('--model_name', type=str,
-                        default='multinomial_bipolar_depression_background')
+                        default='multinomial_depression_background')
     args = parser.parse_args()
     model_type = args.model_type
     model_path = os.path.join(args.model_path, args.model_name)
-    data_type_list = [['bipolar'], ['depression'], ['background']]
+    data_type_list = model_path.split('_')[1:]
+    for index, type in enumerate(data_type_list):
+        data_type_list[index] = type.split('-')
 
     # data_loader = DataLoaderForState(
     #     data_type_list=data_type_list, data_size=[400, 100, 200])
