@@ -4,7 +4,9 @@ import argparse
 import os
 import pickle
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, roc_auc_score
+from multiprocessing import Pool
 from data import DataLoaderForState
+import random
 
 
 class HMM(object):
@@ -17,16 +19,16 @@ class HMM(object):
         self._model_type = model_type
         self._metrics = dict()
         self._best_model = {'metrics': dict(), 'hyper_parameters': dict()}
-        self._hyper_parameters = {
-            'n_components': 0, 'n_iter': 0, 'algorithm': ''}
         if model_type != 'MultinomialHMM':
             self._hyper_parameters['covariance_type'] = ''
         self.data = data_loader
         self.load_model = load_model
+        self._hyper_parameters = {
+            'n_components': 0, 'n_iter': 0, 'algorithm': '', 'class_number': self.data.class_number}
         if load_model:
             self._load_model()
 
-    def fit(self):
+    def fit(self, processing=1, iter=3):
         self._data()
         self._best_model['metrics']['accuracy'] = 0
         if self.load_model:
@@ -38,19 +40,19 @@ class HMM(object):
             self.test()
             self._save_model()
 
-        n_component_list = [5 * i for i in range(4, 7)]
-        n_iter_list = [50 * i for i in range(1, 5)]
+        n_component_list = [i for i in range(5, 20)]
+        n_iter_list = [10 * i for i in range(1, 5)]
         algorithm_list = ['viterbi', 'map']
         if self._model_type != 'MultinomialHMM':
             covariance_type_list = ["spherical", "diag", "full", "tied"]
-
+        pool = Pool(processes=processing)
         for n_component in n_component_list:
             for n_iter in n_iter_list:
                 for algorithm in algorithm_list:
                     self._hyper_parameters['n_components'] = n_component
                     self._hyper_parameters['n_iter'] = n_iter
                     self._hyper_parameters['algorithm'] = algorithm
-                    temp_best_acc = 0
+
                     if self._model_type != 'MultinomialHMM':
                         for covariance_type in covariance_type_list:
                             self._hyper_parameters['covariance_type'] = covariance_type
@@ -67,28 +69,36 @@ class HMM(object):
                                     self.test()
                                     self._save_model()
                     else:
-                        for iter in range(3):
-                            self._build_model()
-                            self.train_model()
+                        data = []
+                        for i in range(iter):
+                            data.append({"hyper": self._hyper_parameters, 'random_seed': random.randint(1, 20),
+                                         "train_data": self._train_data, "valid_data": self._valid_data})
+                        results = pool.map(self._helper_function, data)
+                        temp_best_acc = 0
+                        for result in results:
+                            metrics, models = result
                             temp_best_acc = max(
-                                self._metrics['accuracy'], temp_best_acc)
-
-                            if self._metrics['accuracy'] >= self._best_model['metrics']['accuracy']:
+                                metrics['accuracy'], temp_best_acc)
+                            if metrics['accuracy'] >= self._best_model['metrics']['accuracy']:
+                                self.model_list = models
                                 self.test()
                                 for key, value in self._metrics.items():
                                     self._best_model['metrics'][key] = value
                                 for key, value in self._hyper_parameters.items():
                                     self._best_model['hyper_parameters'][key] = value
                                 self._save_model()
-                    print("n_component is %d and the n_iter is %d and the accuracy is %2f" % (
-                        n_component, n_iter, temp_best_acc))
+                print("n_component is %d and the n_iter is %d and the accuracy is %2f" % (
+                    n_component, n_iter, temp_best_acc))
 
-    def train_model(self):
-        for index, model in enumerate(self.model_list):
-            data = self._train_data[index]['feature']
-            length = self._train_data[index]['length']
+    def train_model(self, model_list=None, train_data=None):
+        if model_list is None:
+            model_list = self.model_list
+        if train_data is None:
+            train_data = self._train_data
+        for index, model in enumerate(model_list):
+            data = train_data[index]['feature']
+            length = train_data[index]['length']
             model.fit(data, length)
-        self._valid()
 
     def predict(self, data):
         prob_list = [0 for _ in range(len(self.model_list))]
@@ -103,7 +113,7 @@ class HMM(object):
         label_pred = []
         for item in feature:
             label_pred.append(self.predict(item))
-        self._calculate_metrics(label_pred, label)
+        self._metrics = self._calculate_metrics(label_pred, label)
         print('Best accuracy on test dataset : %2f' %
               self._metrics['accuracy'])
 
@@ -131,12 +141,14 @@ class HMM(object):
 
         print('data prepare finish')
 
-    def _build_model(self):
-        n_components = self._hyper_parameters['n_components']
-        n_iter = self._hyper_parameters['n_iter']
-        algorithm = self._hyper_parameters['algorithm']
-        if 'covariance_type' in self._hyper_parameters:
-            covariance_type = self._hyper_parameters['covariance_type']
+    def _build_model(self, hyper_parameters, random_seed):
+        n_components = hyper_parameters['n_components']
+        n_iter = hyper_parameters['n_iter']
+        algorithm = hyper_parameters['algorithm']
+        class_number = hyper_parameters['class_number']
+        random_state = random_seed
+        if 'covariance_type' in hyper_parameters:
+            covariance_type = hyper_parameters['covariance_type']
 
         if self._model_type == 'GaussianHMM':
             hmm_model = hmm.GaussianHMM
@@ -145,31 +157,35 @@ class HMM(object):
         elif self._model_type == 'MultinomialHMM':
             hmm_model = hmm.MultinomialHMM
         if 'covariance_type' not in self._hyper_parameters:
-            self.model_list = [hmm_model(n_components=n_components, n_iter=n_iter,
-                                         algorithm=algorithm) for _ in range(self.data.class_number)]
+            model_list = [hmm_model(n_components=n_components, n_iter=n_iter,
+                                    algorithm=algorithm, random_state=random_state) for _ in range(class_number)]
         else:
-            self.model_list = [hmm_model(n_components=n_components, n_iter=n_iter, algorithm=algorithm,
-                                         covariance_type=covariance_type) for _ in range(self.data.class_number)]
+            model_list = [hmm_model(n_components=n_components, n_iter=n_iter, algorithm=algorithm,
+                                    covariance_type=covariance_type, random_state=random_state) for _ in range(class_number)]
+        return model_list
 
-    def _valid(self):
-        data = self.data.valid_dataset
+    def _valid(self, data=None):
+        if data is None:
+            data = self.data.valid_dataset
         feature, label = data
         label_pred = []
         for item in feature:
             label_pred.append(self.predict(item))
-        self._calculate_metrics(label_pred, label)
+        return self._calculate_metrics(label_pred, label)
 
     def _calculate_metrics(self, pred, ground):
+        metrics = dict()
         if 'accuracy' in self._metrics_list:
-            self._metrics['accuracy'] = accuracy_score(ground, pred)
+            metrics['accuracy'] = accuracy_score(ground, pred)
         if 'micro_f1_score' in self._metrics_list:
-            self._metrics['micro_f1_score'] = f1_score(
+            metrics['micro_f1_score'] = f1_score(
                 ground, pred, average='micro')
         if 'macro_f1_score' in self._metrics_list:
-            self._metrics['macro_f1_score'] = f1_score(
+            metrics['macro_f1_score'] = f1_score(
                 ground, pred, average='macro')
         if 'confusion' in self._metrics_list:
-            self._metrics['confusion_matrix'] = confusion_matrix(ground, pred)
+            metrics['confusion_matrix'] = confusion_matrix(ground, pred)
+        return metrics
 
     def _save_model(self):
         json_file = os.path.join(self._model_path, 'result')
@@ -186,6 +202,16 @@ class HMM(object):
         for index, model in enumerate(self.model_list):
             with open(model_file[index], mode='wb') as fp:
                 pickle.dump(model, fp)
+
+    def _helper_function(self, data):
+        hyper_parameters = data['hyper']
+        train_data = data['train_data']
+        valid_data = data['valid_data']
+        random_seed = data['random_seed']
+        model_list = self._build_model(hyper_parameters, random_seed)
+        self.train_model(model_list, train_data)
+        metrics = self._valid(valid_data)
+        return (metrics, model_list)
 
     def calculate_auc(self):
         data = self.data.test_dataset
@@ -218,7 +244,7 @@ def main():
         data_type_list=data_type_list, data_size=[200, 100, 100])
     model = HMM(model_type, data_loader, model_path,
                 data_type_list, load_model=True)
-    model.fit()
+    model.fit(processing=3)
     # model.test()
 
 
