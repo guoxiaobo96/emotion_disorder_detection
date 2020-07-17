@@ -45,7 +45,6 @@ class HMM(object):
         algorithm_list = ['viterbi', 'map']
         if self._model_type != 'MultinomialHMM':
             covariance_type_list = ["spherical", "diag", "full", "tied"]
-        pool = Pool(processes=processing)
         for n_component in n_component_list:
             for n_iter in n_iter_list:
                 for algorithm in algorithm_list:
@@ -73,7 +72,8 @@ class HMM(object):
                         for i in range(iter):
                             data.append({"hyper": self._hyper_parameters, 'random_seed': random.randint(1, 20),
                                          "train_data": self._train_data, "valid_data": self._valid_data})
-                        results = pool.map(self._helper_function, data)
+                        with Pool(processes=processing) as pool:
+                            results = pool.map(self._helper_function, data)
                         temp_best_acc = 0
                         for result in results:
                             metrics, models = result
@@ -157,12 +157,12 @@ class HMM(object):
         elif self._model_type == 'MultinomialHMM':
             hmm_model = hmm.MultinomialHMM
         if 'covariance_type' not in self._hyper_parameters:
-            model_list = [hmm_model(n_components=n_components, n_iter=n_iter,
-                                    algorithm=algorithm, random_state=random_state) for _ in range(class_number)]
+            self.model_list = [hmm_model(n_components=n_components, n_iter=n_iter,
+                                         algorithm=algorithm, random_state=random_state) for _ in range(class_number)]
         else:
-            model_list = [hmm_model(n_components=n_components, n_iter=n_iter, algorithm=algorithm,
-                                    covariance_type=covariance_type, random_state=random_state) for _ in range(class_number)]
-        return model_list
+            self.model_list = [hmm_model(n_components=n_components, n_iter=n_iter, algorithm=algorithm,
+                                         covariance_type=covariance_type, random_state=random_state) for _ in range(class_number)]
+        return self.model_list
 
     def _valid(self, data=None):
         if data is None:
