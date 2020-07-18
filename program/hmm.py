@@ -240,10 +240,12 @@ def main():
     for index, type in enumerate(data_type_list):
         data_type_list[index] = type.split('-')
 
-    # data_loader = DataLoaderForState(
-    #     data_type_list=data_type_list, data_size=[400, 100, 200])
+    if args.model_name == "multinomial_bipolar-depression_background":
+        data_size = [400, 100, 200]
+    else:
+        data_size = [200, 100, 100]
     data_loader = DataLoaderForState(
-        data_type_list=data_type_list, data_size=[200, 100, 100])
+        data_type_list=data_type_list, data_size=data_size)
     model = HMM(model_type, data_loader, model_path,
                 data_type_list, load_model=True)
     model.fit(processing=3)
