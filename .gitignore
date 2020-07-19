@@ -7,3 +7,5 @@ program/*.sh
 data/reddit/*/*
 data/state/*/*
 work.sh
+.vscode/.ropeproject/config.py
+.vscode/.ropeproject/objectdb
