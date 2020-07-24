@@ -1,9 +1,9 @@
-accuracy : 0.84
-micro_f1_score : 0.8399999999999999
-macro_f1_score : 0.8399999999999999
-confusion_matrix : [[84 16]
- [16 84]]
-n_components : 17
-n_iter : 10
+accuracy : 0.81
+micro_f1_score : 0.81
+macro_f1_score : 0.8096955128205128
+confusion_matrix : [[77 23]
+ [15 85]]
+n_components : 27
+n_iter : 45
 algorithm : map
 class_number : 2
