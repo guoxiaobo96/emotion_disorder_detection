@@ -220,6 +220,22 @@ def _identify_disorder(user, comment, author_flair_text, identify_list, banned_l
     return False
 
 
+def remove_duplicate_user(user_list_folder, user_file_list):
+    user_list = []
+    user_info = []
+    for file in user_file_list:
+        user_list_single, user_info_single = read_user_list(
+            user_list_folder, file)
+        user_list.append(user_list_single)
+        user_info.append(user_info_single)
+    for i, user_list_single in enumerate(user_list):
+        for user_id in user_list_single:
+            for index, temp in enumerate(user_list):
+                if user_id in temp and i != index:
+                    print('test')
+    print('test')
+
+
 def get_data():
     pass
 
@@ -230,17 +246,24 @@ def read_user_list(user_list_folder, keyword):
     file_path = os.path.join(user_list_folder, keyword)
     with open(file_path, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user, comment, time_step, author_flair_text = line.strip().split(
+            user, comment, author_flair_text, time_step = line.strip().split(
                 ' [info] ')
             user_list.add(user)
-            user_info[user] = {'user': user,
-                               'comment': comment, 'time': time_step, 'author_flair_text': author_flair_text}
+            if user not in user_info:
+                user_info[user] = {'user': user,
+                                   'comment': comment, 'time': time_step, 'author_flair_text': author_flair_text}
+            elif time_step < user_info[user]['time']:
+                temp = user_info[user]['time']
+                user_info[user] = {'user': user,
+                                   'comment': comment, 'time': time_step, 'author_flair_text': author_flair_text}
     return user_list, user_info
 
 
 def main():
-    get_user(data_path_list, user_list_folder, [
-             'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], 'checked_file')
+    # get_user(data_path_list, user_list_folder, [
+    #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], 'checked_file')
+    remove_duplicate_user(user_list_folder, [
+                          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'])
 
 
 if __name__ == '__main__':
