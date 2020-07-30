@@ -1,10 +1,10 @@
-accuracy : 0.6066666666666667
-micro_f1_score : 0.6066666666666667
-macro_f1_score : 0.5834755955512628
-confusion_matrix : [[68 17 15]
- [42 30 28]
- [10  6 84]]
-n_components : 0
-n_iter : 0
-algorithm : 
+accuracy : 0.6033333333333334
+micro_f1_score : 0.6033333333333334
+macro_f1_score : 0.596941371488352
+confusion_matrix : [[67 29  4]
+ [49 36 15]
+ [13  9 78]]
+n_components : 19
+n_iter : 50
+algorithm : map
 class_number : 3

@@ -40,7 +40,7 @@ class HMM(object):
             self.test()
             self._save_model()
 
-        n_component_list = [i for i in range(2, 40)]
+        n_component_list = [i for i in range(27, 40)]
         n_iter_list = [5 * i for i in range(1, 11)]
         algorithm_list = ['viterbi', 'map']
         if self._model_type != 'MultinomialHMM':
