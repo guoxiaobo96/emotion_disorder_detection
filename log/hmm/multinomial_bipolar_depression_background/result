@@ -1,10 +1,10 @@
-accuracy : 0.6033333333333334
-micro_f1_score : 0.6033333333333334
-macro_f1_score : 0.596941371488352
-confusion_matrix : [[67 29  4]
- [49 36 15]
- [13  9 78]]
-n_components : 19
+accuracy : 0.62
+micro_f1_score : 0.62
+macro_f1_score : 0.6055221888555221
+confusion_matrix : [[67 21 12]
+ [43 36 21]
+ [12  5 83]]
+n_components : 27
 n_iter : 50
-algorithm : map
+algorithm : viterbi
 class_number : 3

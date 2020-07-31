@@ -38,9 +38,9 @@ class HMM(object):
             for key, value in self._hyper_parameters.items():
                 self._best_model['hyper_parameters'][key] = value
             self.test()
-            self._save_model()
+            # self._save_model()
 
-        n_component_list = [i for i in range(27, 40)]
+        n_component_list = [i for i in range(21, 40)]
         n_iter_list = [5 * i for i in range(1, 11)]
         algorithm_list = ['viterbi', 'map']
         if self._model_type != 'MultinomialHMM':

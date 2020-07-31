@@ -1,9 +1,9 @@
-accuracy : 0.84
-micro_f1_score : 0.8399999999999999
-macro_f1_score : 0.8399839983998401
+accuracy : 0.835
+micro_f1_score : 0.835
+macro_f1_score : 0.8349628666449951
 confusion_matrix : [[170  30]
- [ 34 166]]
-n_components : 19
+ [ 36 164]]
+n_components : 26
 n_iter : 50
 algorithm : map
 class_number : 2
