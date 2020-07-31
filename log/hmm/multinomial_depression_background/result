@@ -1,9 +1,9 @@
 accuracy : 0.81
 micro_f1_score : 0.81
-macro_f1_score : 0.8096955128205128
-confusion_matrix : [[77 23]
- [15 85]]
-n_components : 27
-n_iter : 45
-algorithm : map
+macro_f1_score : 0.809313528703332
+confusion_matrix : [[87 13]
+ [25 75]]
+n_components : 35
+n_iter : 50
+algorithm : viterbi
 class_number : 2
