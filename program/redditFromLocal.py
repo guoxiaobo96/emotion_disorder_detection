@@ -32,7 +32,7 @@ depression_banned_list = ['bipolar', 'anxiety']
 anxiety_banned_list = ['bipolar', 'depression']
 
 data_path_list = ['f:/reddit/comments', 'f:/reddit/submissions']
-user_list_folder = './data/new_user_list'
+user_list_folder = './data/user_list'
 
 
 class Zreader:
@@ -229,11 +229,20 @@ def remove_duplicate_user(user_list_folder, user_file_list):
         user_list.append(user_list_single)
         user_info.append(user_info_single)
     for i, user_list_single in enumerate(user_list):
-        for user_id in user_list_single:
-            for index, temp in enumerate(user_list):
-                if user_id in temp and i != index:
-                    print('test')
-    print('test')
+        target_file = os.path.join(user_list_folder, user_file_list[i])
+        with open(target_file,mode='w',encoding='utf8') as fp:
+            for user_id in user_list_single:
+                duplicate_mark = False
+                for index, temp in enumerate(user_list):
+                    if user_id in temp and i != index:
+                        duplicate_mark = True
+                        break
+                if duplicate_mark:
+                    continue
+                data = user_info[i][user_id]['user']+' [info] ' + user_info[i][user_id]['comment']+' [info] ' + user_info[i][user_id]['author_flair_text']+' [info] ' + user_info[i][user_id]['time']
+                fp.write(data+'\n')
+
+    print('user filter finish')
 
 
 def get_data():
