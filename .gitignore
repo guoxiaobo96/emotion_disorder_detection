@@ -10,3 +10,4 @@ work.sh
 .vscode/.ropeproject/config.py
 .vscode/.ropeproject/objectdb
 submissions/*
+data/full_reddit/*/*

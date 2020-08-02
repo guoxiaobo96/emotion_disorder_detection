@@ -32,7 +32,8 @@ depression_banned_list = ['bipolar', 'anxiety']
 anxiety_banned_list = ['bipolar', 'depression']
 
 data_path_list = ['f:/reddit/comments', 'f:/reddit/submissions']
-user_list_folder = './data/user_list'
+# data_path_list = ['f:/reddit/submissions']
+user_list_folder = './data/full_user_list'
 
 
 class Zreader:
@@ -114,104 +115,85 @@ def get_user(data_path_list, user_list_folder, user_file_list, checked_file):
             if file.endswith('.zst'):
                 for line in fp.readlines():
                     try:
-                        obj = json.loads(line)
-                        user = obj['author']
-                        if user == '[deleted]':
-                            continue
-                        try:
-                            comment = obj['body'].replace(
-                                '\n', '').replace('\r', '')
-                        except:
-                            comment = obj['title'].replace(
-                                '\n', '').replace('\r', '')
-                        if obj['author_flair_text'] is not None:
-                            author_flair_text = obj['author_flair_text'].replace(
-                                '\n', '').replace('\r', '')
-                        else:
-                            author_flair_text = 'None'
-                        time_step = str(obj['created_utc'])
+                        _get_user_one_line(line, user_info, data)
                     except:
                         continue
-                    line_data = {'user': user, 'comment': comment,
-                                 'time': time_step, 'author_flair_text': author_flair_text}
-                    _, disorder_list = _solve_data(line_data, data)
-                    for index, disorder_mark in enumerate(disorder_list):
-                        if disorder_mark:
-                            temp = line_data['user'] + ' [info] ' + line_data['comment'] + ' [info] ' + \
-                                line_data['author_flair_text'] + \
-                                ' [info] ' + line_data['time']
-                            user_info[index].append(temp)
             else:
                 while True:
                     line = fp.readline()
                     if not line:
                         break
                     try:
-                        obj = json.loads(line)
-                        user = obj['author']
-                        if user == '[deleted]':
-                            continue
-                        try:
-                            comment = obj['body'].replace(
-                                '\n', '').replace('\r', '')
-                        except:
-                            comment = obj['title'].replace(
-                                '\n', '').replace('\r', '')
-                        if obj['author_flair_text'] is not None:
-                            author_flair_text = obj['author_flair_text'].replace(
-                                '\n', '').replace('\r', '')
-                        else:
-                            author_flair_text = 'None'
-                        time_step = str(obj['created_utc'])
+                        _get_user_one_line(line, user_info, data)
                     except:
                         continue
-                    line_data = {'user': user, 'comment': comment,
-                                 'time': time_step, 'author_flair_text': author_flair_text}
-                    _, disorder_list = _solve_data(line_data, data)
-                    for index, disorder_mark in enumerate(disorder_list):
-                        if disorder_mark:
-                            temp = line_data['user'] + ' [info] ' + line_data['comment'] + ' [info] ' + \
-                                line_data['author_flair_text'] + \
-                                ' [info] ' + line_data['time']
-                            user_info[index].append(temp)
-            with open(checked_file, mode='a') as fp:
-                fp.write(file+'\n')
             for i, target_file in enumerate(user_file_list):
                 with open(os.path.join(user_list_folder, target_file), mode='a', encoding='utf8') as fp:
                     for item in user_info[i]:
                         fp.write(item + '\n')
+            with open(checked_file, mode='a') as fp:
+                fp.write(file+'\n')
             print("%s finished with %d seconds" %
                   (file, time.time()-start_time))
 
+def _get_user_one_line(line, user_info, data):
+    obj = json.loads(line)
+    user = obj['author']
+    if user == '[deleted]':
+        return
+    if 'body' in obj:
+        text = obj['body'].replace(
+            '\n', '').replace('\r', '')
+    elif 'title' in obj:
+        text = obj['title'].replace(
+            '\n', '').replace('\r', '')
+        text = text + ' ' + obj['selftext'].replace(
+            '\n', '').replace('\r', '')
+    text = text.strip()
+    if obj['author_flair_text'] is not None:
+        author_flair_text = obj['author_flair_text'].replace(
+            '\n', '').replace('\r', '')
+    else:
+        author_flair_text = 'None'
+    time_stamp = str(obj['created_utc'])
+    line_data = {'user': user, 'text': text,
+                    'time': time_stamp, 'author_flair_text': author_flair_text}
+    _, disorder_list = _get_user_helper(line_data, data)
+    for index, disorder_mark in enumerate(disorder_list):
+        if disorder_mark:
+            temp = line_data['user'] + ' [info] ' + line_data['text'] + ' [info] ' + \
+                line_data['author_flair_text'] + \
+                ' [info] ' + line_data['time']
+            user_info[index].append(temp)
 
-def _solve_data(line_data, data):
 
+def _get_user_helper(line_data, data):
     identify_list = data['identify_list']
     banned_list = data['banned_list']
     user_list = data['user_list']
     flair_list = data['flair_list']
 
     user = line_data['user']
-    comment = line_data['comment']
-    time_step = line_data['time']
+    text = line_data['text']
+    time_stamp = line_data['time']
     author_flair_text = line_data['author_flair_text']
     disorder_list = list()
 
     for i in range(len(identify_list)):
         disorder_list.append(_identify_disorder(
-            user, comment, author_flair_text, identify_list[i], banned_list[i], flair_list[i], user_list[i]))
+            user, text, author_flair_text, identify_list[i], banned_list[i], flair_list[i], user_list[i]))
 
     return (line_data, disorder_list)
 
 
-def _identify_disorder(user, comment, author_flair_text, identify_list, banned_list, flair_list, user_list):
+def _identify_disorder(user, text, author_flair_text, identify_list, banned_list, flair_list, user_list):
     if user in user_list:
         return False
     for item in banned_list:
-        if item in comment:
+        if item in text:
             return False
     for item in identify_list:
-        if item in comment or item in author_flair_text:
+        if item in text or item in author_flair_text:
             return True
     for item in flair_list:
         if item in author_flair_text:
@@ -230,7 +212,7 @@ def remove_duplicate_user(user_list_folder, user_file_list):
         user_info.append(user_info_single)
     for i, user_list_single in enumerate(user_list):
         target_file = os.path.join(user_list_folder, user_file_list[i])
-        with open(target_file,mode='w',encoding='utf8') as fp:
+        with open(target_file, mode='w', encoding='utf8') as fp:
             for user_id in user_list_single:
                 duplicate_mark = False
                 for index, temp in enumerate(user_list):
@@ -239,14 +221,123 @@ def remove_duplicate_user(user_list_folder, user_file_list):
                         break
                 if duplicate_mark:
                     continue
-                data = user_info[i][user_id]['user']+' [info] ' + user_info[i][user_id]['comment']+' [info] ' + user_info[i][user_id]['author_flair_text']+' [info] ' + user_info[i][user_id]['time']
+                data = user_info[i][user_id]['user']+' [info] ' + user_info[i][user_id]['text']+' [info] ' + \
+                    user_info[i][user_id]['author_flair_text'] + \
+                    ' [info] ' + user_info[i][user_id]['time']
                 fp.write(data+'\n')
 
     print('user filter finish')
 
 
-def get_data():
-    pass
+def get_data(data_path_list, user_list_folder, user_file_list, target_folder, checked_file):
+    checked_file_list = set()
+    target_folder_list = []
+    with open(checked_file, mode='r') as fp:
+        for line in fp.readlines():
+            checked_file_list.add(line.strip())
+    user_list = list()
+    user_info = list()
+    for file in user_file_list:
+        data_type = file.split('_')[0]
+        user_list_single, user_info_single = read_user_list(
+            user_list_folder, file)
+        user_list.append(user_list_single)
+        user_info.append(user_info_single)
+        target_folder_list.append(os.path.join(target_folder, data_type))
+        if not os.path.exists(os.path.join(target_folder, data_type)):
+            os.mkdir(os.path.join(target_folder, data_type))
+
+    data_file_list = dict()
+
+    for data_path in data_path_list:
+        for file in os.listdir(data_path):
+            temp = file.split('_')
+
+            if temp[1] == 'v2':
+                time_period = temp[2]
+            else:
+                time_period = temp[1]
+            time_period = time_period.split('.')[0]
+            if time_period not in data_file_list:
+                data_file_list[time_period] = []
+
+            data_file_list[time_period].append(os.path.join(data_path, file))
+    time_list = sorted(data_file_list.keys())
+    with Pool(processes=6) as pool:
+        results = []
+        for time_period in time_list:
+            for file in data_file_list[time_period]:
+                if file in checked_file_list:
+                    continue
+                result = pool.apply_async(func=_get_data_single_file, args=(
+                    file, user_info, target_folder_list,checked_file,))
+                results.append(result)
+        pool.close()
+        pool.join()
+        for result in results:
+            result.get()
+
+
+def _get_data_single_file(file, user_info, target_folder_list, checked_file):
+    if file.endswith('.bz2'):
+        fp = bz2.open(file, mode='r')
+    elif file.endswith('.zst'):
+        fp = Zreader(file, chunk_size=2**24)
+    elif file.endswith('.xz'):
+        fp = lzma.open(file, mode='r')
+    else:
+        print('File type error with %s' % file)
+    start_time = time.time()
+    if file.endswith('.zst'):
+        for line in fp.readlines():
+            try:
+                _get_data_single_line(line, user_info, target_folder_list)
+            except:
+                continue
+    else:
+        while True:
+            line = fp.readline()
+            if not line:
+                break
+            try:
+                _get_data_single_line(line, user_info, target_folder_list)
+            except:
+                continue
+    with open(checked_file, mode='a') as fp:
+        fp.write(file+'\n')
+    print("%s finished at %s with %d seconds" % (file,time.strftime("%H:%M:%S", time.localtime()), time.time() - start_time))
+
+
+def _get_data_single_line(line, user_info, target_folder_list):
+    obj = json.loads(line)
+    user = obj['author']
+    if user == '[deleted]':
+        return
+    if 'body' in obj:
+        text = obj['body'].replace(
+            '\n', '').replace('\r', '')
+    elif 'title' in obj:
+        text = obj['title'].replace(
+            '\n', '').replace('\r', '')
+        text = text + ' ' + obj['selftext'].replace(
+            '\n', '').replace('\r', '')
+    text = text.strip()
+    subreddit = obj['subreddit']
+    id = obj['id']
+    time_stamp = str(obj['created_utc'])
+    permalink = obj['permalink']
+    for index, user_info_single in enumerate(user_info):
+        if user in user_info_single:
+            write_data = {id: {"text": text, "subreddit": subreddit,
+                               "time": time_stamp, "permalink": permalink}}
+            target_path = os.path.join(target_folder_list[index], user)
+            if time_stamp < user_info_single[user]['time']:
+                target_path += '.before'
+            else:
+                target_path += '.after'
+            with open(target_path, mode='a') as fp:
+                fp.write(json.dumps(write_data) + '\n')
+            break
 
 
 def read_user_list(user_list_folder, keyword):
@@ -255,24 +346,26 @@ def read_user_list(user_list_folder, keyword):
     file_path = os.path.join(user_list_folder, keyword)
     with open(file_path, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user, comment, author_flair_text, time_step = line.strip().split(
+            user, text, author_flair_text, time_stamp = line.strip().split(
                 ' [info] ')
             user_list.add(user)
             if user not in user_info:
                 user_info[user] = {'user': user,
-                                   'comment': comment, 'time': time_step, 'author_flair_text': author_flair_text}
-            elif time_step < user_info[user]['time']:
+                                   'text': text, 'time': time_stamp, 'author_flair_text': author_flair_text}
+            elif time_stamp < user_info[user]['time']:
                 temp = user_info[user]['time']
                 user_info[user] = {'user': user,
-                                   'comment': comment, 'time': time_step, 'author_flair_text': author_flair_text}
+                                   'text': text, 'time': time_stamp, 'author_flair_text': author_flair_text}
     return user_list, user_info
 
 
 def main():
     # get_user(data_path_list, user_list_folder, [
     #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], 'checked_file')
-    remove_duplicate_user(user_list_folder, [
-                          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'])
+    # remove_duplicate_user(user_list_folder, [
+    #                       'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'])
+    get_data(data_path_list, user_list_folder, [
+             'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], './data/full_reddit', 'checked_file')
 
 
 if __name__ == '__main__':
