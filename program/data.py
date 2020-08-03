@@ -129,7 +129,8 @@ class DataLoaderForTransProb(object):
         self.train_dataset = []
         self.valid_dataset = []
         self.test_dataset = []
-        self.build_dataset(self.data_type_list,self.data_size)
+        self._state_number = 5
+        self.build_dataset(self.data_type_list, self.data_size)
         
     def build_dataset(self, data_type_list, data_size):
         data = []
@@ -146,7 +147,7 @@ class DataLoaderForTransProb(object):
                         user_list.append(user)
                 for index, user in enumerate(user_list):
                     state_list = []
-                    state_prob = np.array([[0.0 for _ in range(17)] for i in range(17)])
+                    state_prob = np.array([[0.0 for _ in range(self._state_number)] for i in range(self._state_number)])
                     user_state_path = os.path.join(user_state_folder, user)
                     with open(user_state_path, mode='r', encoding='utf8') as fp:
                         for line in fp.readlines():
@@ -154,19 +155,20 @@ class DataLoaderForTransProb(object):
                             state_int = 0
                             if state != [-1, -1, -1, -1]:
                                 for i, s in enumerate(state):
-                                    state_int += pow(2, i) * s
+                                    if i not in [0,1]:
+                                        state_int += pow(2, i-2) * s
                                 state_int += 1
                             state_list.append(state_int)
 
                     for i, state in enumerate(state_list[1:]):
                         state_prob[state_list[i - 1]][state] += 1.0
-                    for state_prev in range(17):
+                    for state_prev in range(self._state_number):
                         sum = np.sum(state_prob[state_prev])
                         if sum == 0:
-                            for state_next in range(17):
+                            for state_next in range(self._state_number):
                                 state_prob[state_prev][state_next] = 0
                         else:
-                            for state_next in range(17):
+                            for state_next in range(self._state_number):
                                 state_prob[state_prev][state_next] /= sum
                     data[type_index].append(state_prob)
         split_number = 0
