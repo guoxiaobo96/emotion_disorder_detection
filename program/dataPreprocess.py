@@ -1,21 +1,20 @@
+from nltk.tokenize import sent_tokenize
+from official.nlp.bert import tokenization
+from random import shuffle, choice, seed
+import tensorflow as tf
+import argparse
+import numpy as np
+import re
+import json
 import os
 import logging
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
-import json
-import re
-
-import numpy as np
-import argparse
-
-import tensorflow as tf
-from random import shuffle, choice, seed
-from official.nlp.bert import tokenization
-from nltk.tokenize import sent_tokenize
 
 # bert_model_dir = 'F:/pretrained-models/bert/wwm_cased_L-24_H-1024_A-16'
 bert_model_dir = '/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16'
+
 
 def build_text_tfrecord(user_file_list, data_path_list, record_path):
     suffix_list = ['.before', '.after']
@@ -27,9 +26,9 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
     tokenizer = tokenization.FullTokenizer(
         bert_vocab_file, do_lower_case=False)
 
-    with open(user_file_list,mode='r') as fp:
+    with open(user_file_list, mode='r') as fp:
         for line in fp.readlines():
-             user_set.add(line.split(' [info] ')[0])
+            user_set.add(line.split(' [info] ')[0])
     user_count = 0
     for user in user_set:
         for suffix in suffix_list:
@@ -43,7 +42,8 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
                 for line in fp.readlines():
                     try:
                         for id, value in json.loads(line.strip()).items():
-                            feature, text = _prepare_reddit_text_id(value['text'],tokenizer,max_seq)
+                            feature, text = _prepare_reddit_text_id(
+                                value['text'], tokenizer, max_seq)
                             data[id] = feature
                             text_data[id] = text
                     except json.decoder.JSONDecodeError:
@@ -53,7 +53,7 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
             writer = tf.io.TFRecordWriter(record_file)
             for id, feature in data.items():
                 for sentence_feature in feature:
-                    text_ids, text_mask, segment_ids= sentence_feature
+                    text_ids, text_mask, segment_ids = sentence_feature
                     example = tf.train.Example(
                         features=tf.train.Features(
                             feature={
@@ -68,7 +68,8 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
             writer.close()
         user_count += 1
     print('finish')
-            
+
+
 def build_multi_class_tfrecord(data_path_list, record_path, type_list=["train", "valid", "test"]):
 
     bert_vocab_file = os.path.join(bert_model_dir, 'vocab.txt')
@@ -99,7 +100,7 @@ def build_multi_class_tfrecord(data_path_list, record_path, type_list=["train", 
                     for i in range(len(label)):
                         label[i] = int(label[i])
                         if type == 0:
-                            meta_data['class_weight_list'][label[i]] += 1 
+                            meta_data['class_weight_list'][label[i]] += 1
                     if _clean_text(text) not in text_set:
                         text_set.add(_clean_text(text))
                         text = _prepare_text_id(
@@ -138,18 +139,20 @@ def build_multi_class_tfrecord(data_path_list, record_path, type_list=["train", 
 
     basic_weight = max(meta_data['class_weight_list'])
     for i, weight in enumerate(meta_data['class_weight_list']):
-        meta_data['class_weight_list'][i] = basic_weight / meta_data['class_weight_list'][i]
+        meta_data['class_weight_list'][i] = basic_weight / \
+            meta_data['class_weight_list'][i]
     meta_file = os.path.join(record_path, 'meta_data')
     with open(meta_file, mode='w', encoding='utf8') as fp:
         json.dump(meta_data, fp)
+
 
 def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["train", "valid", "test"], balanced=True):
 
     bert_vocab_file = os.path.join(bert_model_dir, 'vocab.txt')
     tokenizer = tokenization.FullTokenizer(
         bert_vocab_file, do_lower_case=False)
-    count_list = [[0,0] for _ in range(len(data_path_list))]
-    tweet_list = [[[],[]] for _ in range(len(data_path_list))]
+    count_list = [[0, 0] for _ in range(len(data_path_list))]
+    tweet_list = [[[], []] for _ in range(len(data_path_list))]
     meta_data = dict()
 
     meta_data['classes'] = 2
@@ -173,7 +176,7 @@ def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["
                     for i in range(len(label)):
                         label[i] = int(label[i])
                         if type == 0:
-                            meta_data['class_weight_list'][label[i]] += 1 
+                            meta_data['class_weight_list'][label[i]] += 1
                     if _clean_text(text) not in text_set:
                         text_set.add(_clean_text(text))
                         text = _prepare_text_id(
@@ -190,8 +193,9 @@ def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["
         shuffle(tweet_list[type][1])
         if balanced:
             count_list[type] = min(count_list[type])
-            meta_data['class_weight_list']=[count_list[0],count_list[0]]
-        tweet_list[type] = tweet_list[type][0][:count_list[type]]+tweet_list[type][1][:count_list[type]]
+            meta_data['class_weight_list'] = [count_list[0], count_list[0]]
+        tweet_list[type] = tweet_list[type][0][:count_list[type]] + \
+            tweet_list[type][1][:count_list[type]]
         shuffle(tweet_list[type])
 
     for index, data in enumerate(tweet_list):
@@ -218,18 +222,20 @@ def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["
 
     basic_weight = max(meta_data['class_weight_list'])
     for i, weight in enumerate(meta_data['class_weight_list']):
-        meta_data['class_weight_list'][i] = basic_weight / meta_data['class_weight_list'][i]
+        meta_data['class_weight_list'][i] = basic_weight / \
+            meta_data['class_weight_list'][i]
     meta_file = os.path.join(record_path, 'meta_data')
     with open(meta_file, mode='w', encoding='utf8') as fp:
         json.dump(meta_data, fp)
 
-def build_state(data_type,window,gap):
+
+def build_state(data_type, window, gap):
     user_list_file = './data/user_list/' + data_type + '_user_list'
     user_text_folder = os.path.join('./data/reddit', data_type)
     user_state_folder = os.path.join('./data/state', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
-    
+
     user_list = []
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
@@ -238,7 +244,7 @@ def build_state(data_type,window,gap):
     for index, user in enumerate(user_list):
         try:
             user_info_file = os.path.join(user_text_folder, user)
-            state_info_file = os.path.join(user_state_folder,user)
+            state_info_file = os.path.join(user_state_folder, user)
             curve_state = []
             state_list = dict()
             with open(user_info_file, mode='r', encoding='utf8') as fp:
@@ -246,14 +252,16 @@ def build_state(data_type,window,gap):
                     info = json.loads(line)
                     for key in info:
                         value = info[key]
-                        states = [value["anger"],value["fear"], value["joy"],value["sadness"]]
-                        state_list[value['time']] = [min(int(state),1) for state in states]
+                        states = [value["anger"], value["fear"],
+                                  value["joy"], value["sadness"]]
+                        state_list[value['time']] = [
+                            min(int(state), 1) for state in states]
             time_list = sorted(state_list.keys())
             start_time = time_list[0]
             while start_time <= time_list[-1]:
                 end_time = start_time + window
                 state = [0, 0, 0, 0]
-                mark=False
+                mark = False
                 for i, time in enumerate(time_list):
                     if time >= start_time and time <= end_time:
                         mark = True
@@ -264,16 +272,17 @@ def build_state(data_type,window,gap):
                 if not mark:
                     state = [-1, -1, -1, -1]
                 else:
-                    state = [min(s,1) for s in state]
+                    state = [min(s, 1) for s in state]
                 curve_state.append(state)
                 start_time += gap
             with open(state_info_file, mode='w', encoding='utf8') as fp:
                 for state in curve_state:
-                    fp.write(str(state[0]) + ',' + str(state[1]) + ',' + str(state[2]) + ',' + str(state[3]) + '\n')
+                    fp.write(str(state[0]) + ',' + str(state[1]) +
+                             ',' + str(state[2]) + ',' + str(state[3]) + '\n')
         except IndexError:
             print(user)
             continue
-    
+
     user_list = []
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
@@ -343,11 +352,10 @@ def _prepare_reddit_text_id(text, tokenizer, max_seq_length):
         tokens.extend(text_tokens)
         tokens.append("[SEP]")
 
-
         input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
         input_mask = [1] * len(input_ids)
-        segment_ids = [0] *len(input_ids)
+        segment_ids = [0] * len(input_ids)
 
         text = '[CLS] ' + text + ' [SEP]'
 
@@ -363,8 +371,8 @@ def _prepare_reddit_text_id(text, tokenizer, max_seq_length):
         data_list.append(feature)
         original_text_list.append(text)
 
-
     return data_list, original_text_list
+
 
 def _clean_text(original_tweet):
     processed_tweet = re.sub(r'http[^ ]+', 'URL', original_tweet)
@@ -386,10 +394,12 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_type', choices = ['background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
-    parser.add_argument('--function_type', choices=['build_state', 'build_text_tfrecord'], type=str, default='build_text_tfrecord')
+    parser.add_argument('--data_type', choices=[
+                        'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
+    parser.add_argument('--function_type', choices=[
+                        'build_state', 'build_text_tfrecord'], type=str, default='build_text_tfrecord')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
@@ -401,12 +411,15 @@ if __name__ == '__main__':
     function = args.function_type
     os.chdir('/home/xiaobo/emotion_disorder_detection')
     if function == 'build_state':
-        for keywords in ['bipolar', 'depression','background']:
-            build_state(keywords, window=window_size*60*60,gap=step_size*60*60)
+        for keywords in ['bipolar', 'depression', 'background']:
+            build_state(keywords, window=window_size *
+                        60 * 60, gap=step_size * 60 * 60)
+
     elif function == 'build_text_tfrecord':
-        build_text_tfrecord('./data/full_user_list/'+keywords+'_user_list','./data/full_reddit/'+keywords , './data/TFRecord/reddit_data/'+keywords)
+        build_text_tfrecord('./data/full_user_list/' + keywords + '_user_list',
+                            './data/full_reddit/' + keywords, './data/TFRecord/reddit_data/' + keywords)
+
     elif function == 'build_binary_tfrecod':
         pass
     elif function == 'build_multi_class_tfrecord':
         pass
-
