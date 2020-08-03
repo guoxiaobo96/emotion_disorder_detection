@@ -18,6 +18,7 @@ from nltk.tokenize import sent_tokenize
 bert_model_dir = '/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16'
 
 def build_text_tfrecord(user_file_list, data_path_list, record_path):
+    suffix_list = ['.before', '.after']
     if not os.path.exists(record_path):
         os.mkdir(record_path)
     max_seq = 142
@@ -29,36 +30,43 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
     with open(user_file_list,mode='r') as fp:
         for line in fp.readlines():
              user_set.add(line.split(' [info] ')[0])
-
+    user_count = 0
     for user in user_set:
-        file_name = os.path.join(data_path_list,user)
-        with open(file_name, mode='r', encoding='utf8') as fp:
-            data = dict()
-            text_data = dict()
-            for line in fp.readlines():
-                for id, value in json.loads(line.strip()).items():
-                    feature, text = _prepare_reddit_text_id(value['text'],tokenizer,max_seq)
-                    data[id] = feature
-                    text_data[id] = text
-        record_file = user+".tfrecord"
-        record_file = os.path.join(record_path, record_file)
-        writer = tf.io.TFRecordWriter(record_file)
-        for id, feature in data.items():
-            for sentence_feature in feature:
-                text_ids, text_mask, segment_ids= sentence_feature
-                example = tf.train.Example(
-                    features=tf.train.Features(
-                        feature={
-                            "id": tf.train.Feature(bytes_list=tf.train.BytesList(value=[bytes(id, encoding='utf-8')])),
-                            "text_ids": tf.train.Feature(int64_list=tf.train.Int64List(value=text_ids)),
-                            "text_mask": tf.train.Feature(int64_list=tf.train.Int64List(value=text_mask)),
-                            "segment_ids": tf.train.Feature(int64_list=tf.train.Int64List(value=segment_ids)),
-                        }
+        for suffix in suffix_list:
+            file_name = os.path.join(data_path_list, user + suffix)
+            if not os.path.exists(file_name):
+                continue
+            file_name = os.path.join(data_path_list, user + suffix)
+            with open(file_name, mode='r', encoding='utf8') as fp:
+                data = dict()
+                text_data = dict()
+                for line in fp.readlines():
+                    try:
+                        for id, value in json.loads(line.strip()).items():
+                            feature, text = _prepare_reddit_text_id(value['text'],tokenizer,max_seq)
+                            data[id] = feature
+                            text_data[id] = text
+                    except json.decoder.JSONDecodeError:
+                        pass
+            record_file = user+suffix+".tfrecord"
+            record_file = os.path.join(record_path, record_file)
+            writer = tf.io.TFRecordWriter(record_file)
+            for id, feature in data.items():
+                for sentence_feature in feature:
+                    text_ids, text_mask, segment_ids= sentence_feature
+                    example = tf.train.Example(
+                        features=tf.train.Features(
+                            feature={
+                                "id": tf.train.Feature(bytes_list=tf.train.BytesList(value=[bytes(id, encoding='utf-8')])),
+                                "text_ids": tf.train.Feature(int64_list=tf.train.Int64List(value=text_ids)),
+                                "text_mask": tf.train.Feature(int64_list=tf.train.Int64List(value=text_mask)),
+                                "segment_ids": tf.train.Feature(int64_list=tf.train.Int64List(value=segment_ids)),
+                            }
+                        )
                     )
-                )
-                writer.write(example.SerializeToString())
-        writer.close()
-    
+                    writer.write(example.SerializeToString())
+            writer.close()
+        user_count += 1
     print('finish')
             
 def build_multi_class_tfrecord(data_path_list, record_path, type_list=["train", "valid", "test"]):
@@ -380,8 +388,8 @@ if __name__ == '__main__':
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_type', type=str, default='background')
-    parser.add_argument('--function_type', type=str, default='build_state')
+    parser.add_argument('--data_type', choices = ['background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
+    parser.add_argument('--function_type', choices=['build_state', 'build_text_tfrecord'], type=str, default='build_text_tfrecord')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
@@ -396,7 +404,7 @@ if __name__ == '__main__':
         for keywords in ['bipolar', 'depression','background']:
             build_state(keywords, window=window_size*60*60,gap=step_size*60*60)
     elif function == 'build_text_tfrecord':
-        build_text_tfrecord('./data/user_list/'+keywords+'_user_list','./data/reddit/'+keywords , './data/TFRecord/reddit_data/'+keywords)
+        build_text_tfrecord('./data/full_user_list/'+keywords+'_user_list','./data/full_reddit/'+keywords , './data/TFRecord/reddit_data/'+keywords)
     elif function == 'build_binary_tfrecod':
         pass
     elif function == 'build_multi_class_tfrecord':
