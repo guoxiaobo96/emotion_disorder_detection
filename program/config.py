@@ -24,7 +24,7 @@ data_arg.add_argument('--target_dir', type=str, default='./data/full_reddit')
 # data_arg.add_argument('--data_type',type=str,default='balanced')
 
 data_arg.add_argument('--dataset', type=str, default='full_reddit_data')
-data_arg.add_argument('--data_type', type=str, default='depression')
+data_arg.add_argument('--data_type', type=str, default='bipolar')
 
 data_arg.add_argument('--user_data_path', type=str, default='./data/full_user_list')
 
@@ -62,8 +62,8 @@ misc_arg.add_argument('--model_name', type=str, default='weighted')
 misc_arg.add_argument('--root_dir', type=str,
                       default='/home/xiaobo/emotion_disorder_detection')
 misc_arg.add_argument('--log_dir', type=str, default='log')
-misc_arg.add_argument('--load_path', type=str, default='tweet_trust/best')
-misc_arg.add_argument('--emotion_type', type=str, default='trust')
+misc_arg.add_argument('--load_path', type=str, default='tweet_anger/best')
+misc_arg.add_argument('--emotion_type', type=str, default='anger')
 misc_arg.add_argument('--gpu_id', type=str, default='1')
 misc_arg.add_argument('--bert_model_dir', type=str,
                       default='/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16')

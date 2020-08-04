@@ -12,3 +12,4 @@ work.sh
 submissions/*
 data/full_reddit/*/*
 data/state_trans/*/*
+program/__pycache__/*
