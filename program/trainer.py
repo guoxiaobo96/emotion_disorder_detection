@@ -93,8 +93,11 @@ class Trainer(object):
             with open(target_file, mode='r', encoding='utf8') as fp:
                 user_data = dict()
                 for line in fp.readlines():
-                    for id, value in json.loads(line.strip()).items():
-                        user_data[id] = value
+                    try:
+                        for id, value in json.loads(line.strip()).items():
+                            user_data[id] = value
+                    except json.decoder.JSONDecodeError:
+                        pass
             for item in text_data:
                 sentence, id_list = item
                 label_list = self.model.predict(sentence)
