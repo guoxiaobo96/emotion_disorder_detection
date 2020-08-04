@@ -1,14 +1,12 @@
 program/.vscode/settings.json
+.vscode/settings.json
 log/*/*/log/*
 log/*/*/model/*
-.vscode/settings.json
 data/TFRecord/*/*
 program/*.sh
 data/reddit/*/*
 data/state/*/*
 work.sh
-.vscode/.ropeproject/config.py
-.vscode/.ropeproject/objectdb
 submissions/*
 data/full_reddit/*/*
 data/state_trans/*/*
