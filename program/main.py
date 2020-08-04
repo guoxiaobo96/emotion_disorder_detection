@@ -1,14 +1,24 @@
+<<<<<<< HEAD
 import logging
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
+=======
+import os
+import logging
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+>>>>>>> 05d7e4b31b974cd87599da1affa98c60a7c5de86
 import warnings
 from trainer import Trainer
 from data import DataLoader, DataLoaderForReddit
 from util import prepare_dirs_and_logger, save_config
 from config import get_config
+<<<<<<< HEAD
 
+=======
+>>>>>>> 05d7e4b31b974cd87599da1affa98c60a7c5de86
 
 
 warnings.filterwarnings('ignore')
