@@ -11,3 +11,4 @@ work.sh
 .vscode/.ropeproject/objectdb
 submissions/*
 data/full_reddit/*/*
+data/state_trans/*/*

@@ -4,66 +4,15 @@ import itertools
 import random
 import os
 import pickle
-import tensorflow as tf
 
-from sklearn import linear_model
+from sklearn import linear_model, svm, ensemble
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from multiprocessing import Pool
-from tensorflow import keras
-
-from .model_util import build_bert_encoder
-
-
-def build_basic_text_model(config, max_seq_len, model_dir=None):
-    model_name = config.basic_text_model
-    if model_name == 'Bert':
-        encoder = build_bert_encoder(model_dir, max_seq_len)
-        output = keras.layers.Dropout(0.1)(encoder.output[1])
-    model = keras.models.Model(
-        inputs=encoder.input, outputs=output, name=model_name)
-
-    if config.text_model_path:
-        init_checkpoint = os.path.join(config.text_model_path, 'model.ckpt')
-        model.load_weights(init_checkpoint).expect_partial()
-        model.trainable = config.text_model_trainable
-    return model
-
-def classify(text_model, config):
-    if config.model_type == 'single_label':
-        model = _single_label_classifier(text_model, config)
-    elif config.model_type == 'multi_label':
-        model = _multi_label_classifier(text_model,config)
-    return model
-
-def _single_label_classifier(text_model, config):
-        text_feature = text_model.output
-        out_put = keras.layers.Dense(
-            units=config.classes, kernel_initializer='glorot_uniform', activation="softmax")(text_feature)
-        model = keras.Model(inputs=[text_model.inputs], outputs=[
-                            out_put], name='Text')
-
-        model.compile(optimizer=keras.optimizers.Adam(),
-                      loss=keras.losses.SparseCategoricalCrossentropy(
-            from_logits=True),
-            metrics=[keras.metrics.SparseCategoricalAccuracy(name="acc")])
-        return model
-
-def _multi_label_classifier(text_model, config):
-    text_feature = text_model.output
-    out_put = keras.layers.Dense(
-        units=config.classes, kernel_initializer='glorot_uniform', activation="sigmoid")(text_feature)
-    model = keras.Model(inputs=[text_model.inputs], outputs=[
-                         out_put], name='Text')
-
-    model.compile(optimizer=keras.optimizers.Adam(),
-                    loss=keras.losses.BinaryCrossentropy(
-            from_logits=True),
-        metrics=[keras.metrics.BinaryAccuracy(name="acc")])
-    return model
 
 class MLModel(object):
-    def __init__(self, data_loader, model_path, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False):
+    def __init__(self, data_loader, model_path, model_name, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False):
         self._model_path = model_path
+        self._model_name = model_name
         if not os.path.exists(model_path):
             os.mkdir(model_path)
         self._metrics_list = metrics_list
@@ -80,7 +29,7 @@ class MLModel(object):
         if self._load_model_mark:
             self._load_model()
             self._best_model['metrics'] = self._valid()
-        for hyper_parameters in self._hyper_parameters_list:
+        for index, hyper_parameters in enumerate(self._hyper_parameters_list):
             results = []
             temp_best_acc = 0
             if self._multi_processing and processing_number > 1 and random_number > 1:
@@ -118,6 +67,7 @@ class MLModel(object):
                     self._save_model()
         self._load_model()
         self.test()
+        self._save_model()
 
     def _train_model(self, data):
         try:
@@ -138,25 +88,15 @@ class MLModel(object):
         feature, label = data
         label_pred = self.model.predict(feature)
         self._calculate_metrics(label_pred, label)
-        print('accuracy : %2f' % self._metrics['accuracy'])
+        for key, value in self._metrics.items():
+            self._best_model['metrics'][key] = value
+        print('accuracy : %.3f' % self._metrics['accuracy'])
 
     def _generate_hyper_parameters(self):
-        penalty_list = ['l1', 'l2']
-        solver_list = ['newton-cg', 'lbfgs', 'sag', 'saga']
-        multi_class_list = ['ovr', 'multinomial']
-
-        self._hyper_parameters_list = list()
-
-        for data in itertools.product(penalty_list, solver_list, multi_class_list):
-            hyper_parameters = {'penalty': data[0], 'solver': data[1], 'multi_class': data[2]}
-            self._hyper_parameters_list.append(hyper_parameters)
+        pass
 
     def _build_model(self, hyper_parameters, random_state):
-        penalty = hyper_parameters['penalty']
-        solver = hyper_parameters['solver']
-        multi_class = hyper_parameters['multi_class']
-        self.model=linear_model.LogisticRegressionCV(
-            random_state=random_state, solver=solver, penalty=penalty, max_iter=1000, multi_class=multi_class)
+        pass
 
     def _calculate_metrics(self, pred, ground):
         if 'accuracy' in self._metrics_list:
@@ -175,15 +115,16 @@ class MLModel(object):
         self._data = data_loader
 
     def _load_model(self):
-        with open(os.path.join(self._model_path, 'model'), "rb") as fp:
+        with open(os.path.join(self._model_path, self._model_name+'_model'), "rb") as fp:
             self.model = pickle.load(fp)
 
     def _save_model(self):
-        json_file = os.path.join(self._model_path, 'result')
-        model_file = os.path.join(self._model_path, 'model')
+        json_file = os.path.join(self._model_path, self._model_name + '_result')
+        
+        model_file = os.path.join(self._model_path, self._model_name + '_model')
 
         with open(json_file, mode='w', encoding='utf8') as fp:
-            for key, value in self._metrics.items():
+            for key, value in self._best_model['metrics'].items():
                 fp.write(key + ' : ' + str(value) + '\n')
             for key, value in self._best_model['hyper_parameters'].items():
                 fp.write(key + ' : ' + str(value) + '\n')
@@ -199,3 +140,49 @@ class MLModel(object):
         else:
             metrics = None
         return (metrics, self.model, random_seed)
+
+class LogisticRegressionCV(MLModel):
+    
+    def _generate_hyper_parameters(self):
+        penalty_list = ['l1', 'l2']
+        solver_list = ['newton-cg', 'lbfgs', 'sag', 'saga']
+        multi_class_list = ['ovr', 'multinomial']
+
+        self._hyper_parameters_list = list()
+
+        for data in itertools.product(penalty_list, solver_list, multi_class_list):
+            hyper_parameters = {'penalty': data[0], 'solver': data[1], 'multi_class': data[2]}
+            self._hyper_parameters_list.append(hyper_parameters)
+
+    def _build_model(self, hyper_parameters, random_state):
+        self.model=linear_model.LogisticRegressionCV(
+            random_state=random_state, max_iter=1000, **hyper_parameters)
+
+class SVM(MLModel):
+    def _generate_hyper_parameters(self):
+        kernel_list = ['linear', 'poly', 'rbf', 'sigmoid']
+        gamma_list = ['scale', 'auto']
+        decision_function_shape_list = ['ovo', 'ovr']
+        
+        self._hyper_parameters_list = list()
+
+        for data in itertools.product(kernel_list, gamma_list, decision_function_shape_list):
+            hyper_parameters = {'kernel': data[0], 'gamma': data[1], 'decision_function_shape': data[2]}
+            self._hyper_parameters_list.append(hyper_parameters)
+
+    def _build_model(self, hyper_parameters, random_state):
+        self.model = svm.SVC(**hyper_parameters)
+
+class RandomForest(MLModel):
+    def _generate_hyper_parameters(self):
+        criterion_list = ['gini', 'entropy']
+        max_features_list = ['auto', 'log2']
+        
+        self._hyper_parameters_list = list()
+
+        for data in itertools.product(criterion_list, max_features_list):
+            hyper_parameters = {'criterion': data[0], 'max_features': data[1]}
+            self._hyper_parameters_list.append(hyper_parameters)
+
+    def _build_model(self, hyper_parameters, random_state):
+        self.model=ensemble.RandomForestClassifier(**hyper_parameters)

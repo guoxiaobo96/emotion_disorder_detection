@@ -117,7 +117,7 @@ class HMM(object):
         print('Best accuracy on test dataset : %2f' %
               self._metrics['accuracy'])
 
-    def _load_model(self,):
+    def _load_model(self):
         self.model_list = []
         for name in self._model_name:
             name = '-'.join(name)
