@@ -1,17 +1,14 @@
+from model_util import build_bert_encoder
+from tensorflow import keras
+from multiprocessing import Pool
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
+from sklearn import linear_model
+import pickle
+import os
+import random
+import itertools
 import warnings
 warnings.filterwarnings("ignore")
-import itertools
-import random
-import os
-import pickle
-import tensorflow as tf
-
-from sklearn import linear_model
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
-from multiprocessing import Pool
-from tensorflow import keras
-
-from .model_util import build_bert_encoder
 
 
 def build_basic_text_model(config, max_seq_len, model_dir=None):
@@ -28,41 +25,45 @@ def build_basic_text_model(config, max_seq_len, model_dir=None):
         model.trainable = config.text_model_trainable
     return model
 
+
 def classify(text_model, config):
     if config.model_type == 'single_label':
         model = _single_label_classifier(text_model, config)
     elif config.model_type == 'multi_label':
-        model = _multi_label_classifier(text_model,config)
+        model = _multi_label_classifier(text_model, config)
     return model
 
-def _single_label_classifier(text_model, config):
-        text_feature = text_model.output
-        out_put = keras.layers.Dense(
-            units=config.classes, kernel_initializer='glorot_uniform', activation="softmax")(text_feature)
-        model = keras.Model(inputs=[text_model.inputs], outputs=[
-                            out_put], name='Text')
 
-        model.compile(optimizer=keras.optimizers.Adam(),
-                      loss=keras.losses.SparseCategoricalCrossentropy(
-            from_logits=True),
-            metrics=[keras.metrics.SparseCategoricalAccuracy(name="acc")])
-        return model
+def _single_label_classifier(text_model, config):
+    text_feature = text_model.output
+    out_put = keras.layers.Dense(
+        units=config.classes, kernel_initializer='glorot_uniform', activation="softmax")(text_feature)
+    model = keras.Model(inputs=[text_model.inputs], outputs=[
+                        out_put], name='Text')
+
+    model.compile(optimizer=keras.optimizers.Adam(),
+                  loss=keras.losses.SparseCategoricalCrossentropy(
+        from_logits=True),
+        metrics=[keras.metrics.SparseCategoricalAccuracy(name="acc")])
+    return model
+
 
 def _multi_label_classifier(text_model, config):
     text_feature = text_model.output
     out_put = keras.layers.Dense(
         units=config.classes, kernel_initializer='glorot_uniform', activation="sigmoid")(text_feature)
     model = keras.Model(inputs=[text_model.inputs], outputs=[
-                         out_put], name='Text')
+        out_put], name='Text')
 
     model.compile(optimizer=keras.optimizers.Adam(),
-                    loss=keras.losses.BinaryCrossentropy(
-            from_logits=True),
+                  loss=keras.losses.BinaryCrossentropy(
+        from_logits=True),
         metrics=[keras.metrics.BinaryAccuracy(name="acc")])
     return model
 
+
 class MLModel(object):
-    def __init__(self, data_loader, model_path, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False):
+    def __init__(self, data_loader, model_path, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model=False, verbose=False):
         self._model_path = model_path
         if not os.path.exists(model_path):
             os.mkdir(model_path)
@@ -73,8 +74,7 @@ class MLModel(object):
         self._load_data(data_loader)
         self._multi_processing = multi_processing
         self._load_model_mark = load_model
-        self._verbose  = verbose
-
+        self._verbose = verbose
 
     def fit(self, processing_number=1, random_number=3):
         if self._load_model_mark:
@@ -148,14 +148,15 @@ class MLModel(object):
         self._hyper_parameters_list = list()
 
         for data in itertools.product(penalty_list, solver_list, multi_class_list):
-            hyper_parameters = {'penalty': data[0], 'solver': data[1], 'multi_class': data[2]}
+            hyper_parameters = {
+                'penalty': data[0], 'solver': data[1], 'multi_class': data[2]}
             self._hyper_parameters_list.append(hyper_parameters)
 
     def _build_model(self, hyper_parameters, random_state):
         penalty = hyper_parameters['penalty']
         solver = hyper_parameters['solver']
         multi_class = hyper_parameters['multi_class']
-        self.model=linear_model.LogisticRegressionCV(
+        self.model = linear_model.LogisticRegressionCV(
             random_state=random_state, solver=solver, penalty=penalty, max_iter=1000, multi_class=multi_class)
 
     def _calculate_metrics(self, pred, ground):

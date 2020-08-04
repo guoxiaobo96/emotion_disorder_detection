@@ -1,8 +1,8 @@
 import warnings
-from .trainer import Trainer
-from .data import DataLoader, DataLoaderFromReddit
-from .util import prepare_dirs_and_logger, save_config
-from .config import get_config
+from trainer import Trainer
+from data import DataLoader, DataLoaderForReddit
+from util import prepare_dirs_and_logger, save_config
+from config import get_config
 import logging
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -17,7 +17,7 @@ def main(config):
     if config.task in ['train', 'roc_curve', 'test']:
         data_loader = DataLoader(config)
     elif config.task in ['label', 'predict']:
-        data_loader = DataLoaderFromReddit(config)
+        data_loader = DataLoaderForReddit(config)
     trainer = Trainer(config, data_loader)
 
     if config.is_debug:

@@ -8,8 +8,8 @@ from official.nlp.bert import tokenization
 from sklearn.metrics import f1_score
 
 
-from .model import build_basic_text_model, classify
-from .model_util import create_learning_rate_scheduler
+from model import build_basic_text_model, classify
+from model_util import create_learning_rate_scheduler
 
 
 class Trainer(object):

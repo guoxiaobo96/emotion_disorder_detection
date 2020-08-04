@@ -231,8 +231,8 @@ def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["
 
 def build_state(data_type, window, gap):
     user_list_file = './data/user_list/' + data_type + '_user_list'
-    user_text_folder = os.path.join('./data/reddit', data_type)
-    user_state_folder = os.path.join('./data/state', data_type)
+    user_text_folder = os.path.join('./data/full_reddit', data_type)
+    user_state_folder = os.path.join('./data/full_state', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
 
@@ -329,7 +329,7 @@ def build_state_trans(data_type, emotion_list, emotion_state_number):
                     state_prob[state_prev][state_next] /= sum
         state_trans_file = user + '.' + '-'.join(emotion_list)+'.npy'
         target_file = os.path.join(user_state_trans_folder, state_trans_file)
-        np.save(target_file,state_prob)
+        np.save(target_file, state_prob)
 
 
 def _prepare_text_id(text, tokenizer, max_seq_length):
@@ -459,16 +459,16 @@ if __name__ == '__main__':
 
     elif function == 'build_text_tfrecord':
         build_text_tfrecord('./data/full_user_list/' + keywords + '_user_list',
-                            './data/full_reddit/' + keywords, './data/TFRecord/reddit_data/' + keywords)
+                            './data/full_reddit/' + keywords, './data/TFRecord/full_reddit_data/' + keywords)
     elif function == 'build_state_trans':
         for keywords in ['bipolar', 'depression', 'background']:
-            # build_state_trans(
-            #     keywords, ["anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8])
+            build_state_trans(
+                keywords, ["anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8])
             build_state_trans(
                 keywords, ["anger", "fear"], emotion_state_number=[1, 2, 0, 0])
-            # build_state_trans(
-            #     keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
-                
+            build_state_trans(
+                keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
+
     elif function == 'build_binary_tfrecod':
         pass
     elif function == 'build_multi_class_tfrecord':
