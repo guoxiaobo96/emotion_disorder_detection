@@ -131,7 +131,7 @@ class DataLoaderForReddit(object):
 
 
 class DataLoaderForTransProb(object):
-    def __init__(self, emotion_list, data_type_list=[['bipolar'], ['depression'], ['background']], fold_data_mark = True, data_size=[200, 100, 100]):
+    def __init__(self, emotion_list, data_type_list=[['bipolar'], ['depression'], ['background']], fold_data_mark = False, data_size=[200, 100, 100]):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
         self.data_size = data_size
@@ -163,7 +163,7 @@ class DataLoaderForTransProb(object):
                         user_state_trans_folder, state_trans_file)
                     state_prob = np.load(state_trans_path)
                     data[type_index].append(state_prob)
-        if self._load_data_mark:
+        if self._fold_data_mark:
             data_size = len(data[0])
             fold_data = [[[0],[1]] for _ in range(5)]
             for data_list in data:

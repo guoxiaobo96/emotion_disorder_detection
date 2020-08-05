@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from multiprocessing import Pool
 
 class MLModel(object):
-    def __init__(self, data_loader, model_path, model_name, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False, cross_validation = True):
+    def __init__(self, data_loader, model_path, model_name, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False, cross_validation = False):
         self._model_path = model_path
         self._model_name = model_name
         if not os.path.exists(model_path):
@@ -27,7 +27,7 @@ class MLModel(object):
 
 
     def fit(self, processing_number=1, random_number=3):
-        if self._load_model_mark and os.path.exists(os.path.join(self._model_path, self._model_name + '_model')):
+        if not self._cross_validation and self._load_model_mark and os.path.exists(os.path.join(self._model_path, self._model_name + '_model')):
             change_mark = False
             self._load_model()
             self._best_model['metrics'] = self._valid()
@@ -68,10 +68,16 @@ class MLModel(object):
                         self._best_model['hyper_parameters'][key] = value
                     self._best_model['hyper_parameters']['random_seed'] = random_seed
                     self._save_model()
-        self._load_model()
-        self.test()
-        if change_mark:
-            self._save_model()
+        if not self._cross_validation:
+            self._load_model()
+            self.test()
+            if change_mark:
+                self._save_model()
+
+        else:
+            print('accuracy : %.3f' % self._best_model['metrics']['accuracy'])
+
+    
 
     def _train_model(self, data):
         try:
@@ -138,11 +144,15 @@ class MLModel(object):
     def _helper_function(self, hyper_parameters, data):
         random_seed = random.randint(1, 20)
         self._build_model(hyper_parameters, random_seed)
-        self._train_model(data)
-        if self.model is not None:
-            metrics = self._valid(data)
+        if not self._cross_validation:
+            self._train_model(data)
+            if self.model is not None:
+                metrics = self._valid(data)
+            else:
+                metrics = None
         else:
-            metrics = None
+            for i in range(5):
+                pass
         return (metrics, self.model, random_seed)
 
 class LogisticRegressionCV(MLModel):

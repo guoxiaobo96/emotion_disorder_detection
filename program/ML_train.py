@@ -84,7 +84,7 @@ def train_tf_idf(model_type,  model_path, model_name, load_model, processing_num
     
 
 def main():
-    model = SVM
+    model = RandomForest
     model_path = './log/RF'
     load_model = True
     processing_numer = 10

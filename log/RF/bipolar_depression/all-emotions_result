@@ -1,8 +1,8 @@
-accuracy : 0.785
-micro_f1_score : 0.785
-macro_f1_score : 0.7849946248656217
-confusion_matrix : [[78 22]
- [21 79]]
-criterion : gini
-max_features : auto
-random_seed : 16
+accuracy : 0.78
+micro_f1_score : 0.78
+macro_f1_score : 0.77997799779978
+confusion_matrix : [[79 21]
+ [23 77]]
+criterion : entropy
+max_features : log2
+random_seed : 2
