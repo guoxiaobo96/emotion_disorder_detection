@@ -11,3 +11,5 @@ submissions/*
 data/full_reddit/*/*
 data/state_trans/*/*
 program/__pycache__/*
+data/tf_idf/*/*
+log/*/*/*_model

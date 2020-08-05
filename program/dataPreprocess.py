@@ -8,6 +8,9 @@ import re
 import json
 import os
 import logging
+import math
+from nltk.stem.porter import PorterStemmer
+
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
@@ -332,6 +335,70 @@ def build_state_trans(data_type, emotion_list, emotion_state_number):
         np.save(target_file, state_prob)
 
 
+def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix_list=['']):
+    if not os.path.exists(record_path):
+        os.mkdir(record_path)
+    words_set = set()
+    idf = dict()
+    record = dict()
+    stemmer = PorterStemmer()
+    total_page = 0
+    word_map = dict()
+    word_index = 0
+    for data_type in data_type_list:
+        user_set = set()
+        user_file = os.path.join(user_file_folder, data_type) + '_user_list'
+        data_folder = os.path.join(data_path, data_type)
+        with open(user_file, mode='r') as fp:
+            for line in fp.readlines():
+                user_set.add(line.split(' [info] ')[0])
+        record[data_type] = dict()
+        for index, user in enumerate(user_set):
+            for suffix in suffix_list:
+                file_name = os.path.join(data_folder, user + suffix)
+                if not os.path.exists(file_name):
+                    continue
+                total_page += 1
+                single_page_word_count = 0
+                file_name = os.path.join(data_folder, user + suffix)
+                term_frequency = dict()
+                with open(file_name, mode='r', encoding='utf8') as fp:
+                    for line in fp.readlines():
+                        try:
+                            for id, value in json.loads(line.strip()).items():
+                                if value['text'] == '':
+                                    continue
+                                text = value['text'].strip().split(' ')
+                                term_record = set()
+                                for word in text:
+                                    if word not in word_map:
+                                        word_map[word] = word_index
+                                        word_index += 1
+                                    single_page_word_count += 1
+                                    if word not in term_frequency:
+                                        term_frequency[word] = 0
+                                        if word not in idf:
+                                            idf[word] = 0
+                                        idf[word] += 1
+                                    term_frequency[word] += 1
+                        except json.decoder.JSONDecodeError:
+                            pass
+                record[data_type][user] = {
+                    'tf': term_frequency, 'word_count': single_page_word_count}
+    for data_type, value in record.items():
+        record_folder = os.path.join(record_path, data_type)
+        if not os.path.exists(record_folder):
+            os.mkdir(record_folder)
+        for user, v in value.items():
+            tf_idf = np.zeros(len(word_map), dtype='float')
+            total_word = v['word_count']
+            for word, term_frequency in v['tf'].items():
+                index = word_map[word]
+                tf_idf[index] = term_frequency * math.log(total_page + 1 / (idf[word] + 1))
+            record_file = os.path.join(record_folder, user)
+            np.save(record_file, tf_idf)
+
+
 def _prepare_text_id(text, tokenizer, max_seq_length):
     text = ' '.join(text.split())
     text = text.strip()
@@ -441,7 +508,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--function_type', choices=[
-                        'build_state', 'build_text_tfrecord', 'build_state_trans'], type=str, default='build_state_trans')
+                        'build_state', 'build_text_tfrecord', 'build_state_trans', 'build_tfidf'], type=str, default='build_tfidf')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
@@ -468,7 +535,9 @@ if __name__ == '__main__':
                 keywords, ["anger", "fear"], emotion_state_number=[1, 2, 0, 0])
             build_state_trans(
                 keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
-
+    elif function == 'build_tfidf':
+        build_tfidf('./data/user_list/', './data/reddit/', './data/tf_idf',
+                    data_type_list=['bipolar', 'depression', 'background'])
     elif function == 'build_binary_tfrecod':
         pass
     elif function == 'build_multi_class_tfrecord':

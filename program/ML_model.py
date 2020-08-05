@@ -129,7 +129,7 @@ class MLModel(object):
             for key, value in self._best_model['hyper_parameters'].items():
                 fp.write(key + ' : ' + str(value) + '\n')
         with open(model_file, mode='wb') as fp:
-            pickle.dump(self.model, fp)
+            pickle.dump(self.model, fp, protocol=4)
 
     def _helper_function(self, hyper_parameters, data):
         random_seed = random.randint(1, 20)

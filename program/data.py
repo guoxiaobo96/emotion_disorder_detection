@@ -172,6 +172,46 @@ class DataLoaderForTransProb(object):
             split_number += number
         self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
+class DataLoaderForTfIdf(object):
+    def __init__(self,data_type_list=[['bipolar'], ['depression'], ['background']], data_size=[200, 100, 100]):
+        self.data_type_list = data_type_list
+        self.class_number = len(data_type_list)
+        self.data_size = data_size
+        self.train_dataset = []
+        self.valid_dataset = []
+        self.test_dataset = []
+        self.build_dataset(self.data_type_list, self.data_size)
+
+    def build_dataset(self, data_type_list, data_size):
+        data = []
+        split_data = [[[], []], [[], []], [[], []]]
+        for type_index, data_type in enumerate(data_type_list):
+            data.append([])
+            for type in data_type:
+                user_list = []
+                user_list_file = './data/user_list/' + type + '_user_list'
+                user_tf_idf_folder = './data/tf_idf/' + type
+                with open(user_list_file, mode='r', encoding='utf8') as fp:
+                    for line in fp.readlines():
+                        user, _ = line.strip().split(' [info] ')
+                        user_list.append(user)
+                for index, user in enumerate(user_list):
+                    tf_idf_file = user + '.npy'
+                    tf_idf_path = os.path.join(
+                        user_tf_idf_folder, tf_idf_file)
+                    tf_idf = np.load(tf_idf_path)
+                    data[type_index].append(tf_idf)
+        split_number = 0
+        for i, number in enumerate(data_size):
+            for type, single_type_data in enumerate(data):
+                seed(123)
+                shuffle(single_type_data)
+                for prob in single_type_data[split_number: split_number + number]:
+                    split_data[i][0].append(prob.flatten())
+                    split_data[i][1].append(type)
+            split_number += number
+        self.train_dataset, self.valid_dataset, self.test_dataset = split_data
+
 
 class DataLoaderForState(object):
     def __init__(self, data_type_list=['bipolar', 'depression', 'background'], data_size=[200, 100, 100]):
@@ -224,7 +264,7 @@ class DataLoaderForState(object):
 
 
 def test():
-    data_loader = DataLoaderForState()
+    data_loader = DataLoaderForTfIdf()
     print('test')
     # from config import get_config
     # from util import prepare_dirs_and_logger
