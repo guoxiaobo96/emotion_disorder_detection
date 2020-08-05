@@ -81,16 +81,19 @@ class MLModel(object):
 
     def _train_model(self, data):
         try:
-            self.model.fit(data.train_dataset[0], data.train_dataset[1])
+            self.model.fit(data[0], data[1])
         except ValueError:
             self.model = None
 
     def _valid(self, data=None):
         if data is None:
-            data = self._data
-        feature, label = data.valid_dataset
+            data = self._data.valid_dataset
+        feature, label = data
         label_pred = self.model.predict(feature)
-        return self._calculate_metrics(label_pred, label)
+        if not self._cross_validation:
+            return self._calculate_metrics(label_pred, label)
+        else:
+            return label_pred, label
 
     def test(self, data=None):
         if data is None:
@@ -138,21 +141,39 @@ class MLModel(object):
                 fp.write(key + ' : ' + str(value) + '\n')
             for key, value in self._best_model['hyper_parameters'].items():
                 fp.write(key + ' : ' + str(value) + '\n')
-        with open(model_file, mode='wb') as fp:
-            pickle.dump(self.model, fp, protocol=4)
+        if not self._cross_validation:
+            with open(model_file, mode='wb') as fp:
+                pickle.dump(self.model, fp, protocol=4)
 
     def _helper_function(self, hyper_parameters, data):
         random_seed = random.randint(1, 20)
         self._build_model(hyper_parameters, random_seed)
         if not self._cross_validation:
-            self._train_model(data)
+            self._train_model(data.train_dataset)
             if self.model is not None:
-                metrics = self._valid(data)
+                metrics = self._valid()
             else:
                 metrics = None
         else:
+            predict_labe_list = []
+            label_list = []
             for i in range(5):
-                pass
+                train_data = [[], []]
+                for j in range(5):
+                    if j != i:
+                        train_data[0].extend(data.fold_data[j][0])
+                        train_data[1].extend(data.fold_data[j][1])
+                test_data = data.fold_data[i]
+                self._build_model(hyper_parameters, random_seed)
+                self._train_model(train_data)
+                if self.model is not None:
+                    predict_label, label = self._valid(test_data)
+                    predict_labe_list.extend(predict_label)
+                    label_list.extend(label)
+        if self.model is not None:
+            metrics = self._calculate_metrics(predict_labe_list, label_list)
+        else:
+            metrics = None
         return (metrics, self.model, random_seed)
 
 class LogisticRegressionCV(MLModel):

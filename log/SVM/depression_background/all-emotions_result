@@ -6,4 +6,4 @@ confusion_matrix : [[89 11]
 kernel : rbf
 gamma : scale
 decision_function_shape : ovo
-random_seed : 5
+random_seed : 9

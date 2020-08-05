@@ -1,3 +1,7 @@
+import os
+import logging
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
 from nltk.tokenize import sent_tokenize
 from official.nlp.bert import tokenization
 from random import shuffle, choice, seed
@@ -6,13 +10,9 @@ import argparse
 import numpy as np
 import re
 import json
-import os
-import logging
 import math
 from nltk.stem.porter import PorterStemmer
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
 
 # bert_model_dir = 'F:/pretrained-models/bert/wwm_cased_L-24_H-1024_A-16'
