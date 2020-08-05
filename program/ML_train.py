@@ -87,8 +87,8 @@ def main():
     model = SVM
     model_path = './log/RF'
     load_model = True
-    processing_numer = 5
-    random_number = 5
+    processing_numer = 10
+    random_number = 10
 
     emotion_list = ["anger", "fear", "joy", "sadness"]
     model_name = 'all-emotions'
@@ -104,6 +104,16 @@ def main():
     model_name = 'anger-fear'
     print(model_name)
     train_trans_prob(model, emotion_list, model_path, model_name, load_model, processing_numer, random_number)
+
+    # model = RandomForest
+    # model_path = './log/RF'
+    # load_model = False
+    # processing_numer = 1
+
+    # model_name = 'tf-idf'
+    # print(model_name)
+    # train_tf_idf(model, model_path, model_name, load_model, processing_numer)
+
     # model = SVM
     # model_path = './log/SVM'
     # load_model = False

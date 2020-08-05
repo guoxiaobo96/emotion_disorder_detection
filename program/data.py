@@ -110,7 +110,8 @@ class DataLoaderForReddit(object):
         for user in self._user_list:
             suffix_list = ['before', 'after']
             for suffix in suffix_list:
-                file_name = os.path.join(self._data_path, user + '.' + suffix + ".tfrecord")
+                file_name = os.path.join(
+                    self._data_path, user + '.' + suffix + ".tfrecord")
                 if os.path.exists(file_name):
                     label_dataset = tf.data.TFRecordDataset(file_name)
                     label_dataset = label_dataset.map(
@@ -130,7 +131,7 @@ class DataLoaderForReddit(object):
 
 
 class DataLoaderForTransProb(object):
-    def __init__(self, emotion_list, data_type_list=['bipolar', 'depression', 'background'], data_size=[200, 100, 100]):
+    def __init__(self, emotion_list, data_type_list=[['bipolar'], ['depression'], ['background']], fold_data_mark = True, data_size=[200, 100, 100]):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
         self.data_size = data_size
@@ -139,6 +140,7 @@ class DataLoaderForTransProb(object):
         self.test_dataset = []
         self._state_number = pow(2, len(emotion_list)) + 1
         self._emotion_list = emotion_list
+        self._fold_data_mark = fold_data_mark
         self.build_dataset(self.data_type_list, self.data_size)
 
     def build_dataset(self, data_type_list, data_size):
@@ -161,16 +163,34 @@ class DataLoaderForTransProb(object):
                         user_state_trans_folder, state_trans_file)
                     state_prob = np.load(state_trans_path)
                     data[type_index].append(state_prob)
-        split_number = 0
-        for i, number in enumerate(data_size):
+        if self._load_data_mark:
+            data_size = len(data[0])
+            fold_data = [[[0],[1]] for _ in range(5)]
+            for data_list in data:
+                data_size = min(data_size, len(data_list))
+            one_fold_data_size = int(data_size / 5)
             for type, single_type_data in enumerate(data):
                 seed(123)
                 shuffle(single_type_data)
-                for prob in single_type_data[split_number: split_number + number]:
-                    split_data[i][0].append(prob.flatten())
-                    split_data[i][1].append(type)
-            split_number += number
-        self.train_dataset, self.valid_dataset, self.test_dataset = split_data
+                for i, prob in enumerate(single_type_data):
+                    temp = [single_type_data[i * one_fold_data_size:(
+                        i + 1) * one_fold_data_size] for fold in range(0, int(len(single_type_data) / one_fold_data_size))]
+                    for index, single_fold_data in enumerate(temp):
+                        for prob in single_fold_data:
+                            split_data[i][0].append(prob.flatten())
+                            split_data[i][1].append(type)
+            self.fold_data = fold_data
+        else:
+            split_number = 0
+            for i, number in enumerate(data_size):
+                for type, single_type_data in enumerate(data):
+                    seed(123)
+                    shuffle(single_type_data)
+                    for prob in single_type_data[split_number: split_number + number]:
+                        split_data[i][0].append(prob.flatten())
+                        split_data[i][1].append(type)
+                split_number += number
+            self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
 class DataLoaderForTfIdf(object):
     def __init__(self,data_type_list=[['bipolar'], ['depression'], ['background']], data_size=[200, 100, 100]):
@@ -264,7 +284,7 @@ class DataLoaderForState(object):
 
 
 def test():
-    data_loader = DataLoaderForTfIdf()
+    data_loader = DataLoaderForTransProb(emotion_list=["anger", "fear", "joy", "sadness"])
     print('test')
     # from config import get_config
     # from util import prepare_dirs_and_logger

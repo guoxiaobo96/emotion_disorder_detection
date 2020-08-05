@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from multiprocessing import Pool
 
 class MLModel(object):
-    def __init__(self, data_loader, model_path, model_name, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False):
+    def __init__(self, data_loader, model_path, model_name, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False, cross_validation = True):
         self._model_path = model_path
         self._model_name = model_name
         if not os.path.exists(model_path):
@@ -22,11 +22,13 @@ class MLModel(object):
         self._load_data(data_loader)
         self._multi_processing = multi_processing
         self._load_model_mark = load_model
-        self._verbose  = verbose
+        self._verbose = verbose
+        self._cross_validation = cross_validation
 
 
     def fit(self, processing_number=1, random_number=3):
-        if self._load_model_mark and os.path.exists(os.path.join(self._model_path, self._model_name+'_model')):
+        if self._load_model_mark and os.path.exists(os.path.join(self._model_path, self._model_name + '_model')):
+            change_mark = False
             self._load_model()
             self._best_model['metrics'] = self._valid()
         for index, hyper_parameters in enumerate(self._hyper_parameters_list):
@@ -56,6 +58,7 @@ class MLModel(object):
                 temp_best_acc = max(
                     metrics['accuracy'], temp_best_acc)
                 if 'accuracy' not in self._best_model['metrics'] or metrics['accuracy'] > self._best_model['metrics']['accuracy']:
+                    change_mark = True
                     self.model = model
                     if self._verbose:
                         self.test()
@@ -67,7 +70,8 @@ class MLModel(object):
                     self._save_model()
         self._load_model()
         self.test()
-        self._save_model()
+        if change_mark:
+            self._save_model()
 
     def _train_model(self, data):
         try:
