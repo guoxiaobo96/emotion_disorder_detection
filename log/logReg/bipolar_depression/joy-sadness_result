@@ -1,0 +1,9 @@
+accuracy : 0.585
+micro_f1_score : 0.585
+macro_f1_score : 0.5849896247406186
+confusion_matrix : [[59 41]
+ [42 58]]
+penalty : l1
+solver : saga
+multi_class : ovr
+random_seed : 4

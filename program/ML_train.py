@@ -84,43 +84,44 @@ def train_tf_idf(model_type,  model_path, model_name, load_model, processing_num
     
 
 def main():
+    model = SVM
+    model_path = './log/RF'
+    load_model = True
+    processing_numer = 5
+    random_number = 5
+
+    emotion_list = ["anger", "fear", "joy", "sadness"]
+    model_name = 'all-emotions'
+    print(model_name)
+    train_trans_prob(model, emotion_list, model_path, model_name, load_model, processing_numer, random_number)
+
+    emotion_list = ["joy", "sadness"]
+    model_name = 'joy-sadness'
+    print(model_name)
+    train_trans_prob(model, emotion_list, model_path, model_name, load_model, processing_numer, random_number)
+
+    emotion_list = ["anger", "fear"]
+    model_name = 'anger-fear'
+    print(model_name)
+    train_trans_prob(model, emotion_list, model_path, model_name, load_model, processing_numer, random_number)
+    # model = SVM
+    # model_path = './log/SVM'
+    # load_model = False
+    # processing_numer = 1
+
+    # model_name = 'tf-idf'
+    # print(model_name)
+    # train_tf_idf(model, model_path, model_name, load_model, processing_numer)
+    
+
     # model = LogisticRegressionCV
     # model_path = './log/logReg'
     # load_model = False
-    # processing_numer = 3
+    # processing_numer = 1
 
-    # emotion_list = ["anger", "fear", "joy", "sadness"]
-    # model_name = 'all-emotions'
+    # model_name = 'tf-idf'
     # print(model_name)
-    # train(model, emotion_list, model_path, model_name, load_model, processing_numer)
-
-    # emotion_list = ["joy", "sadness"]
-    # model_name = 'joy-sadness'
-    # print(model_name)
-    # train(model, emotion_list, model_path, model_name, load_model, processing_numer)
-
-    # emotion_list = ["anger", "fear"]
-    # model_name = 'anger-fear'
-    # print(model_name)
-    # train(model, emotion_list, model_path, model_name, load_model, processing_numer)
-    model = SVM
-    model_path = './log/SVM'
-    load_model = False
-    processing_numer = 1
-
-    model_name = 'tf-idf'
-    print(model_name)
-    train_tf_idf(model, model_path, model_name, load_model, processing_numer)
-    
-
-    model = LogisticRegressionCV
-    model_path = './log/logReg'
-    load_model = False
-    processing_numer = 1
-
-    model_name = 'tf-idf'
-    print(model_name)
-    train_tf_idf(model,model_path, model_name, load_model, processing_numer)
+    # train_tf_idf(model,model_path, model_name, load_model, processing_numer)
 
 if __name__ == '__main__':
     main()

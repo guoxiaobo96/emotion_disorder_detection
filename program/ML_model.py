@@ -26,7 +26,7 @@ class MLModel(object):
 
 
     def fit(self, processing_number=1, random_number=3):
-        if self._load_model_mark:
+        if self._load_model_mark and os.path.exists(os.path.join(self._model_path, self._model_name+'_model')):
             self._load_model()
             self._best_model['metrics'] = self._valid()
         for index, hyper_parameters in enumerate(self._hyper_parameters_list):

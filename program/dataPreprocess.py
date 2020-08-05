@@ -349,7 +349,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         user_set = set()
         user_file = os.path.join(user_file_folder, data_type) + '_user_list'
         data_folder = os.path.join(data_path, data_type)
-        with open(user_file, mode='r') as fp:
+        with open(user_file, mode='r',encoding='utf8') as fp:
             for line in fp.readlines():
                 user_set.add(line.split(' [info] ')[0])
         record[data_type] = dict()
@@ -503,7 +503,8 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-
+    # root_dir = '/home/xiaobo/emotion_disorder_detection'
+    root_dir = 'D:/research/emotion_disorder_detection'
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
@@ -518,7 +519,7 @@ if __name__ == '__main__':
     step_size = args.step_size
 
     function = args.function_type
-    os.chdir('/home/xiaobo/emotion_disorder_detection')
+    os.chdir(root_dir)
     if function == 'build_state':
         for keywords in ['bipolar', 'depression', 'background']:
             build_state(keywords, window=window_size *

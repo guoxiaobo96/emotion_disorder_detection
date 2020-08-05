@@ -1,10 +1,10 @@
-accuracy : 0.52
-micro_f1_score : 0.52
-macro_f1_score : 0.4244833068362481
-confusion_matrix : [[ 0 84 16]
- [ 0 84 16]
- [ 0 28 72]]
-penalty : l1
-solver : saga
+accuracy : 0.56
+micro_f1_score : 0.56
+macro_f1_score : 0.5538881697543326
+confusion_matrix : [[48 32 20]
+ [32 45 23]
+ [15 10 75]]
+penalty : l2
+solver : lbfgs
 multi_class : ovr
-random_seed : 8
+random_seed : 12
