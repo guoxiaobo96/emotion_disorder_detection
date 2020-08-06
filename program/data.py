@@ -193,13 +193,14 @@ class DataLoaderForTransProb(object):
 
 
 class DataLoaderForTfIdf(object):
-    def __init__(self, data_type_list=[['bipolar'], ['depression'], ['background']], data_size=[200, 100, 100]):
+    def __init__(self, data_type_list=[['bipolar'], ['depression'], ['background']], cross_validation=False, data_size=[200, 100, 100]):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
         self.data_size = data_size
         self.train_dataset = []
         self.valid_dataset = []
         self.test_dataset = []
+        self._cross_validation = cross_validation
         self.build_dataset(self.data_type_list, self.data_size)
 
     def build_dataset(self, data_type_list, data_size):
@@ -221,16 +222,33 @@ class DataLoaderForTfIdf(object):
                         user_tf_idf_folder, tf_idf_file)
                     tf_idf = np.load(tf_idf_path)
                     data[type_index].append(tf_idf)
-        split_number = 0
-        for i, number in enumerate(data_size):
+        if self._cross_validation:
+            data_size = len(data[0])
+            fold_data = [[[], []] for _ in range(5)]
+            for data_list in data:
+                data_size = min(data_size, len(data_list))
+            one_fold_data_size = int(data_size / 5)
             for type, single_type_data in enumerate(data):
                 seed(123)
                 shuffle(single_type_data)
-                for prob in single_type_data[split_number: split_number + number]:
-                    split_data[i][0].append(prob.flatten())
-                    split_data[i][1].append(type)
-            split_number += number
-        self.train_dataset, self.valid_dataset, self.test_dataset = split_data
+                temp = [single_type_data[i * one_fold_data_size:(
+                    i + 1) * one_fold_data_size] for i in range(0, 5)]
+                for index, single_fold_data in enumerate(temp):
+                        for prob in single_fold_data:
+                            fold_data[index][0].append(prob.flatten())
+                            fold_data[index][1].append(type)
+            self.fold_data = fold_data
+        else:
+            split_number = 0
+            for i, number in enumerate(data_size):
+                for type, single_type_data in enumerate(data):
+                    seed(123)
+                    shuffle(single_type_data)
+                    for prob in single_type_data[split_number: split_number + number]:
+                        split_data[i][0].append(prob.flatten())
+                        split_data[i][1].append(type)
+                split_number += number
+            self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
 
 class DataLoaderForState(object):
