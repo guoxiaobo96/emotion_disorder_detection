@@ -1,0 +1,9 @@
+accuracy : 0.7687943262411348
+micro_f1_score : 0.7687943262411348
+macro_f1_score : 0.7687273210285763
+confusion_matrix : [[554 151]
+ [175 530]]
+kernel : poly
+gamma : scale
+decision_function_shape : ovo
+random_seed : 18
