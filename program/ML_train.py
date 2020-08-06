@@ -152,7 +152,7 @@ def main():
     cross_validation = False
     load_model = True
     processing_numer = 10
-    random_number = 10
+    random_number = 20
 
     model = RandomForest
     model_path = './log/RF'
