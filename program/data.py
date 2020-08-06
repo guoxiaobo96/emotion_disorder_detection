@@ -300,6 +300,68 @@ class DataLoaderForState(object):
             split_number += number
         self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
+class DataLoaderForTransSeq(object):
+    def __init__(self, emotion_list, data_type_list=[['bipolar'], ['depression'], ['background']], cross_validation=False, data_size=[200, 100, 100]):
+        self.data_type_list = data_type_list
+        self.class_number = len(data_type_list)
+        self.data_size = data_size
+        self.train_dataset = []
+        self.valid_dataset = []
+        self.test_dataset = []
+        self._state_number = pow(2, len(emotion_list)) + 1
+        self._emotion_list = emotion_list
+        self._cross_validation = cross_validation
+        self.build_dataset(self.data_type_list, self.data_size)
+
+    def build_dataset(self, data_type_list, data_size):
+        data = []
+        split_data = [[[], []], [[], []], [[], []]]
+        for type_index, data_type in enumerate(data_type_list):
+            data.append([])
+            for type in data_type:
+                user_list = []
+                user_list_file = './data/user_list/' + type + '_user_list'
+                user_state_trans_folder = './data/state_sequence/' + type
+                with open(user_list_file, mode='r', encoding='utf8') as fp:
+                    for line in fp.readlines():
+                        user, _ = line.strip().split(' [info] ')
+                        user_list.append(user)
+                for index, user in enumerate(user_list):
+                    state_trans_file = user + '.' + \
+                        '-'.join(self._emotion_list)+'.npy'
+                    state_trans_path = os.path.join(
+                        user_state_trans_folder, state_trans_file)
+                    state_prob = np.load(state_trans_path)
+                    data[type_index].append(state_prob)
+        if self._cross_validation:
+            data_size = len(data[0])
+            fold_data = [[[], []] for _ in range(5)]
+            for data_list in data:
+                data_size = min(data_size, len(data_list))
+            one_fold_data_size = int(data_size / 5)
+            for type, single_type_data in enumerate(data):
+                seed(123)
+                shuffle(single_type_data)
+                temp = [single_type_data[i * one_fold_data_size:(
+                    i + 1) * one_fold_data_size] for i in range(0, 5)]
+                for index, single_fold_data in enumerate(temp):
+                        for prob in single_fold_data:
+                            fold_data[index][0].append(prob.flatten())
+                            fold_data[index][1].append(type)
+            self.fold_data = fold_data
+        else:
+            split_number = 0
+            for i, number in enumerate(data_size):
+                for type, single_type_data in enumerate(data):
+                    seed(123)
+                    shuffle(single_type_data)
+                    for prob in single_type_data[split_number: split_number + number]:
+                        split_data[i][0].append(prob.flatten())
+                        split_data[i][1].append(type)
+                split_number += number
+            self.train_dataset, self.valid_dataset, self.test_dataset = split_data
+
+
 
 def test():
     data_loader = DataLoaderForTransProb(

@@ -14,3 +14,4 @@ program/__pycache__/*
 data/tf_idf/*/*
 log/*/*/tf-idf_model
 .vscode/*/*
+data/state_sequence/*/*
