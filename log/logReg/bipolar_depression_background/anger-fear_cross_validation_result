@@ -1,0 +1,10 @@
+accuracy : 0.51440329218107
+micro_f1_score : 0.51440329218107
+macro_f1_score : 0.4853995462771592
+confusion_matrix : [[274  59  72]
+ [227  76 102]
+ [ 91  39 275]]
+penalty : l2
+solver : lbfgs
+multi_class : ovr
+random_seed : 7

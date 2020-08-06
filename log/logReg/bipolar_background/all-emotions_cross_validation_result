@@ -1,0 +1,9 @@
+accuracy : 0.7864197530864198
+micro_f1_score : 0.7864197530864198
+macro_f1_score : 0.7863021720532102
+confusion_matrix : [[328  77]
+ [ 96 309]]
+penalty : l2
+solver : newton-cg
+multi_class : ovr
+random_seed : 5
