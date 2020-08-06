@@ -105,23 +105,23 @@ def main():
 
     cross_validation = True
     load_model = True
-    processing_numer = 3
-    random_number = 3
+    processing_numer = 10
+    random_number = 10
 
-    model = LogisticRegressionCV
-    model_path = './log/logReg'
+    model = SVM
+    model_path = './log/SVM'
 
-    emotion_list = ["anger", "fear", "joy", "sadness"]
-    model_name = 'all-emotions'
-    print(model_name)
-    train_trans_prob(model, emotion_list, model_path, model_name,
-                     load_model, cross_validation, processing_numer, random_number)
+    # emotion_list = ["anger", "fear", "joy", "sadness"]
+    # model_name = 'all-emotions'
+    # print(model_name)
+    # train_trans_prob(model, emotion_list, model_path, model_name,
+    #                  load_model, cross_validation, processing_numer, random_number)
 
-    emotion_list = ["joy", "sadness"]
-    model_name = 'joy-sadness'
-    print(model_name)
-    train_trans_prob(model, emotion_list, model_path, model_name,
-                     load_model, cross_validation, processing_numer, random_number)
+    # emotion_list = ["joy", "sadness"]
+    # model_name = 'joy-sadness'
+    # print(model_name)
+    # train_trans_prob(model, emotion_list, model_path, model_name,
+    #                  load_model, cross_validation, processing_numer, random_number)
 
     emotion_list = ["anger", "fear"]
     model_name = 'anger-fear'

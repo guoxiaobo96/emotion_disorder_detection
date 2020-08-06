@@ -6,4 +6,4 @@ confusion_matrix : [[554 151]
 kernel : poly
 gamma : scale
 decision_function_shape : ovo
-random_seed : 18
+random_seed : 4

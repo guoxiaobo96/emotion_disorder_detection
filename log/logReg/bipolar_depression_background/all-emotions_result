@@ -1,0 +1,10 @@
+accuracy : 0.5566666666666666
+micro_f1_score : 0.5566666666666666
+macro_f1_score : 0.5499966785474729
+confusion_matrix : [[52 30 18]
+ [34 41 25]
+ [15 11 74]]
+penalty : l2
+solver : sag
+multi_class : multinomial
+random_seed : 2
