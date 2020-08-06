@@ -170,10 +170,10 @@ class MLModel(object):
                     predict_label, label = self._valid(test_data)
                     predict_label_list.extend(predict_label)
                     label_list.extend(label)
-        if self.model is not None:
-            metrics = self._calculate_metrics(predict_label_list, label_list)
-        else:
-            metrics = None
+            if self.model is not None:
+                metrics = self._calculate_metrics(predict_label_list, label_list)
+            else:
+                metrics = None
         return (metrics, self.model, random_seed)
 
 class LogisticRegressionCV(MLModel):
