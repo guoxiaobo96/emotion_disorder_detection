@@ -1,9 +1,7 @@
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 from data import DataLoaderForTransProb, DataLoaderForTfIdf
 from ML_model import LogisticRegressionCV, SVM, RandomForest
-import argparse
-import os
-import logging
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 
 def _str2bool(v):
@@ -56,7 +54,7 @@ def train_trans_prob(model_type, emotion_list, model_path, model_name, load_mode
     print('\n')
 
 
-def train_tf_idf(model_type,  model_path, model_name, load_model, cross_validation, processing_number=1, random_number=3, multi_processing=True):
+def train_tf_idf(model_type, model_path, model_name, load_model, cross_validation, processing_number=1, random_number=3, multi_processing=True):
     if not os.path.exists(model_path):
         os.mkdir(model_path)
     if cross_validation:
@@ -66,7 +64,7 @@ def train_tf_idf(model_type,  model_path, model_name, load_model, cross_validati
     data_loader = DataLoaderForTfIdf(data_type_list=[['bipolar'], ['depression'], [
         'background']], cross_validation=cross_validation, data_size=[200, 100, 100])
     model = model_type(data_loader, model_path=model_path + '/bipolar_depression_background',
-                       model_name=model_name, load_model=load_model, multi_processing=multi_processing ,cross_validation=cross_validation)
+                       model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
     model.fit(processing_number=processing_number, random_number=random_number)
     print('\n')
 
@@ -110,28 +108,26 @@ def main():
     processing_numer = 10
     random_number = 10
 
-    model = SVM
-    model_path = './log/SVM'
-
+    model = LogisticRegressionCV
+    model_path = './log/LogReg'
 
     emotion_list = ["anger", "fear", "joy", "sadness"]
     model_name = 'all-emotions'
     print(model_name)
     train_trans_prob(model, emotion_list, model_path, model_name,
-                        load_model, cross_validation, processing_numer, random_number)
+                     load_model, cross_validation, processing_numer, random_number)
 
     emotion_list = ["joy", "sadness"]
     model_name = 'joy-sadness'
     print(model_name)
     train_trans_prob(model, emotion_list, model_path, model_name,
-                        load_model, cross_validation, processing_numer, random_number)
+                     load_model, cross_validation, processing_numer, random_number)
 
     emotion_list = ["anger", "fear"]
     model_name = 'anger-fear'
     print(model_name)
     train_trans_prob(model, emotion_list, model_path, model_name,
-                        load_model, cross_validation, processing_numer, random_number)
-
+                     load_model, cross_validation, processing_numer, random_number)
 
     # model = SVM
     # model_path = './log/SVM'
@@ -150,7 +146,6 @@ def main():
     # print(model_name)
     # train_tf_idf(model, model_path, model_name,
     #                 load_model, cross_validation, processing_numer)
-
 
     # model = RandomForest
     # model_path = './log/RF'
