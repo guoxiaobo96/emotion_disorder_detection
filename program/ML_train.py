@@ -103,7 +103,7 @@ def train_tf_idf(model_type, model_path, model_name, load_model, cross_validatio
 
 def main():
 
-    cross_validation = True
+    cross_validation = False
     load_model = True
     processing_numer = 10
     random_number = 10

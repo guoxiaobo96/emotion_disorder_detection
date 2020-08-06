@@ -155,7 +155,7 @@ class MLModel(object):
             else:
                 metrics = None
         else:
-            predict_labe_list = []
+            predict_label_list = []
             label_list = []
             for i in range(5):
                 train_data = [[], []]
@@ -168,12 +168,12 @@ class MLModel(object):
                 self._train_model(train_data)
                 if self.model is not None:
                     predict_label, label = self._valid(test_data)
-                    predict_labe_list.extend(predict_label)
+                    predict_label_list.extend(predict_label)
                     label_list.extend(label)
-        if self.model is not None:
-            metrics = self._calculate_metrics(predict_labe_list, label_list)
-        else:
-            metrics = None
+            if self.model is not None:
+                metrics = self._calculate_metrics(predict_label_list, label_list)
+            else:
+                metrics = None
         return (metrics, self.model, random_seed)
 
 class LogisticRegressionCV(MLModel):
