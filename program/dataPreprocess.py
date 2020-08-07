@@ -238,7 +238,7 @@ def build_binary_tfrecord(data_path_list, record_path, label_index, type_list=["
 def build_state(data_type, window, gap):
     user_list_file = './data/user_list/' + data_type + '_user_list'
     user_text_folder = os.path.join('./data/full_reddit', data_type)
-    user_state_folder = os.path.join('./data/full_state', data_type)
+    user_state_folder = os.path.join('./data/features/state_origin/anger_fear_joy_sadness', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
 
@@ -300,8 +300,12 @@ def build_state_sequence(data_type, emotion_list, emotion_state_number):
     basic_sequence = np.zeros(shape=600, dtype=float)
     user_list = []
     user_list_file = './data/user_list/' + data_type + '_user_list'
-    user_state_folder = './data/state/' + data_type
-    user_state_sequence_folder = './data/state_sequence/' + data_type
+    user_state_folder = './data/features/state/state_origin/anger_fear_joy_sadness/' + data_type
+    user_state_sequence_folder = './data/features/state/state_sequence/' + '_'.join(emotion_list) + '/' + data_type
+
+    if not os.path.exists(user_state_sequence_folder):
+        os.makedirs(user_state_sequence_folder)
+
     if not os.path.exists(user_state_sequence_folder):
         os.mkdir(user_state_sequence_folder)
     with open(user_list_file, mode='r', encoding='utf8') as fp:
@@ -340,7 +344,7 @@ def build_state_sequence(data_type, emotion_list, emotion_state_number):
                 new_state = state_list[item[1]]
         normalized_state_list[last_index] = 1.0 * new_state / count
 
-        state_sequence_file = user + '.' + '-'.join(emotion_list)+'.npy'
+        state_sequence_file = user + '.' +'.npy'
         target_file = os.path.join(user_state_sequence_folder, state_sequence_file)
         np.save(target_file, normalized_state_list)
 
@@ -348,10 +352,11 @@ def build_state_trans(data_type, emotion_list, emotion_state_number):
     state_number = pow(2, len(emotion_list)) + 1
     user_list = []
     user_list_file = './data/user_list/' + data_type + '_user_list'
-    user_state_folder = './data/state/' + data_type
-    user_state_trans_folder = './data/state_trans/' + data_type
+    user_state_folder = './data/features/state/state_origin/anger_fear_joy_sadness/' + data_type
+    user_state_trans_folder = './data/features/state/state_trans/' + '_'.join(emotion_list) + '/' + data_type
     if not os.path.exists(user_state_trans_folder):
-        os.mkdir(user_state_trans_folder)
+        os.makedirs(user_state_trans_folder)
+
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
             user, _ = line.strip().split(' [info] ')
@@ -381,7 +386,7 @@ def build_state_trans(data_type, emotion_list, emotion_state_number):
             else:
                 for state_next in range(state_number):
                     state_prob[state_prev][state_next] /= sum
-        state_trans_file = user + '.' + '-'.join(emotion_list)+'.npy'
+        state_trans_file = user + '.npy'
         target_file = os.path.join(user_state_trans_folder, state_trans_file)
         np.save(target_file, state_prob)
 
