@@ -122,7 +122,7 @@ class Trainer(object):
                     item = json.dumps(item)
                     fp.write(item + '\n')
             count += 1
-            if count % 25 == 0:
+            if count % 100 == 0:
                 print(count)
 
     def calculate_f1_score(self, data=None):
