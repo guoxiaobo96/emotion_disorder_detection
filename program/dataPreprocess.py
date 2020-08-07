@@ -11,6 +11,9 @@ import numpy as np
 import re
 import json
 import math
+from scipy.spatial.distance import euclidean
+
+from fastdtw import fastdtw
 from nltk.stem.porter import PorterStemmer
 
 
@@ -292,6 +295,54 @@ def build_state(data_type, window, gap):
             user, _ = line.strip().split(' [info] ')
             user_list.append(user)
 
+def build_state_sequence(data_type, emotion_list, emotion_state_number):
+    state_number = pow(2, len(emotion_list)) + 1
+    basic_sequence = np.zeros(shape=600, dtype=float)
+    user_list = []
+    user_list_file = './data/user_list/' + data_type + '_user_list'
+    user_state_folder = './data/state/' + data_type
+    user_state_sequence_folder = './data/state_sequence/' + data_type
+    if not os.path.exists(user_state_sequence_folder):
+        os.mkdir(user_state_sequence_folder)
+    with open(user_list_file, mode='r', encoding='utf8') as fp:
+        for line in fp.readlines():
+            user, _ = line.strip().split(' [info] ')
+            user_list.append(user)
+    for index, user in enumerate(user_list):
+        state_list = []
+        normalized_state_list = np.zeros(shape=600, dtype=float)
+        state_prob = np.array([[0.0 for _ in range(state_number)]
+                               for i in range(state_number)])
+        user_state_path = os.path.join(user_state_folder, user)
+        with open(user_state_path, mode='r', encoding='utf8') as fp:
+            for line in fp.readlines():
+                state = [int(s) for s in line.strip().split(',')]
+                state_int = 0
+                if state != [-1, -1, -1, -1]:
+                    for i, s in enumerate(state):
+                        state_int += emotion_state_number[i] * s
+                    state_int += 1
+                state_list.append(state_int)
+        _, path = fastdtw(basic_sequence, np.array(state_list), dist=euclidean)
+        
+        last_index = 0
+        new_state = 0
+        count = 0
+        
+        for item in path:
+            if item[0] == last_index:
+                new_state += state_list[item[1]]
+                count += 1
+            else:
+                normalized_state_list[last_index] = 1.0 * new_state / count
+                last_index = item[0]
+                count = 1
+                new_state = state_list[item[1]]
+        normalized_state_list[last_index] = 1.0 * new_state / count
+
+        state_sequence_file = user + '.' + '-'.join(emotion_list)+'.npy'
+        target_file = os.path.join(user_state_sequence_folder, state_sequence_file)
+        np.save(target_file, normalized_state_list)
 
 def build_state_trans(data_type, emotion_list, emotion_state_number):
     state_number = pow(2, len(emotion_list)) + 1
@@ -509,7 +560,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--function_type', choices=[
-                        'build_state', 'build_text_tfrecord', 'build_state_trans', 'build_tfidf'], type=str, default='build_tfidf')
+                        'build_state', 'build_text_tfrecord', 'build_state_trans', 'build_tfidf', 'build_state_sequence'], type=str, default='build_state_sequence')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
@@ -539,6 +590,14 @@ if __name__ == '__main__':
     elif function == 'build_tfidf':
         build_tfidf('./data/user_list/', './data/reddit/', './data/tf_idf',
                     data_type_list=['bipolar', 'depression', 'background'])
+    elif function == 'build_state_sequence':
+        for keywords in ['bipolar', 'depression', 'background']:
+            build_state_sequence(
+                keywords, ["anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8])
+            build_state_sequence(
+                keywords, ["anger", "fear"], emotion_state_number=[1, 2, 0, 0])
+            build_state_sequence(
+                keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
     elif function == 'build_binary_tfrecod':
         pass
     elif function == 'build_multi_class_tfrecord':

@@ -24,7 +24,7 @@ data_arg.add_argument('--target_dir', type=str, default='./data/full_reddit')
 # data_arg.add_argument('--data_type',type=str,default='balanced')
 
 data_arg.add_argument('--dataset', type=str, default='full_reddit_data')
-data_arg.add_argument('--data_type', type=str, default='bipolar')
+data_arg.add_argument('--data_type', type=str, default='depression')
 
 data_arg.add_argument('--user_data_path', type=str, default='./data/full_user_list')
 

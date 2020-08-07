@@ -88,6 +88,7 @@ class Trainer(object):
             data = self._data_loader.label_dataset
         count = 0
         for user, text_data in data.items():
+            emotion_finish = True
             write_data = list()
             target_file = os.path.join(target_dir, user)
             with open(target_file, mode='r', encoding='utf8') as fp:
@@ -96,8 +97,19 @@ class Trainer(object):
                     try:
                         for id, value in json.loads(line.strip()).items():
                             user_data[id] = value
+                            if emotion_type not in value:
+                                emotion_finish = False
                     except json.decoder.JSONDecodeError:
                         pass
+            if emotion_finish:
+                count += 1
+                if count % 1000 == 0:
+                    print(count)
+                continue
+            else:
+                for key, value in user_data.items():
+                    if emotion_type in user_data[key]:
+                        user_data[key][emotion_type] = 0
             for item in text_data:
                 sentence, id_list = item
                 label_list = self.model.predict(sentence)
@@ -122,7 +134,7 @@ class Trainer(object):
                     item = json.dumps(item)
                     fp.write(item + '\n')
             count += 1
-            if count % 25 == 0:
+            if count % 500 == 0:
                 print(count)
 
     def calculate_f1_score(self, data=None):
