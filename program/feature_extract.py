@@ -1,24 +1,18 @@
-import os
-import logging
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-logging.getLogger("tensorflow").setLevel(logging.ERROR)
-from random import shuffle, choice, seed
 import argparse
 import numpy as np
-import re
 import json
 import math
 from scipy.spatial.distance import euclidean
-
 from fastdtw import fastdtw
 from nltk.stem.porter import PorterStemmer
-
+import os
 
 
 def build_state(data_type, window, gap):
     user_list_file = './data/user_list/' + data_type + '_user_list'
     user_text_folder = os.path.join('./data/full_reddit', data_type)
-    user_state_folder = os.path.join('./data/features/state_origin/anger_fear_joy_sadness', data_type)
+    user_state_folder = os.path.join(
+        './data/features/state_origin/anger_fear_joy_sadness', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
 
@@ -75,13 +69,14 @@ def build_state(data_type, window, gap):
             user, _ = line.strip().split(' [info] ')
             user_list.append(user)
 
+
 def build_state_sequence(data_type, emotion_list, emotion_state_number):
-    state_number = pow(2, len(emotion_list)) + 1
     basic_sequence = np.zeros(shape=600, dtype=float)
     user_list = []
     user_list_file = './data/user_list/' + data_type + '_user_list'
     user_state_folder = './data/features/state/state_origin/anger_fear_joy_sadness/' + data_type
-    user_state_sequence_folder = './data/features/state/state_sequence/' + '_'.join(emotion_list) + '/' + data_type
+    user_state_sequence_folder = './data/features/state/state_sequence/' + \
+        '_'.join(emotion_list) + '/' + data_type
 
     if not os.path.exists(user_state_sequence_folder):
         os.makedirs(user_state_sequence_folder)
@@ -95,8 +90,6 @@ def build_state_sequence(data_type, emotion_list, emotion_state_number):
     for index, user in enumerate(user_list):
         state_list = []
         normalized_state_list = np.zeros(shape=600, dtype=float)
-        state_prob = np.array([[0.0 for _ in range(state_number)]
-                               for i in range(state_number)])
         user_state_path = os.path.join(user_state_folder, user)
         with open(user_state_path, mode='r', encoding='utf8') as fp:
             for line in fp.readlines():
@@ -108,11 +101,11 @@ def build_state_sequence(data_type, emotion_list, emotion_state_number):
                     state_int += 1
                 state_list.append(state_int)
         _, path = fastdtw(basic_sequence, np.array(state_list), dist=euclidean)
-        
+
         last_index = 0
         new_state = 0
         count = 0
-        
+
         for item in path:
             if item[0] == last_index:
                 new_state += state_list[item[1]]
@@ -124,16 +117,19 @@ def build_state_sequence(data_type, emotion_list, emotion_state_number):
                 new_state = state_list[item[1]]
         normalized_state_list[last_index] = 1.0 * new_state / count
 
-        state_sequence_file = user + '.' +'.npy'
-        target_file = os.path.join(user_state_sequence_folder, state_sequence_file)
+        state_sequence_file = user + '.' + '.npy'
+        target_file = os.path.join(
+            user_state_sequence_folder, state_sequence_file)
         np.save(target_file, normalized_state_list)
+
 
 def build_state_trans(data_type, emotion_list, emotion_state_number):
     state_number = pow(2, len(emotion_list)) + 1
     user_list = []
     user_list_file = './data/user_list/' + data_type + '_user_list'
     user_state_folder = './data/features/state/state_origin/anger_fear_joy_sadness/' + data_type
-    user_state_trans_folder = './data/features/state/state_trans/' + '_'.join(emotion_list) + '/' + data_type
+    user_state_trans_folder = './data/features/state/state_trans/' + \
+        '_'.join(emotion_list) + '/' + data_type
     if not os.path.exists(user_state_trans_folder):
         os.makedirs(user_state_trans_folder)
 
@@ -170,10 +166,10 @@ def build_state_trans(data_type, emotion_list, emotion_state_number):
         target_file = os.path.join(user_state_trans_folder, state_trans_file)
         np.save(target_file, state_prob)
 
+
 def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix_list=['']):
     if not os.path.exists(record_path):
-        os.mkdir(record_path)
-    words_set = set()
+        os.makedirs(record_path)
     idf = dict()
     record = dict()
     stemmer = PorterStemmer()
@@ -184,7 +180,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         user_set = set()
         user_file = os.path.join(user_file_folder, data_type) + '_user_list'
         data_folder = os.path.join(data_path, data_type)
-        with open(user_file, mode='r',encoding='utf8') as fp:
+        with open(user_file, mode='r', encoding='utf8') as fp:
             for line in fp.readlines():
                 user_set.add(line.split(' [info] ')[0])
         record[data_type] = dict()
@@ -204,8 +200,8 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
                                 if value['text'] == '':
                                     continue
                                 text = value['text'].strip().split(' ')
-                                term_record = set()
                                 for word in text:
+                                    word = stemmer.stem(word.lower())
                                     if word not in word_map:
                                         word_map[word] = word_index
                                         word_index += 1
@@ -223,16 +219,16 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     for data_type, value in record.items():
         record_folder = os.path.join(record_path, data_type)
         if not os.path.exists(record_folder):
-            os.mkdir(record_folder)
+            os.makedirs(record_folder)
         for user, v in value.items():
             tf_idf = np.zeros(len(word_map), dtype='float')
             total_word = v['word_count']
             for word, term_frequency in v['tf'].items():
                 index = word_map[word]
-                tf_idf[index] = term_frequency * math.log(total_page + 1 / (idf[word] + 1))
+                tf_idf[index] = term_frequency / total_word * \
+                    math.log(total_page + 1 / (idf[word] + 1))
             record_file = os.path.join(record_folder, user)
             np.save(record_file, tf_idf)
-
 
 
 if __name__ == '__main__':
@@ -242,13 +238,13 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    # root_dir = '/home/xiaobo/emotion_disorder_detection'
-    root_dir = 'D:/research/emotion_disorder_detection'
+    root_dir = '/home/xiaobo/emotion_disorder_detection'
+    # root_dir = 'D:/research/emotion_disorder_detection'
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--function_type', choices=[
-                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence'], type=str, default='build_state_sequence')
+                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence'], type=str, default='build_tfidf')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
@@ -273,7 +269,7 @@ if __name__ == '__main__':
             build_state_trans(
                 keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
     elif function == 'build_tfidf':
-        build_tfidf('./data/user_list/', './data/reddit/', './data/tf_idf',
+        build_tfidf('./data/user_list/', './data/reddit/', './data/features/content/tf_idf',
                     data_type_list=['bipolar', 'depression', 'background'])
     elif function == 'build_state_sequence':
         for keywords in ['bipolar', 'depression', 'background']:
@@ -283,7 +279,3 @@ if __name__ == '__main__':
                 keywords, ["anger", "fear"], emotion_state_number=[1, 2, 0, 0])
             build_state_sequence(
                 keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
-    elif function == 'build_binary_tfrecod':
-        pass
-    elif function == 'build_multi_class_tfrecord':
-        pass
