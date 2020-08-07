@@ -9,8 +9,7 @@ data/state/*/*
 work.sh
 submissions/*
 data/full_reddit/*/*
-data/state_trans/*/*
 program/__pycache__/*
-data/tf_idf/*/*
+data/features/*/*/*
 log/*/*/tf-idf_model
 .vscode/*/*
