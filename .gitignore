@@ -10,6 +10,6 @@ work.sh
 submissions/*
 data/full_reddit/*/*
 program/__pycache__/*
-data/features/*
+data/feature/*
 log/*/*/tf-idf_model
 .vscode/*/*

@@ -1,6 +1,6 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-from data import DataLoaderForTransProb, DataLoaderForTfIdf, DataLoaderForTransSeq
+from data import DataLoaderForFeature
 from ML_model import LogisticRegressionCV, SVM, RandomForest
 
 
@@ -100,14 +100,14 @@ def train_trans_seq(model_type, emotion_list, model_path, model_name, load_model
     print('\n')
 
 
-def train_tf_idf(model_type, model_path, model_name, load_model, cross_validation, processing_number=1, random_number=3, multi_processing=True):
+def train_tf_idf(model_type, feature_type, feature_name, model_path, model_name, load_model, cross_validation, processing_number=1, random_number=3, multi_processing=True):
     if not os.path.exists(model_path):
         os.mkdir(model_path)
     if cross_validation:
         model_name = model_name + '_cross_validation'
 
     print('multi-class : ')
-    data_loader = DataLoaderForTfIdf(data_type_list=[['bipolar'], ['depression'], [
+    data_loader = DataLoaderForFeature(feature_type, feature_name, data_type_list=[['bipolar'], ['depression'], [
         'background']], cross_validation=cross_validation, data_size=[200, 100, 100])
     model = model_type(data_loader, model_path=model_path + '/bipolar_depression_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
@@ -115,7 +115,7 @@ def train_tf_idf(model_type, model_path, model_name, load_model, cross_validatio
     print('\n')
 
     print('disorder : ')
-    data_loader = DataLoaderForTfIdf(data_type_list=[['bipolar', 'depression'], [
+    data_loader = DataLoaderForFeature(feature_type, feature_name, data_type_list=[['bipolar', 'depression'], [
         'background']], cross_validation=cross_validation, data_size=[400, 100, 200])
     model = model_type(data_loader, model_path=model_path + '/bipolar-depression_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
@@ -123,7 +123,7 @@ def train_tf_idf(model_type, model_path, model_name, load_model, cross_validatio
     print('\n')
 
     print('bipolar : ')
-    data_loader = DataLoaderForTfIdf(
+    data_loader = DataLoaderForFeature(feature_type, feature_name, 
         data_type_list=[['bipolar'], ['background']], cross_validation=cross_validation, data_size=[200, 100, 100])
     model = model_type(data_loader, model_path=model_path + '/bipolar_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
@@ -131,7 +131,7 @@ def train_tf_idf(model_type, model_path, model_name, load_model, cross_validatio
     print('\n')
 
     print('bipolar-depression : ')
-    data_loader = DataLoaderForTfIdf(
+    data_loader = DataLoaderForFeature(feature_type, feature_name, 
         data_type_list=[['bipolar'], ['depression']], cross_validation=cross_validation, data_size=[200, 100, 100])
     model = model_type(data_loader, model_path=model_path + '/bipolar_depression',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
@@ -139,7 +139,7 @@ def train_tf_idf(model_type, model_path, model_name, load_model, cross_validatio
     print('\n')
 
     print('depression : ')
-    data_loader = DataLoaderForTfIdf(
+    data_loader = DataLoaderForFeature(feature_type, feature_name, 
         data_type_list=[['depression'], ['background']], cross_validation=cross_validation, data_size=[200, 100, 100])
     model = model_type(data_loader, model_path=model_path + '/depression_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
@@ -151,17 +151,17 @@ def main():
 
     cross_validation = False
     load_model = True
-    processing_numer = 10
-    random_number = 20
+    # processing_numer = 10
+    # random_number = 20
 
-    model = RandomForest
-    model_path = './log/RF'
+    # model = RandomForest
+    # model_path = './log/RF'
 
-    emotion_list = ["anger", "fear", "joy", "sadness"]
-    model_name = 'all-emotions'
-    print(model_name)
-    train_trans_prob(model, emotion_list, model_path, model_name,
-                     load_model, cross_validation, processing_numer, random_number)
+    # emotion_list = ["anger", "fear", "joy", "sadness"]
+    # model_name = 'all-emotions'
+    # print(model_name)
+    # train_trans_prob(model, emotion_list, model_path, model_name,
+    #                  load_model, cross_validation, processing_numer, random_number)
 
     # emotion_list = ["joy", "sadness"]
     # model_name = 'joy-sadness'
@@ -194,6 +194,8 @@ def main():
     #                  load_model, cross_validation, processing_numer, random_number)
 
 
+    feature_type = 'content'
+    feature_name = 'tf_idf'
     # model = SVM
     # model_path = './log/SVM'
     # load_model = False
@@ -212,15 +214,16 @@ def main():
     # train_tf_idf(model, model_path, model_name,
     #                 load_model, cross_validation, processing_numer)
 
-    # model = RandomForest
-    # model_path = './log/RF'
-    # load_model = False
-    # processing_numer = 1
+    model = RandomForest
+    model_path = './log/RF'
+    load_model = False
+    processing_numer = 1
+    random_number = 3
 
-    # model_name = 'tf-idf'
-    # print(model_name)
-    # train_tf_idf(model, model_path, model_name,
-    #                 load_model, cross_validation, processing_numer)
+    model_name = 'tf-idf'
+    print(model_name)
+    train_tf_idf(model, feature_type, feature_name, model_path, model_name,
+                    load_model, cross_validation, processing_numer)
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ def build_state(data_type, window, gap):
     user_list_file = './data/user_list/' + data_type + '_user_list'
     user_text_folder = os.path.join('./data/full_reddit', data_type)
     user_state_folder = os.path.join(
-        './data/features/state_origin/anger_fear_joy_sadness', data_type)
+        './data/feature/state_origin/anger_fear_joy_sadness', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
 
@@ -74,8 +74,8 @@ def build_state_sequence(data_type, emotion_list, emotion_state_number):
     basic_sequence = np.zeros(shape=600, dtype=float)
     user_list = []
     user_list_file = './data/user_list/' + data_type + '_user_list'
-    user_state_folder = './data/features/state/state_origin/anger_fear_joy_sadness/' + data_type
-    user_state_sequence_folder = './data/features/state/state_sequence/' + \
+    user_state_folder = './data/feature/state/state_origin/anger_fear_joy_sadness/' + data_type
+    user_state_sequence_folder = './data/feature/state/state_sequence/' + \
         '_'.join(emotion_list) + '/' + data_type
 
     if not os.path.exists(user_state_sequence_folder):
@@ -127,8 +127,8 @@ def build_state_trans(data_type, emotion_list, emotion_state_number):
     state_number = pow(2, len(emotion_list)) + 1
     user_list = []
     user_list_file = './data/user_list/' + data_type + '_user_list'
-    user_state_folder = './data/features/state/state_origin/anger_fear_joy_sadness/' + data_type
-    user_state_trans_folder = './data/features/state/state_trans/' + \
+    user_state_folder = './data/feature/state/state_origin/anger_fear_joy_sadness/' + data_type
+    user_state_trans_folder = './data/feature/state/state_trans/' + \
         '_'.join(emotion_list) + '/' + data_type
     if not os.path.exists(user_state_trans_folder):
         os.makedirs(user_state_trans_folder)
@@ -201,17 +201,20 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
                                     continue
                                 text = value['text'].strip().split(' ')
                                 for word in text:
-                                    word = stemmer.stem(word.lower())
-                                    if word not in word_map:
-                                        word_map[word] = word_index
-                                        word_index += 1
-                                    single_page_word_count += 1
-                                    if word not in term_frequency:
-                                        term_frequency[word] = 0
-                                        if word not in idf:
-                                            idf[word] = 0
-                                        idf[word] += 1
-                                    term_frequency[word] += 1
+                                    try:
+                                        word = stemmer.stem(word.lower())
+                                        if word not in word_map:
+                                            word_map[word] = word_index
+                                            word_index += 1
+                                        single_page_word_count += 1
+                                        if word not in term_frequency:
+                                            term_frequency[word] = 0
+                                            if word not in idf:
+                                                idf[word] = 0
+                                            idf[word] += 1
+                                        term_frequency[word] += 1
+                                    except RecursionError:
+                                        continue
                         except json.decoder.JSONDecodeError:
                             pass
                 record[data_type][user] = {
@@ -238,8 +241,8 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    root_dir = '/home/xiaobo/emotion_disorder_detection'
-    # root_dir = 'D:/research/emotion_disorder_detection'
+    # root_dir = '/home/xiaobo/emotion_disorder_detection'
+    root_dir = 'D:/research/emotion_disorder_detection'
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
@@ -269,7 +272,7 @@ if __name__ == '__main__':
             build_state_trans(
                 keywords, ["joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
     elif function == 'build_tfidf':
-        build_tfidf('./data/user_list/', './data/reddit/', './data/features/content/tf_idf',
+        build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
                     data_type_list=['bipolar', 'depression', 'background'])
     elif function == 'build_state_sequence':
         for keywords in ['bipolar', 'depression', 'background']:
