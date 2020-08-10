@@ -241,8 +241,8 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    # root_dir = '/home/xiaobo/emotion_disorder_detection'
-    root_dir = 'D:/research/emotion_disorder_detection'
+    root_dir = '/home/xiaobo/emotion_disorder_detection'
+    # root_dir = 'D:/research/emotion_disorder_detection'
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
