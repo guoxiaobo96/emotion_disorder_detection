@@ -31,8 +31,8 @@ bipolar_banned_list = ['anxiety', 'depression']
 depression_banned_list = ['bipolar', 'anxiety']
 anxiety_banned_list = ['bipolar', 'depression']
 
+
 data_path_list = ['f:/reddit/comments', 'f:/reddit/submissions']
-# data_path_list = ['f:/reddit/submissions']
 user_list_folder = './data/full_user_list'
 
 
@@ -136,6 +136,7 @@ def get_user(data_path_list, user_list_folder, user_file_list, checked_file):
             print("%s finished with %d seconds" %
                   (file, time.time()-start_time))
 
+
 def _get_user_one_line(line, user_info, data):
     obj = json.loads(line)
     user = obj['author']
@@ -157,7 +158,7 @@ def _get_user_one_line(line, user_info, data):
         author_flair_text = 'None'
     time_stamp = str(obj['created_utc'])
     line_data = {'user': user, 'text': text,
-                    'time': time_stamp, 'author_flair_text': author_flair_text}
+                 'time': time_stamp, 'author_flair_text': author_flair_text}
     _, disorder_list = _get_user_helper(line_data, data)
     for index, disorder_mark in enumerate(disorder_list):
         if disorder_mark:
@@ -270,7 +271,7 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
                 if file in checked_file_list:
                     continue
                 result = pool.apply_async(func=_get_data_single_file, args=(
-                    file, user_info, target_folder_list,checked_file,))
+                    file, user_info, target_folder_list, checked_file,))
                 results.append(result)
         pool.close()
         pool.join()
@@ -305,7 +306,8 @@ def _get_data_single_file(file, user_info, target_folder_list, checked_file):
                 continue
     with open(checked_file, mode='a') as fp:
         fp.write(file+'\n')
-    print("%s finished at %s with %d seconds" % (file,time.strftime("%H:%M:%S", time.localtime()), time.time() - start_time))
+    print("%s finished at %s with %d seconds" % (file, time.strftime(
+        "%H:%M:%S", time.localtime()), time.time() - start_time))
 
 
 def _get_data_single_line(line, user_info, target_folder_list):
@@ -359,13 +361,163 @@ def read_user_list(user_list_folder, keyword):
     return user_list, user_info
 
 
+def get_popular_subreddit(data_path, type_list, checked_file):
+    checked_file_list = set()
+    subreddit_count = dict()
+    total_count = 0
+    with open(checked_file, mode='r') as fp:
+        for line in fp.readlines():
+            checked_file_list.add(line.strip())
+    for type in type_list:
+        data_folder = os.path.join(data_path, type)
+        file_list = os.listdir(data_folder)
+        for i, file in enumerate(file_list):
+            if file in checked_file:
+                continue
+            with open(os.path.join(data_folder, file), mode='r', encoding='utf8') as fp:
+                for line in fp.readlines():
+                    try:
+                        item_data = json.loads(line.strip())
+                        for key, value in item_data.items():
+                            subreddit = value['subreddit']
+                            if subreddit not in subreddit_count:
+                                subreddit_count[subreddit] = 0
+                            subreddit_count[subreddit] += 1
+                            total_count += 1
+                    except json.decoder.JSONDecodeError:
+                        pass
+            with open(checked_file, mode='a', encoding='utf8') as fp:
+                fp.write(file+'\n')
+    subreddit_count = sorted(subreddit_count.items(),
+                             key=lambda item: item[1], reverse=True)
+    with open('./temp', mode='w', encoding='utf8') as fp:
+        fp.write("The total number is %d \n" % total_count)
+        for subreddit in subreddit_count[:20]:
+            fp.write(subreddit[0] + ' : ' + str(subreddit[1]) + '\n')
+    fp = open(checked_file, mode='w', encoding='utf8')
+    fp.close()
+
+
+def get_background_user(data_path_list, user_list_folder, user_file_list, checked_file):
+    checked_file_list = set()
+    banned_user_list = set()
+    subreddit_list = []
+    data_file_list = dict()
+
+    with open('./temp', mode='r', encoding='utf8') as fp:
+        for line in fp.readlines():
+            subreddit = line.strip().split(' : ')[0]
+            subreddit_list.append(subreddit)
+
+    background_user_list_file = os.path.join(
+        user_list_folder, 'background_user_list_full')
+
+    with open(checked_file, mode='r') as fp:
+        for line in fp.readlines():
+            checked_file_list.add(line.strip())
+
+    for file in user_file_list:
+        data_type = file.split('_')[0]
+        user_list_single, _ = read_user_list(user_list_folder, file)
+        banned_user_list = banned_user_list | user_list_single
+
+    for data_path in data_path_list:
+        for file in os.listdir(data_path):
+            temp = file.split('_')
+
+            if temp[1] == 'v2':
+                time_period = temp[2]
+            else:
+                time_period = temp[1]
+            time_period = time_period.split('.')[0]
+            if time_period not in data_file_list:
+                data_file_list[time_period] = []
+
+            data_file_list[time_period].append(os.path.join(data_path, file))
+    time_list = sorted(data_file_list.keys())
+    # for time_period in time_list[-3:]:
+    #     for file in data_file_list[time_period]:
+    #         if file in checked_file_list:
+    #             continue
+    #         _get_background_user_single_file(file, subreddit_list, banned_user_list, background_user_list_file, checked_file)
+    with Pool(processes=6) as pool:
+        results = []
+        for time_period in time_list:
+            for file in data_file_list[time_period]:
+                if file in checked_file_list:
+                    continue
+                result = pool.apply_async(func=_get_background_user_single_file, args=(
+                    file, subreddit_list, banned_user_list, background_user_list_file, checked_file,))
+                results.append(result)
+        pool.close()
+        pool.join()
+        for result in results:
+            result.get()
+
+    fp = open(checked_file, mode='w')
+    fp.close()
+
+
+def _get_background_user_single_file(file, subreddit_list, banned_user_list, background_user_list_file, checked_file):
+    background_user_list = list()
+
+    if file.endswith('.bz2'):
+        fp = bz2.open(file, mode='r')
+    elif file.endswith('.zst'):
+        fp = Zreader(file, chunk_size=2**24)
+    elif file.endswith('.xz'):
+        fp = lzma.open(file, mode='r')
+    else:
+        print('File type error with %s' % file)
+    start_time = time.time()
+    if file.endswith('.zst'):
+        for line in fp.readlines():
+            try:
+                _get_background_user_single_line(
+                    line, subreddit_list,  banned_user_list, background_user_list)
+            except:
+                continue
+    else:
+        while True:
+            line = fp.readline()
+            if not line:
+                break
+            try:
+                _get_background_user_single_line(
+                    line, subreddit_list, banned_user_list, background_user_list)
+            except:
+                continue
+    with open(checked_file, mode='a') as fp:
+        fp.write(file + '\n')
+    with open(background_user_list_file, mode='a') as fp:
+        for user in background_user_list:
+            fp.write(user + '\n')
+
+    print("%s finished at %s with %d seconds" % (file, time.strftime(
+        "%H:%M:%S", time.localtime()), time.time() - start_time))
+
+
+def _get_background_user_single_line(line, subreddit_list, banned_user_list, background_user_list):
+    obj = json.loads(line)
+    user = obj['author']
+    if user == '[deleted]':
+        return None
+    subreddit = obj['subreddit']
+    if subreddit in subreddit_list and user not in banned_user_list:
+        background_user_list.append(user)
+
+
 def main():
     # get_user(data_path_list, user_list_folder, [
     #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], 'checked_file')
     # remove_duplicate_user(user_list_folder, [
     #                       'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'])
-    get_data(data_path_list, user_list_folder, [
-             'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], './data/full_reddit', 'checked_file')
+    # get_data(data_path_list, user_list_folder, [
+    #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], './data/full_reddit', 'checked_file')
+    # get_popular_subreddit('./data/full_reddit',
+    #                       ['anxiety', 'bipolar', 'depression'], 'checked_file')
+    get_background_user(data_path_list, user_list_folder, [
+                        'bipolar_user_list_full', 'anxiety_user_list_full', 'depression_user_list_full'], 'checked_file')
 
 
 if __name__ == '__main__':

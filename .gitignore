@@ -13,3 +13,5 @@ program/__pycache__/*
 data/feature/*
 log/*/*/tf-idf_model
 .vscode/*/*
+temp
+checked_file
