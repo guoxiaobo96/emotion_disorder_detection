@@ -19,14 +19,14 @@ def add_argument_group(name):
 # Data
 data_arg = add_argument_group('Data')
 data_arg.add_argument('--data_dir', type=str, default='./data/TFRecord')
-data_arg.add_argument('--target_dir', type=str, default='./data/full_reddit')
+data_arg.add_argument('--target_dir', type=str, default='./data/reddit')
 # data_arg.add_argument('--dataset', type=str, default='tweet_trust')
 # data_arg.add_argument('--data_type',type=str,default='balanced')
 
-data_arg.add_argument('--dataset', type=str, default='full_reddit_data')
-data_arg.add_argument('--data_type', type=str, default='depression')
+data_arg.add_argument('--dataset', type=str, default='reddit_data')
+data_arg.add_argument('--data_type', type=str, default='background')
 
-data_arg.add_argument('--user_data_path', type=str, default='./data/full_user_list')
+data_arg.add_argument('--user_data_path', type=str, default='./data/user_list')
 
 
 data_arg.add_argument('--batch_size', type=int, default=16)

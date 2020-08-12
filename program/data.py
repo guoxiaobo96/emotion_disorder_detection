@@ -1,12 +1,12 @@
+import os
+import logging
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
 from official.nlp.bert import tokenization
 import tensorflow as tf
 from random import seed, shuffle
 import json
 import numpy as np
-import os
-import logging
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
 
 class DataLoader(object):
@@ -187,7 +187,6 @@ class DataLoaderForFeature(object):
                         split_data[i][1].append(type)
                 split_number += number
             self.train_dataset, self.valid_dataset, self.test_dataset = split_data
-
 
 class DataLoaderForState(object):
     def __init__(self, data_type_list=['bipolar', 'depression', 'background'], data_size=[200, 100, 100]):

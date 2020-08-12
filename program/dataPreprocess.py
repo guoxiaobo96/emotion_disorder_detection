@@ -22,8 +22,7 @@ from nltk.stem.porter import PorterStemmer
 bert_model_dir = '/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16'
 
 
-def build_text_tfrecord(user_file_list, data_path_list, record_path):
-    suffix_list = ['.before', '.after']
+def build_text_tfrecord(user_file_list, data_path_list, record_path, suffix_list = ['.before', '.after']):
     if not os.path.exists(record_path):
         os.mkdir(record_path)
     max_seq = 142
@@ -36,12 +35,11 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
         for line in fp.readlines():
             user_set.add(line.split(' [info] ')[0])
     user_count = 0
-    for user in user_set:
+    for i, user in enumerate(user_set):
         for suffix in suffix_list:
             file_name = os.path.join(data_path_list, user + suffix)
             if not os.path.exists(file_name):
                 continue
-            file_name = os.path.join(data_path_list, user + suffix)
             with open(file_name, mode='r', encoding='utf8') as fp:
                 data = dict()
                 text_data = dict()
@@ -73,6 +71,8 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path):
                     writer.write(example.SerializeToString())
             writer.close()
         user_count += 1
+        if user_count % 100 == 0:
+            print(user_count)
     print('finish')
 
 
@@ -333,36 +333,24 @@ def _clean_text(original_tweet):
 
 
 if __name__ == '__main__':
-    # label_list = ["anger","anticipation","disgust","fear","joy","sadness","surprise","trust"]
-    # data_type = 'balanced'
-    # for label_index,label in enumerate(label_list):
-    #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
-    #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
-    #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    # root_dir = '/home/xiaobo/emotion_disorder_detection'
-    root_dir = 'D:/research/emotion_disorder_detection'
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_type', choices=[
-                        'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
+    parser.add_argument('--root_dir', type=str, required=True)
+    parser.add_argument('--data_type', choices=['background', 'anxiety', 'bipolar', 'depression'], type=str, default='background')
     parser.add_argument('--function_type', choices=['build_text_tfrecord'], type=str, default='build_text_tfrecord')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
     args = parser.parse_args()
+    root_dir = args.root_dir
     keywords = args.data_type
     window_size = args.window_size
     step_size = args.step_size
 
     function = args.function_type
     os.chdir(root_dir)
-    if function == 'build_state':
-        for keywords in ['bipolar', 'depression', 'background']:
-            build_state(keywords, window=window_size *
-                        60 * 60, gap=step_size * 60 * 60)
-
-    elif function == 'build_text_tfrecord':
-        build_text_tfrecord('./data/full_user_list/' + keywords + '_user_list',
-                            './data/full_reddit/' + keywords, './data/TFRecord/full_reddit_data/' + keywords)
+    if function == 'build_text_tfrecord':
+        build_text_tfrecord('./data/user_list/' + keywords + '_user_list',
+                            './data/reddit/' + keywords, './data/TFRecord/reddit_data/' + keywords)
     elif function == 'build_binary_tfrecod':
         pass
     elif function == 'build_multi_class_tfrecord':
