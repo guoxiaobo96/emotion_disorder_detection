@@ -4,7 +4,8 @@ import lzma
 import zstandard as zstd
 import json
 import time
-from multiprocessing import Pool
+import random
+from multiprocessing import Pool, Manager
 
 bipolar_identify_list = ["I am diagnosed with bipolar", "i am diagnosed with bipolar",
                          "I'm diagnosed with bipolar", "i'm diagnosed with bipolar", "I have been diagnosed with bipolar",
@@ -33,7 +34,7 @@ anxiety_banned_list = ['bipolar', 'depression']
 
 
 data_path_list = ['f:/reddit/comments', 'f:/reddit/submissions']
-user_list_folder = './data/full_user_list'
+user_list_folder = './data/user_list'
 
 
 class Zreader:
@@ -231,6 +232,7 @@ def remove_duplicate_user(user_list_folder, user_file_list):
 
 
 def get_data(data_path_list, user_list_folder, user_file_list, target_folder, checked_file):
+    lock = Manager().Lock()
     checked_file_list = set()
     target_folder_list = []
     with open(checked_file, mode='r') as fp:
@@ -271,7 +273,7 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
                 if file in checked_file_list:
                     continue
                 result = pool.apply_async(func=_get_data_single_file, args=(
-                    file, user_info, target_folder_list, checked_file,))
+                    file, user_info, target_folder_list, checked_file, lock,))
                 results.append(result)
         pool.close()
         pool.join()
@@ -279,7 +281,7 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
             result.get()
 
 
-def _get_data_single_file(file, user_info, target_folder_list, checked_file):
+def _get_data_single_file(file, user_info, target_folder_list, checked_file, lock):
     if file.endswith('.bz2'):
         fp = bz2.open(file, mode='r')
     elif file.endswith('.zst'):
@@ -292,7 +294,7 @@ def _get_data_single_file(file, user_info, target_folder_list, checked_file):
     if file.endswith('.zst'):
         for line in fp.readlines():
             try:
-                _get_data_single_line(line, user_info, target_folder_list)
+                _get_data_single_line(line, user_info, target_folder_list, lock)
             except:
                 continue
     else:
@@ -301,16 +303,18 @@ def _get_data_single_file(file, user_info, target_folder_list, checked_file):
             if not line:
                 break
             try:
-                _get_data_single_line(line, user_info, target_folder_list)
+                _get_data_single_line(line, user_info, target_folder_list. lock)
             except:
                 continue
+    lock.acquire()
     with open(checked_file, mode='a') as fp:
-        fp.write(file+'\n')
+        fp.write(file + '\n')
     print("%s finished at %s with %d seconds" % (file, time.strftime(
         "%H:%M:%S", time.localtime()), time.time() - start_time))
+    lock.release()
 
 
-def _get_data_single_line(line, user_info, target_folder_list):
+def _get_data_single_line(line, user_info, target_folder_list, lock):
     obj = json.loads(line)
     user = obj['author']
     if user == '[deleted]':
@@ -404,7 +408,7 @@ def get_background_user(data_path_list, user_list_folder, user_file_list, checke
     subreddit_list = []
     data_file_list = dict()
 
-    with open('./temp', mode='r', encoding='utf8') as fp:
+    with open('./temp/subreddit', mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
             subreddit = line.strip().split(' : ')[0]
             subreddit_list.append(subreddit)
@@ -435,14 +439,9 @@ def get_background_user(data_path_list, user_list_folder, user_file_list, checke
 
             data_file_list[time_period].append(os.path.join(data_path, file))
     time_list = sorted(data_file_list.keys())
-    # for time_period in time_list[-3:]:
-    #     for file in data_file_list[time_period]:
-    #         if file in checked_file_list:
-    #             continue
-    #         _get_background_user_single_file(file, subreddit_list, banned_user_list, background_user_list_file, checked_file)
     with Pool(processes=6) as pool:
         results = []
-        for time_period in time_list:
+        for time_period in time_list[-3:]:
             for file in data_file_list[time_period]:
                 if file in checked_file_list:
                     continue
@@ -456,6 +455,22 @@ def get_background_user(data_path_list, user_list_folder, user_file_list, checke
 
     fp = open(checked_file, mode='w')
     fp.close()
+
+    user_info = []
+    count = 0
+    with open(background_user_list_file) as fp:
+        for line in fp.readlines():
+            item = line.strip() + ' [info] [info] [info] 0'
+            user_info.append(item)
+    random.shuffle(user_info)
+    data_size = 2158
+    full_size = len(banned_user_list)
+    with open('./data/user_list/background_user_list', mode='w', encoding='utf8') as fp:
+        for line in user_info[:data_size]:
+            fp.write(line + '\n')
+    with open('./data/user_list/background_user_list_full', mode='w', encoding='utf8') as fp:
+        for line in user_info[:full_size]:
+            fp.write(line+'\n')
 
 
 def _get_background_user_single_file(file, subreddit_list, banned_user_list, background_user_list_file, checked_file):
@@ -516,8 +531,10 @@ def main():
     #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], './data/full_reddit', 'checked_file')
     # get_popular_subreddit('./data/full_reddit',
     #                       ['anxiety', 'bipolar', 'depression'], 'checked_file')
-    get_background_user(data_path_list, user_list_folder, [
-                        'bipolar_user_list_full', 'anxiety_user_list_full', 'depression_user_list_full'], 'checked_file')
+    # get_background_user(data_path_list, user_list_folder, [
+    #                     'bipolar_user_list_full', 'anxiety_user_list_full', 'depression_user_list_full'], './temp/checked_file')
+    get_data(data_path_list, user_list_folder, [
+             'background_user_list_full'], './data/reddit', './temp/checked_file')
 
 
 if __name__ == '__main__':
