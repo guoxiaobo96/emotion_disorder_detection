@@ -241,17 +241,18 @@ if __name__ == '__main__':
     #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
     #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
     #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
-    root_dir = '/home/xiaobo/emotion_disorder_detection'
-    # root_dir = 'D:/research/emotion_disorder_detection'
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
+    parser.add_argument('--root_dir', type=str, default='D:/research/emotion_disorder_detection')
     parser.add_argument('--function_type', choices=[
                         'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence'], type=str, default='build_tfidf')
     parser.add_argument('--window_size', type=int)
     parser.add_argument('--step_size', type=float)
 
     args = parser.parse_args()
+    root_dir = args.root_dir
     keywords = args.data_type
     window_size = args.window_size
     step_size = args.step_size
