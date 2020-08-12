@@ -1,13 +1,12 @@
+from config import get_config
+from util import prepare_dirs_and_logger, save_config
+from data import DataLoader, DataLoaderForReddit
+from DL_model import BertModel
+import warnings
 import logging
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
-
-import warnings
-from DL_model import BertModel
-from data import DataLoader, DataLoaderForReddit
-from util import prepare_dirs_and_logger, save_config
-from config import get_config
 
 
 warnings.filterwarnings('ignore')
@@ -34,6 +33,7 @@ def train(config, Model):
                 print('start labelling')
                 model.label_emotion(config.target_path, config.emotion_type)
             elif config.task == 'encode':
+                print('start encoding')
                 model.encode(config.target_path, config.source_path)
             elif config.task == 'f1_score':
                 model.calculate_f1_score()
@@ -51,10 +51,12 @@ def train(config, Model):
                     fp.write(str(threshold) + '\n')
                 print(str(threshold))
 
+
 def main():
     config, _ = get_config()
     model = BertModel
     train(config, model)
+
 
 if __name__ == '__main__':
     main()

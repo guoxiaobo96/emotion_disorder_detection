@@ -9,10 +9,10 @@ import os
 
 
 def build_state(data_source, data_type, window, gap, suffix_list=['']):
-    user_list_file = './'+data_source+'/user_list/' + data_type + '_user_list'
-    user_text_folder = os.path.join('./'+data_source+'/reddit', data_type)
+    user_list_file = './' + data_source + '/user_list/' + data_type + '_user_list'
+    user_text_folder = os.path.join('./' + data_source + '/reddit', data_type)
     user_state_folder = os.path.join(
-        './'+data_source+'/feature/state_origin/anger_fear_joy_sadness', data_type)
+        './' + data_source + '/feature/state_origin/anger_fear_joy_sadness', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
 
@@ -27,7 +27,8 @@ def build_state(data_source, data_type, window, gap, suffix_list=['']):
                 user_info_file = os.path.join(user_text_folder, user + suffix)
                 if not os.path.exists(user_info_file):
                     continue
-                state_info_file = os.path.join(user_state_folder, user + suffix)
+                state_info_file = os.path.join(
+                    user_state_folder, user + suffix)
                 curve_state = []
                 state_list = dict()
                 with open(user_info_file, mode='r', encoding='utf8') as fp:
@@ -36,7 +37,7 @@ def build_state(data_source, data_type, window, gap, suffix_list=['']):
                         for key in info:
                             value = info[key]
                             states = [value["anger"], value["fear"],
-                                    value["joy"], value["sadness"]]
+                                      value["joy"], value["sadness"]]
                             state_list[value['time']] = [
                                 min(int(state), 1) for state in states]
                 time_list = sorted(state_list.keys())
@@ -61,7 +62,7 @@ def build_state(data_source, data_type, window, gap, suffix_list=['']):
                 with open(state_info_file, mode='w', encoding='utf8') as fp:
                     for state in curve_state:
                         fp.write(str(state[0]) + ',' + str(state[1]) +
-                                ',' + str(state[2]) + ',' + str(state[3]) + '\n')
+                                 ',' + str(state[2]) + ',' + str(state[3]) + '\n')
             except IndexError:
                 print(user)
                 continue
@@ -107,7 +108,8 @@ def build_state_sequence(data_source, data_type, emotion_list, emotion_state_num
                             state_int += emotion_state_number[i] * s
                         state_int += 1
                     state_list.append(state_int)
-            _, path = fastdtw(basic_sequence, np.array(state_list), dist=euclidean)
+            _, path = fastdtw(basic_sequence, np.array(
+                state_list), dist=euclidean)
 
             last_index = 0
             new_state = 0
@@ -149,7 +151,7 @@ def build_state_trans(data_source, data_type, emotion_list, emotion_state_number
         for suffix in suffix_list:
             state_list = []
             state_prob = np.array([[0.0 for _ in range(state_number)]
-                                for i in range(state_number)])
+                                   for i in range(state_number)])
             user_state_path = os.path.join(user_state_folder, user + suffix)
             if not os.path.exists(user_state_path):
                 continue
@@ -174,7 +176,8 @@ def build_state_trans(data_source, data_type, emotion_list, emotion_state_number
                     for state_next in range(state_number):
                         state_prob[state_prev][state_next] /= sum
             state_trans_file = user + suffix + '.npy'
-            target_file = os.path.join(user_state_trans_folder, state_trans_file)
+            target_file = os.path.join(
+                user_state_trans_folder, state_trans_file)
             np.save(target_file, state_prob)
 
 
@@ -245,71 +248,6 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
             np.save(record_file, tf_idf)
 
 
-def build_bert(data_source, keywords):
-    user_list_file = './'+data_source+'/user_list/' + data_type + '_user_list'
-    user_text_folder = os.path.join('./'+data_source+'/reddit', data_type)
-    user_state_folder = os.path.join(
-        './'+data_source+'/feature/state_origin/anger_fear_joy_sadness', data_type)
-    if not os.path.exists(user_state_folder):
-        os.makedirs(user_state_folder)
-
-    user_list = []
-    with open(user_list_file, mode='r', encoding='utf8') as fp:
-        for line in fp.readlines():
-            user, _ = line.strip().split(' [info] ')
-            user_list.append(user)
-    for index, user in enumerate(user_list):
-        for suffix in suffix_list:
-            try:
-                user_info_file = os.path.join(user_text_folder, user + suffix)
-                if not os.path.exists(user_info_file):
-                    continue
-                state_info_file = os.path.join(user_state_folder, user + suffix)
-                curve_state = []
-                state_list = dict()
-                with open(user_info_file, mode='r', encoding='utf8') as fp:
-                    for line in fp.readlines():
-                        info = json.loads(line)
-                        for key in info:
-                            value = info[key]
-                            states = [value["anger"], value["fear"],
-                                    value["joy"], value["sadness"]]
-                            state_list[value['time']] = [
-                                min(int(state), 1) for state in states]
-                time_list = sorted(state_list.keys())
-                start_time = time_list[0]
-                while start_time <= time_list[-1]:
-                    end_time = start_time + window
-                    state = [0, 0, 0, 0]
-                    mark = False
-                    for i, time in enumerate(time_list):
-                        if time >= start_time and time <= end_time:
-                            mark = True
-                            for state_index, s in enumerate(state_list[time]):
-                                state[state_index] += s
-                        elif time > end_time:
-                            break
-                    if not mark:
-                        state = [-1, -1, -1, -1]
-                    else:
-                        state = [min(s, 1) for s in state]
-                    curve_state.append(state)
-                    start_time += gap
-                with open(state_info_file, mode='w', encoding='utf8') as fp:
-                    for state in curve_state:
-                        fp.write(str(state[0]) + ',' + str(state[1]) +
-                                ',' + str(state[2]) + ',' + str(state[3]) + '\n')
-            except IndexError:
-                print(user)
-                continue
-
-    user_list = []
-    with open(user_list_file, mode='r', encoding='utf8') as fp:
-        for line in fp.readlines():
-            user, _ = line.strip().split(' [info] ')
-            user_list.append(user)
-
-
 if __name__ == '__main__':
     # label_list = ["anger","anticipation","disgust","fear","joy","sadness","surprise","trust"]
     # data_type = 'balanced'
@@ -362,6 +300,3 @@ if __name__ == '__main__':
                                  "anger", "fear"], emotion_state_number=[1, 2, 0, 0])
             build_state_sequence(data_source, keywords, [
                                  "joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
-    elif function == 'build_bert':
-        for keywords in ['bipolar', 'depression', 'anxiety', 'background']:
-            build_bert(data_source, keywords)

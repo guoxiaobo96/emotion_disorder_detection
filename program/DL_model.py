@@ -1,6 +1,4 @@
 import os
-import warnings
-warnings.filterwarnings("ignore")
 from model_util import build_bert_encoder, create_learning_rate_scheduler
 from tensorflow import keras
 from multiprocessing import Pool
@@ -10,8 +8,12 @@ import pickle
 import random
 import itertools
 import numpy as np
+import tensorflow as tf
 import json
 from official.nlp.bert import tokenization
+import warnings
+warnings.filterwarnings("ignore")
+
 
 class BertModel(object):
     def __init__(self, config, data_loader):
@@ -49,7 +51,7 @@ class BertModel(object):
         if self._config.task != 'encode':
             self.model = classify(self._text_model, self._config)
         else:
-            self.model = self._text_model
+            self.model = encoder(self._text_model)
 
     def fit(self):
         steps_per_epoch = self._data_loader.train_size // self._config.batch_size
@@ -151,7 +153,6 @@ class BertModel(object):
             data = self._data_loader.label_dataset
         count = 0
         for user, text_data in data.items():
-            encode_finish = True
             write_data = dict()
             target_file = os.path.join(target_dir, user)+'.npy'
             source_file = os.path.join(source_dir, user)
@@ -168,13 +169,13 @@ class BertModel(object):
                         pass
             for item in text_data:
                 sentence, id_list = item
-                encoded_text = self.model(sentence).numpy()[-2]
+                encoded_text = self.model(sentence).numpy()
                 id_list = id_list.numpy()
                 for index, id in enumerate(id_list):
                     id = id.decode('utf8')
                     if 'encode' not in user_data[id]:
                         user_data[id]['encode'] = []
-                    user_data[id]['encode'].append(encoded_text)
+                    user_data[id]['encode'].append(encoded_text[index])
             for key, value in user_data.items():
                 try:
                     encode_list = np.mean(np.array(value['encode']), axis=0)
@@ -243,6 +244,16 @@ def classify(text_model, config):
     return model
 
 
+def encoder(text_model):
+    attention_layer = text_model.get_layer('transformer/layer_22')
+    # mask = tf.expand_dims(tf.cast(text_model.inputs[1], tf.float32),axis=-1)
+    encode_output = attention_layer.output
+    encode_output = tf.reduce_mean(encode_output, axis=1)
+    model = keras.Model(inputs=[text_model.inputs], outputs=[
+                        encode_output], name='Encoder')
+    return model
+
+
 def _single_label_classifier(text_model, config):
     text_feature = text_model.output
     out_put = keras.layers.Dense(
@@ -269,4 +280,3 @@ def _multi_label_classifier(text_model, config):
         from_logits=True),
         metrics=[keras.metrics.BinaryAccuracy(name="acc")])
     return model
-
