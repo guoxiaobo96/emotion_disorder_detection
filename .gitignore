@@ -2,7 +2,7 @@ program/.vscode/settings.json
 .vscode/*
 program/__pycache__/*
 
-program/*.sh
+program/temp.py
 
 log/*/*/log/*
 log/*/*/model/*
@@ -17,4 +17,3 @@ data/TFRecord/*
 data_pretraining/*
 
 temp/*
-data/background.zip
