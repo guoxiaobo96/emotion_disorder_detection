@@ -1,18 +1,19 @@
-from tensorflow import keras
 import os
+import warnings
+warnings.filterwarnings("ignore")
+from model_util import build_bert_encoder, create_learning_rate_scheduler
+from tensorflow import keras
+from multiprocessing import Pool
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
+from sklearn import linear_model
+import pickle
+import random
+import itertools
 import numpy as np
 import json
 from official.nlp.bert import tokenization
 
-
-from sklearn.metrics import f1_score
-
-
-from model import build_basic_text_model, classify
-from model_util import create_learning_rate_scheduler
-
-
-class Trainer(object):
+class BertModel(object):
     def __init__(self, config, data_loader):
         self._data_loader = data_loader
         self._config = config
@@ -79,7 +80,65 @@ class Trainer(object):
         except IOError:
             pass
 
-    def label(self, target_dir, emotion_type, data=None, steps=None):
+    def label_emotion(self, target_dir, emotion_type, data=None, steps=None):
+        init_checkpoint = os.path.join(os.path.join(
+            self.load_model_dir, self.filepath))
+        self.model.load_weights(init_checkpoint).expect_partial()
+
+        if data is None:
+            data = self._data_loader.label_dataset
+        count = 0
+        for user, text_data in data.items():
+            emotion_finish = True
+            write_data = list()
+            target_file = os.path.join(target_dir, user)
+            with open(target_file, mode='r', encoding='utf8') as fp:
+                user_data = dict()
+                for line in fp.readlines():
+                    try:
+                        for id, value in json.loads(line.strip()).items():
+                            user_data[id] = value
+                            if emotion_type not in value:
+                                emotion_finish = False
+                    except json.decoder.JSONDecodeError:
+                        pass
+            if emotion_finish:
+                count += 1
+                if count % 1000 == 0:
+                    print(count)
+                continue
+            else:
+                for key, value in user_data.items():
+                    if emotion_type in user_data[key]:
+                        user_data[key][emotion_type] = 0
+            for item in text_data:
+                sentence, id_list = item
+                label_list = self.model.predict(sentence)
+                label = np.argmax(label_list, axis=1)
+                id_list = id_list.numpy()
+                for index, id in enumerate(id_list):
+                    id = id.decode('utf8')
+                    if emotion_type not in user_data[id]:
+                        user_data[id][emotion_type] = 0
+                    else:
+                        user_data[id][emotion_type] = int(
+                            user_data[id][emotion_type])
+                    user_data[id][emotion_type] += label[index]
+            for key, value in user_data.items():
+                try:
+                    value[emotion_type] = str(value[emotion_type])
+                except KeyError:
+                    value[emotion_type] = '0'
+                write_data.append({key: value})
+            with open(target_file, mode='w', encoding='utf8') as fp:
+                for item in write_data:
+                    item = json.dumps(item)
+                    fp.write(item + '\n')
+            count += 1
+            if count % 500 == 0:
+                print(count)
+
+    def encode(self, target_dir, emotion_type, data=None, steps=None):
         init_checkpoint = os.path.join(os.path.join(
             self.load_model_dir, self.filepath))
         self.model.load_weights(init_checkpoint).expect_partial()
@@ -164,3 +223,55 @@ class Trainer(object):
             self._config, input_shape, model_dir)
         text_model = basic_text_model
         return text_model
+
+
+def build_basic_text_model(config, max_seq_len, model_dir=None):
+    model_name = config.basic_text_model
+    if model_name == 'Bert':
+        encoder = build_bert_encoder(model_dir, max_seq_len)
+        output = keras.layers.Dropout(0.1)(encoder.output[1])
+    model = keras.models.Model(
+        inputs=encoder.input, outputs=output, name=model_name)
+
+    if config.text_model_path:
+        init_checkpoint = os.path.join(config.text_model_path, 'model.ckpt')
+        model.load_weights(init_checkpoint).expect_partial()
+        model.trainable = config.text_model_trainable
+    return model
+
+
+def classify(text_model, config):
+    if config.model_type == 'single_label':
+        model = _single_label_classifier(text_model, config)
+    elif config.model_type == 'multi_label':
+        model = _multi_label_classifier(text_model, config)
+    return model
+
+
+def _single_label_classifier(text_model, config):
+    text_feature = text_model.output
+    out_put = keras.layers.Dense(
+        units=config.classes, kernel_initializer='glorot_uniform', activation="softmax")(text_feature)
+    model = keras.Model(inputs=[text_model.inputs], outputs=[
+                        out_put], name='Text')
+
+    model.compile(optimizer=keras.optimizers.Adam(),
+                  loss=keras.losses.SparseCategoricalCrossentropy(
+        from_logits=True),
+        metrics=[keras.metrics.SparseCategoricalAccuracy(name="acc")])
+    return model
+
+
+def _multi_label_classifier(text_model, config):
+    text_feature = text_model.output
+    out_put = keras.layers.Dense(
+        units=config.classes, kernel_initializer='glorot_uniform', activation="sigmoid")(text_feature)
+    model = keras.Model(inputs=[text_model.inputs], outputs=[
+        out_put], name='Text')
+
+    model.compile(optimizer=keras.optimizers.Adam(),
+                  loss=keras.losses.BinaryCrossentropy(
+        from_logits=True),
+        metrics=[keras.metrics.BinaryAccuracy(name="acc")])
+    return model
+
