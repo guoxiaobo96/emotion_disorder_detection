@@ -46,8 +46,10 @@ class BertModel(object):
     def build_model(self):
         self._text_model = self._build_text_model(self._config.basic_text_model,
                                                   self._config.max_seq, self._config.bert_model_dir)
-
-        self.model = classify(self._text_model, self._config)
+        if self._config.task != 'encode':
+            self.model = classify(self._text_model, self._config)
+        else:
+            self.model = self._text_model
 
     def fit(self):
         steps_per_epoch = self._data_loader.train_size // self._config.batch_size
@@ -138,60 +140,52 @@ class BertModel(object):
             if count % 500 == 0:
                 print(count)
 
-    def encode(self, target_dir, emotion_type, data=None, steps=None):
+    def encode(self, target_dir, source_dir, data=None, steps=None):
         init_checkpoint = os.path.join(os.path.join(
             self.load_model_dir, self.filepath))
         self.model.load_weights(init_checkpoint).expect_partial()
-
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
         if data is None:
             data = self._data_loader.label_dataset
         count = 0
         for user, text_data in data.items():
-            emotion_finish = True
-            write_data = list()
+            encode_finish = True
+            write_data = dict()
             target_file = os.path.join(target_dir, user)
-            with open(target_file, mode='r', encoding='utf8') as fp:
+            source_file = os.path.join(source_dir, user)
+            if os.path.exists(target_file):
+                count += 1
+                continue
+            with open(source_file, mode='r', encoding='utf8') as fp:
                 user_data = dict()
                 for line in fp.readlines():
                     try:
                         for id, value in json.loads(line.strip()).items():
-                            user_data[id] = value
-                            if emotion_type not in value:
-                                emotion_finish = False
+                            user_data[id] = {'time': value['time']}
                     except json.decoder.JSONDecodeError:
                         pass
-            if emotion_finish:
-                count += 1
-                if count % 1000 == 0:
-                    print(count)
-                continue
-            else:
-                for key, value in user_data.items():
-                    if emotion_type in user_data[key]:
-                        user_data[key][emotion_type] = 0
             for item in text_data:
                 sentence, id_list = item
-                label_list = self.model.predict(sentence)
-                label = np.argmax(label_list, axis=1)
+                encoded_text = np.mean(self.model(sentence).numpy(),axis=0)
                 id_list = id_list.numpy()
                 for index, id in enumerate(id_list):
                     id = id.decode('utf8')
-                    if emotion_type not in user_data[id]:
-                        user_data[id][emotion_type] = 0
-                    else:
-                        user_data[id][emotion_type] = int(
-                            user_data[id][emotion_type])
-                    user_data[id][emotion_type] += label[index]
+                    if 'encode' not in user_data[id]:
+                        user_data[id]['encode'] = []
+                    user_data[id]['encode'].append(encoded_text)
             for key, value in user_data.items():
                 try:
-                    value[emotion_type] = str(value[emotion_type])
+                    encode_list = np.mean(np.array(value['encode']), axis=0)
+                    write_data[value['time']] = encode_list
                 except KeyError:
-                    value[emotion_type] = '0'
-                write_data.append({key: value})
-            with open(target_file, mode='w', encoding='utf8') as fp:
-                for item in write_data:
-                    item = json.dumps(item)
-                    fp.write(item + '\n')
+                    continue
+            time_list = sorted(write_data.keys())
+            final_data = list()
+            for time in time_list:
+                final_data.append(write_data[time])
+            final_data = np.array(final_data)
+            np.save(target_file, final_data)
             count += 1
             if count % 500 == 0:
                 print(count)

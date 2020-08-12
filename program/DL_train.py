@@ -17,7 +17,7 @@ def train(config, Model):
     prepare_dirs_and_logger(config)
     if config.task in ['train', 'roc_curve', 'test']:
         data_loader = DataLoader(config)
-    elif config.task in ['label', 'predict']:
+    elif config.task in ['label', 'predict', 'encode']:
         data_loader = DataLoaderForReddit(config)
     model = Model(config, data_loader)
 
@@ -33,6 +33,8 @@ def train(config, Model):
             elif config.task == 'label_emotion':
                 print('start labelling')
                 model.label_emotion(config.target_path, config.emotion_type)
+            elif config.task == 'encode':
+                model.encode(config.target_path, config.source_path)
             elif config.task == 'f1_score':
                 model.calculate_f1_score()
             elif config.task == 'roc_curve':

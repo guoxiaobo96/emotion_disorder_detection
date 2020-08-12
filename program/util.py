@@ -25,6 +25,8 @@ def prepare_dirs_and_logger(config):
     config.data_path = os.path.join(config.data_path, config.data_type)
     if hasattr(config, 'target_dir'):
         config.target_path = os.path.join(config.target_dir, config.data_type)
+    if hasattr(config, 'source_dir'):
+        config.source_path = os.path.join(config.source_dir, config.data_type)
     # model path
         
 

@@ -19,12 +19,13 @@ def add_argument_group(name):
 # Data
 data_arg = add_argument_group('Data')
 data_arg.add_argument('--data_dir', type=str, default='./data/TFRecord')
-data_arg.add_argument('--target_dir', type=str, default='./data/reddit')
+data_arg.add_argument('--target_dir', type=str, default='./data/feature/bert')
+data_arg.add_argument('--source_dir', type=str, default='./data/reddit')
 # data_arg.add_argument('--dataset', type=str, default='tweet_trust')
 # data_arg.add_argument('--data_type',type=str,default='balanced')
 
 data_arg.add_argument('--dataset', type=str, default='reddit_data')
-data_arg.add_argument('--data_type', type=str, default='background')
+data_arg.add_argument('--data_type', type=str, default='anxiety')
 
 data_arg.add_argument('--user_data_path', type=str, default='./data/user_list')
 
@@ -57,7 +58,7 @@ train_arg.add_argument('--metrics', type=str, default='accuracy')
 
 # Misc
 misc_arg = add_argument_group('Misc')
-train_arg.add_argument('--task', type=str, default='label')
+train_arg.add_argument('--task', type=str, default='encode')
 misc_arg.add_argument('--model_name', type=str, default='weighted')
 misc_arg.add_argument('--root_dir', type=str,
                       default='/home/xiaobo/emotion_disorder_detection')
