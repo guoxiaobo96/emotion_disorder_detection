@@ -43,7 +43,7 @@ net_arg.add_argument('--model_path', type=str, default='')
 
 net_arg.add_argument('--text_model_path', type=str, default='')
 net_arg.add_argument('--text_model_trainable', type=_str2bool, default=True)
-net_arg.add_argument('--load_model', type=_str2bool, default=True)
+net_arg.add_argument('--load_model', type=_str2bool, default=False)
 
 
 # Train and Test parameters
@@ -63,7 +63,7 @@ misc_arg.add_argument('--model_name', type=str, default='weighted')
 misc_arg.add_argument('--root_dir', type=str,
                       default='/home/xiaobo/emotion_disorder_detection')
 misc_arg.add_argument('--log_dir', type=str, default='log')
-misc_arg.add_argument('--load_path', type=str, default='tweet_anger/best')
+misc_arg.add_argument('--load_path', type=str, default='')
 misc_arg.add_argument('--emotion_type', type=str, default='anger')
 misc_arg.add_argument('--gpu_id', type=str, default='1')
 misc_arg.add_argument('--bert_model_dir', type=str,

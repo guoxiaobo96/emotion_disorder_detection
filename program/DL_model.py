@@ -20,7 +20,7 @@ class BertModel(object):
         self.log_dir = config.log_dir
         self.filepath = 'model.ckpt'
         self.model_dir = config.model_dir
-        if config.task != 'train':
+        if config.task != 'train' and config.load_model:
             self.load_model_dir = config.load_model_dir
         else:
             self.load_model_dir = self.model_dir
@@ -141,9 +141,10 @@ class BertModel(object):
                 print(count)
 
     def encode(self, target_dir, source_dir, data=None, steps=None):
-        init_checkpoint = os.path.join(os.path.join(
-            self.load_model_dir, self.filepath))
-        self.model.load_weights(init_checkpoint).expect_partial()
+        if self._config.load_model:
+            init_checkpoint = os.path.join(os.path.join(
+                self.load_model_dir, self.filepath))
+            self.model.load_weights(init_checkpoint).expect_partial()
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
         if data is None:
@@ -152,7 +153,7 @@ class BertModel(object):
         for user, text_data in data.items():
             encode_finish = True
             write_data = dict()
-            target_file = os.path.join(target_dir, user)
+            target_file = os.path.join(target_dir, user)+'.npy'
             source_file = os.path.join(source_dir, user)
             if os.path.exists(target_file):
                 count += 1
@@ -167,7 +168,7 @@ class BertModel(object):
                         pass
             for item in text_data:
                 sentence, id_list = item
-                encoded_text = np.mean(self.model(sentence).numpy(),axis=0)
+                encoded_text = self.model(sentence).numpy()[-2]
                 id_list = id_list.numpy()
                 for index, id in enumerate(id_list):
                     id = id.decode('utf8')
