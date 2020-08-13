@@ -130,7 +130,7 @@ class DataLoaderForReddit(object):
         return (text_ids, text_mask, segement_ids), id
 
 class DataLoaderForFeature(object):
-    def __init__(self, feature_type, feature_name, data_type_list=[['bipolar'], ['depression'], ['background']], cross_validation=False, data_size=[200, 100, 100]):
+    def __init__(self, feature_type, feature_name, train_suffix='all', test_suffix='all', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']], cross_validation=False, data_size=[1510, 216, 432]):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
         self.data_size = data_size
@@ -139,6 +139,8 @@ class DataLoaderForFeature(object):
         self.test_dataset = []
         self._feature_type = feature_type + '/' + feature_name
         self._cross_validation = cross_validation
+        self._train_suffix = train_suffix
+        self._test_suffix = test_suffix
         self.build_dataset(self.data_type_list, self.data_size)
 
     def build_dataset(self, data_type_list, data_size):
@@ -149,17 +151,29 @@ class DataLoaderForFeature(object):
             for type in data_type:
                 user_list = []
                 user_list_file = './data/user_list/' + type + '_user_list'
-                user_tf_idf_folder = './data/feature/' + self._feature_type + '/' + type
+                user_feature_folder = './data/feature/' + self._feature_type + '/' + type
                 with open(user_list_file, mode='r', encoding='utf8') as fp:
                     for line in fp.readlines():
                         user, _ = line.strip().split(' [info] ')
                         user_list.append(user)
-                for index, user in enumerate(user_list):
-                    tf_idf_file = user + '.npy'
-                    tf_idf_path = os.path.join(
-                        user_tf_idf_folder, tf_idf_file)
-                    tf_idf = np.load(tf_idf_path)
-                    data[type_index].append(tf_idf)
+                seed(123)
+                shuffle(user_list)
+                for i, number in enumerate(data_size):
+                    for index, user in user_list[split_number: split_number + number]:
+                        if i == 0:
+                            suffix = self._train_suffix
+                        else:
+                            suffix = self._test_suffix
+                    if suffix == 'all':
+                        suffix_list = ['./before', '.after']
+                    else:
+                        suffix_list = [suffix]
+                    for suffix in suffix_list:
+                        feature_file = user + suffix + '.npy'       
+                        feature_path = os.path.join(
+                            user_tf_idf_folder, tf_idf_file)
+                        feature = np.load(tf_idf_path)
+                        data[type_index].append(feature)
         if self._cross_validation:
             data_size = len(data[0])
             fold_data = [[[], []] for _ in range(5)]

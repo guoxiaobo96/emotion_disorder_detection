@@ -5,10 +5,21 @@ import math
 from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
 from nltk.stem.porter import PorterStemmer
+from multiprocessing import Pool
 import os
 
 
-def build_state(data_source, data_type, window, gap, suffix_list=['']):
+def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
+        # for data_type in data_type_list:
+        #     _build_state(data_source, data_type, window, gap, suffix_list)
+    with Pool(processes=len(data_type_list)) as pool:
+        for data_type in data_type_list:
+            pool.apply_async(func=_build_state, args=(data_source, data_type, window, gap, suffix_list,))
+        pool.close()
+        pool.join()
+
+
+def _build_state(data_source, data_type, window, gap, suffix_list):
     user_list_file = './' + data_source + '/user_list/' + data_type + '_user_list'
     user_text_folder = os.path.join('./' + data_source + '/reddit', data_type)
     user_state_folder = os.path.join(
@@ -19,7 +30,7 @@ def build_state(data_source, data_type, window, gap, suffix_list=['']):
     user_list = []
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user, _ = line.strip().split(' [info] ')
+            user= line.strip().split(' [info] ')[0]
             user_list.append(user)
     for index, user in enumerate(user_list):
         for suffix in suffix_list:
@@ -38,7 +49,7 @@ def build_state(data_source, data_type, window, gap, suffix_list=['']):
                             value = info[key]
                             states = [value["anger"], value["fear"],
                                       value["joy"], value["sadness"]]
-                            state_list[value['time']] = [
+                            state_list[int(value['time'])] = [
                                 min(int(state), 1) for state in states]
                 time_list = sorted(state_list.keys())
                 start_time = time_list[0]
@@ -74,7 +85,14 @@ def build_state(data_source, data_type, window, gap, suffix_list=['']):
             user_list.append(user)
 
 
-def build_state_sequence(data_source, data_type, emotion_list, emotion_state_number, suffix_list=['']):
+def build_state_sequence(data_source, data_type_list, emotion_list, emotion_state_number, suffix_list=['']):
+    with Pool(processes=len(data_type_list)) as pool:
+        for data_type in data_type_list:
+            pool.apply_async(func=_build_state_sequence, args=(data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
+        pool.close()
+        pool.join()
+
+def _build_state_sequence(data_source, data_type, emotion_list, emotion_state_number, suffix_list):
     basic_sequence = np.zeros(shape=600, dtype=float)
     user_list = []
     user_list_file = './'+data_source+'/user_list/' + data_type + '_user_list'
@@ -131,8 +149,16 @@ def build_state_sequence(data_source, data_type, emotion_list, emotion_state_num
                 user_state_sequence_folder, state_sequence_file)
             np.save(target_file, normalized_state_list)
 
+def build_state_trans(data_source, data_type_list, emotion_list, emotion_state_number, suffix_list=['']):
+    for data_type in data_type_list:
+        _build_state_trans(data_source, data_type, emotion_list, emotion_state_number, suffix_list,)
+    # with Pool(processes=len(data_type_list)) as pool:
+    #     for data_type in data_type_list:
+    #         pool.apply_async(func=_build_state_trans, args=(data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
+    #     pool.close()
+    #     pool.join()
 
-def build_state_trans(data_source, data_type, emotion_list, emotion_state_number, suffix_list=['']):
+def _build_state_trans(data_source, data_type, emotion_list, emotion_state_number, suffix_list):
     state_number = pow(2, len(emotion_list)) + 1
     user_list = []
     user_list_file = './'+data_source+'/user_list/' + data_type + '_user_list'
@@ -145,7 +171,7 @@ def build_state_trans(data_source, data_type, emotion_list, emotion_state_number
 
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user, _ = line.strip().split(' [info] ')
+            user= line.strip().split(' [info] ')[0]
             user_list.append(user)
     for index, user in enumerate(user_list):
         for suffix in suffix_list:
@@ -186,53 +212,41 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         os.makedirs(record_path)
     idf = dict()
     record = dict()
-    stemmer = PorterStemmer()
     total_page = 0
     word_map = dict()
-    word_index = 0
+
+    results = []
     for data_type in data_type_list:
-        user_set = set()
-        user_file = os.path.join(user_file_folder, data_type) + '_user_list'
-        data_folder = os.path.join(data_path, data_type)
-        with open(user_file, mode='r', encoding='utf8') as fp:
-            for line in fp.readlines():
-                user_set.add(line.split(' [info] ')[0])
-        record[data_type] = dict()
-        for index, user in enumerate(user_set):
-            for suffix in suffix_list:
-                file_name = os.path.join(data_folder, user + suffix)
-                if not os.path.exists(file_name):
-                    continue
-                total_page += 1
-                single_page_word_count = 0
-                file_name = os.path.join(data_folder, user + suffix)
-                term_frequency = dict()
-                with open(file_name, mode='r', encoding='utf8') as fp:
-                    for line in fp.readlines():
-                        try:
-                            for id, value in json.loads(line.strip()).items():
-                                if value['text'] == '':
-                                    continue
-                                text = value['text'].strip().split(' ')
-                                for word in text:
-                                    try:
-                                        word = stemmer.stem(word.lower())
-                                        if word not in word_map:
-                                            word_map[word] = word_index
-                                            word_index += 1
-                                        single_page_word_count += 1
-                                        if word not in term_frequency:
-                                            term_frequency[word] = 0
-                                            if word not in idf:
-                                                idf[word] = 0
-                                            idf[word] += 1
-                                        term_frequency[word] += 1
-                                    except RecursionError:
-                                        continue
-                        except json.decoder.JSONDecodeError:
-                            pass
-                record[data_type][user] = {
-                    'tf': term_frequency, 'word_count': single_page_word_count}
+        result = _build_tfidf(user_file_folder, data_path,
+                              data_type, suffix_list)
+        results.append(result)
+
+    # with Pool(processes=len(data_type_list)) as pool:
+    #     results = []
+    #     for data_type in data_type_list:
+    #         result = pool.apply_async(func=_build_tfidf, args=(
+    #             user_file_folder, data_path, data_type, suffix_list,))
+    #         results.append(result)
+    #     pool.close()
+    #     pool.join()
+
+    word_index = 0
+    for result in results:
+        try:
+            data_type, record_single, idf_single, word_map_single, total_page_single = result.get()
+        except AttributeError:
+            data_type, record_single, idf_single, word_map_single, total_page_single = result
+        record[data_type] = record_single
+        for key, value in idf_single.items():
+            if key not in idf:
+                idf[key] = 0
+            idf[key] += value
+        for key, value in word_map_single.items():
+            if key not in word_map:
+                word_map[key] = word_index
+                word_index += 1
+        total_page += total_page_single
+
     for data_type, value in record.items():
         record_folder = os.path.join(record_path, data_type)
         if not os.path.exists(record_folder):
@@ -246,6 +260,61 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
                     math.log(total_page + 1 / (idf[word] + 1))
             record_file = os.path.join(record_folder, user)
             np.save(record_file, tf_idf)
+
+def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
+    stemmer = PorterStemmer()
+    idf = dict()
+    record = dict()
+    total_page = 0
+    word_map = dict()
+    word_index = 0
+
+    user_set = set()
+    user_file = os.path.join(user_file_folder, data_type) + '_user_list'
+    data_folder = os.path.join(data_path, data_type)
+    with open(user_file, mode='r', encoding='utf8') as fp:
+        for line in fp.readlines():
+            user_set.add(line.split(' [info] ')[0])
+    temp_count = 0
+    for index, user in enumerate(user_set):
+        for suffix in suffix_list:
+            file_name = os.path.join(data_folder, user + suffix)
+            if not os.path.exists(file_name):
+                continue
+            total_page += 1
+            single_page_word_count = 0
+            file_name = os.path.join(data_folder, user + suffix)
+            term_frequency = dict()
+            with open(file_name, mode='r', encoding='utf8') as fp:
+                for line in fp.readlines():
+                    try:
+                        for id, value in json.loads(line.strip()).items():
+                            if value['text'] == '':
+                                continue
+                            text = value['text'].strip().split(' ')
+                            for word in text:
+                                try:
+                                    word = stemmer.stem(word.lower())
+                                    if word not in word_map:
+                                        word_map[word] = word_index
+                                        word_index += 1
+                                    single_page_word_count += 1
+                                    if word not in term_frequency:
+                                        term_frequency[word] = 0
+                                        if word not in idf:
+                                            idf[word] = 0
+                                        idf[word] += 1
+                                    term_frequency[word] += 1
+                                except RecursionError:
+                                    continue
+                    except json.decoder.JSONDecodeError:
+                        pass
+            record[user + suffix] = {
+                'tf': term_frequency, 'word_count': single_page_word_count}
+        temp_count += 1
+        if temp_count == 3:
+            break
+    return data_type, record, idf, word_map, total_page
 
 
 if __name__ == '__main__':
@@ -262,10 +331,10 @@ if __name__ == '__main__':
     parser.add_argument('--data_type', choices=[
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--root_dir', type=str)
-    parser.add_argument('--function_type', choices=[
+    parser.add_argument('--task', choices=[
                         'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence'], type=str, default='build_tfidf')
-    parser.add_argument('--window_size', type=int)
-    parser.add_argument('--step_size', type=float)
+    parser.add_argument('--window_size', type=int, default=28)
+    parser.add_argument('--step_size', type=float, default=12)
 
     args = parser.parse_args()
     root_dir = args.root_dir
@@ -274,29 +343,28 @@ if __name__ == '__main__':
     window_size = args.window_size
     step_size = args.step_size
 
-    function = args.function_type
+    data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
+
+    function = args.task
     os.chdir(root_dir)
     if function == 'build_state':
-        for keywords in ['bipolar', 'depression', 'background']:
-            build_state(keywords, window=window_size *
-                        60 * 60, gap=step_size * 60 * 60)
+        build_state(data_source, data_type_list, window=window_size *
+                    60 * 60, gap=step_size * 60 * 60, suffix_list=['.before', '.after'])
 
     elif function == 'build_state_trans':
-        for keywords in ['bipolar', 'depression', 'anxiety', 'background']:
-            build_state_trans(data_source, keywords, [
-                              "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8])
-            build_state_trans(data_source, keywords, [
-                              "anger", "fear"], emotion_state_number=[1, 2, 0, 0])
-            build_state_trans(data_source, keywords, [
-                              "joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
+        build_state_trans(data_source, data_type_list, [
+                            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
+        build_state_trans(data_source, data_type_list, [
+                            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before', '.after'])
+        build_state_trans(data_source, data_type_list, [
+                            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after'])
     elif function == 'build_tfidf':
         build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
-                    data_type_list=['bipolar', 'depression', 'anxiety', 'background'])
+                    data_type_list=data_type_list, suffix_list=['.before', '.after'])
     elif function == 'build_state_sequence':
-        for keywords in ['bipolar', 'depression', 'anxiety', 'background']:
-            build_state_sequence(data_source, keywords, [
-                                 "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8])
-            build_state_sequence(data_source, keywords, [
-                                 "anger", "fear"], emotion_state_number=[1, 2, 0, 0])
-            build_state_sequence(data_source, keywords, [
-                                 "joy", "sadness"], emotion_state_number=[0, 0, 1, 2])
+            build_state_sequence(data_source, data_type_list, [
+                                 "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
+            build_state_sequence(data_source, data_type_list, [
+                                 "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before', '.after'])
+            build_state_sequence(data_source, data_type_list, [
+                                 "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after'])
