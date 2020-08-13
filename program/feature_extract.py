@@ -8,29 +8,34 @@ from nltk.stem.porter import PorterStemmer
 from multiprocessing import Pool
 import os
 
+DEBUG = False
+
 
 def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
-        # for data_type in data_type_list:
-        #     _build_state(data_source, data_type, window, gap, suffix_list)
-    with Pool(processes=len(data_type_list)) as pool:
+    if DEBUG:
         for data_type in data_type_list:
-            pool.apply_async(func=_build_state, args=(data_source, data_type, window, gap, suffix_list,))
-        pool.close()
-        pool.join()
+            _build_state(data_source, data_type, window, gap, suffix_list)
+    else:
+        with Pool(processes=len(data_type_list)) as pool:
+            for data_type in data_type_list:
+                pool.apply_async(func=_build_state, args=(
+                    data_source, data_type, window, gap, suffix_list,))
+            pool.close()
+            pool.join()
 
 
 def _build_state(data_source, data_type, window, gap, suffix_list):
     user_list_file = './' + data_source + '/user_list/' + data_type + '_user_list'
     user_text_folder = os.path.join('./' + data_source + '/reddit', data_type)
     user_state_folder = os.path.join(
-        './' + data_source + '/feature/state_origin/anger_fear_joy_sadness', data_type)
+        './' + data_source + '/feature/state/state_origin/anger_fear_joy_sadness', data_type)
     if not os.path.exists(user_state_folder):
         os.makedirs(user_state_folder)
 
     user_list = []
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user= line.strip().split(' [info] ')[0]
+            user = line.strip().split(' [info] ')[0]
             user_list.append(user)
     for index, user in enumerate(user_list):
         for suffix in suffix_list:
@@ -88,9 +93,11 @@ def _build_state(data_source, data_type, window, gap, suffix_list):
 def build_state_sequence(data_source, data_type_list, emotion_list, emotion_state_number, suffix_list=['']):
     with Pool(processes=len(data_type_list)) as pool:
         for data_type in data_type_list:
-            pool.apply_async(func=_build_state_sequence, args=(data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
+            pool.apply_async(func=_build_state_sequence, args=(
+                data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
         pool.close()
         pool.join()
+
 
 def _build_state_sequence(data_source, data_type, emotion_list, emotion_state_number, suffix_list):
     basic_sequence = np.zeros(shape=600, dtype=float)
@@ -149,14 +156,19 @@ def _build_state_sequence(data_source, data_type, emotion_list, emotion_state_nu
                 user_state_sequence_folder, state_sequence_file)
             np.save(target_file, normalized_state_list)
 
+
 def build_state_trans(data_source, data_type_list, emotion_list, emotion_state_number, suffix_list=['']):
-    for data_type in data_type_list:
-        _build_state_trans(data_source, data_type, emotion_list, emotion_state_number, suffix_list,)
-    # with Pool(processes=len(data_type_list)) as pool:
-    #     for data_type in data_type_list:
-    #         pool.apply_async(func=_build_state_trans, args=(data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
-    #     pool.close()
-    #     pool.join()
+    if DEBUG:
+        for data_type in data_type_list:
+            _build_state_trans(data_source, data_type, emotion_list,
+                            emotion_state_number, suffix_list,)
+    else:
+        with Pool(processes=len(data_type_list)) as pool:
+            for data_type in data_type_list:
+                pool.apply_async(func=_build_state_trans, args=(data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
+            pool.close()
+            pool.join()
+
 
 def _build_state_trans(data_source, data_type, emotion_list, emotion_state_number, suffix_list):
     state_number = pow(2, len(emotion_list)) + 1
@@ -171,7 +183,7 @@ def _build_state_trans(data_source, data_type, emotion_list, emotion_state_numbe
 
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user= line.strip().split(' [info] ')[0]
+            user = line.strip().split(' [info] ')[0]
             user_list.append(user)
     for index, user in enumerate(user_list):
         for suffix in suffix_list:
@@ -215,20 +227,20 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     total_page = 0
     word_map = dict()
 
-    results = []
-    for data_type in data_type_list:
-        result = _build_tfidf(user_file_folder, data_path,
-                              data_type, suffix_list)
-        results.append(result)
+    # results = []
+    # for data_type in data_type_list:
+    #     result = _build_tfidf(user_file_folder, data_path,
+    #                           data_type, suffix_list)
+    #     results.append(result)
 
-    # with Pool(processes=len(data_type_list)) as pool:
-    #     results = []
-    #     for data_type in data_type_list:
-    #         result = pool.apply_async(func=_build_tfidf, args=(
-    #             user_file_folder, data_path, data_type, suffix_list,))
-    #         results.append(result)
-    #     pool.close()
-    #     pool.join()
+    with Pool(processes=len(data_type_list)) as pool:
+        results = []
+        for data_type in data_type_list:
+            result = pool.apply_async(func=_build_tfidf, args=(
+                user_file_folder, data_path, data_type, suffix_list,))
+            results.append(result)
+        pool.close()
+        pool.join()
 
     word_index = 0
     for result in results:
@@ -247,19 +259,17 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
                 word_index += 1
         total_page += total_page_single
 
-    for data_type, value in record.items():
-        record_folder = os.path.join(record_path, data_type)
-        if not os.path.exists(record_folder):
-            os.makedirs(record_folder)
-        for user, v in value.items():
-            tf_idf = np.zeros(len(word_map), dtype='float')
-            total_word = v['word_count']
-            for word, term_frequency in v['tf'].items():
-                index = word_map[word]
-                tf_idf[index] = term_frequency / total_word * \
-                    math.log(total_page + 1 / (idf[word] + 1))
-            record_file = os.path.join(record_folder, user)
-            np.save(record_file, tf_idf)
+    with Pool(processes=10) as pool:
+        for data_type, value in record.items():
+            record_folder = os.path.join(record_path, data_type)
+            if not os.path.exists(record_folder):
+                os.makedirs(record_folder)
+            for user, v in value.items():
+                pool.apply_async(func=_build_tfidf_write, args=(
+                    data_type, user, v, word_map, total_page, idf, record_folder,))
+        pool.close()
+        pool.join()
+
 
 def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
     stemmer = PorterStemmer()
@@ -275,7 +285,6 @@ def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
     with open(user_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
             user_set.add(line.split(' [info] ')[0])
-    temp_count = 0
     for index, user in enumerate(user_set):
         for suffix in suffix_list:
             file_name = os.path.join(data_folder, user + suffix)
@@ -311,10 +320,50 @@ def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
                         pass
             record[user + suffix] = {
                 'tf': term_frequency, 'word_count': single_page_word_count}
-        temp_count += 1
-        if temp_count == 3:
-            break
     return data_type, record, idf, word_map, total_page
+
+
+def _build_tfidf_write(data_type, user, v, word_map, total_page, idf, record_folder):
+    tf_idf = np.zeros(len(word_map), dtype='float')
+    total_word = v['word_count']
+    for word, term_frequency in v['tf'].items():
+        index = word_map[word]
+        tf_idf[index] = term_frequency / total_word * \
+            math.log(total_page + 1 / (idf[word] + 1))
+    record_file = os.path.join(record_folder, user)
+    np.save(record_file, tf_idf)
+
+
+def merge_feature(user_file_folder, data_path, data_type_list, suffix_list):
+    for data_type in data_type_list:
+        user_set = set()
+        user_file = os.path.join(user_file_folder, data_type) + '_user_list'
+        data_folder = os.path.join(data_path, data_type)
+        with open(user_file, mode='r', encoding='utf8') as fp:
+            for line in fp.readlines():
+                user_set.add(line.split(' [info] ')[0])
+        if DEBUG:
+            for index, user in enumerate(user_set):
+                _merge_feature(user, data_folder, suffix_list)
+        else:
+            with Pool(processes=10) as pool:
+                for index, user in enumerate(user_set):
+                    pool.apply_async(func=_merge_feature, args=(
+                        user, data_folder, suffix_list,))
+                pool.close()
+                pool.join()
+
+
+def _merge_feature(user, data_folder, suffix_list):
+    data = []
+    for suffix in suffix_list:
+        source_data = os.path.join(data_folder, user + suffix)
+        with open(source_data, mode='r', encoding='utf8') as fp:
+            for line in fp.readlines():
+                data.append(line.strip())
+    with open(os.path.join(data_folder, user), mode='w', encoding='utf8') as fp:
+        for item in data:
+            fp.write(item + '\n')
 
 
 if __name__ == '__main__':
@@ -332,7 +381,7 @@ if __name__ == '__main__':
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--root_dir', type=str)
     parser.add_argument('--task', choices=[
-                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence'], type=str, default='build_tfidf')
+                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state_trans')
     parser.add_argument('--window_size', type=int, default=28)
     parser.add_argument('--step_size', type=float, default=12)
 
@@ -353,18 +402,23 @@ if __name__ == '__main__':
 
     elif function == 'build_state_trans':
         build_state_trans(data_source, data_type_list, [
-                            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
+            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after', ''])
         build_state_trans(data_source, data_type_list, [
-                            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before', '.after'])
+            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before', '.after', ''])
         build_state_trans(data_source, data_type_list, [
-                            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after'])
+            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after', ''])
     elif function == 'build_tfidf':
         build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
                     data_type_list=data_type_list, suffix_list=['.before', '.after'])
+        # build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
+        #             data_type_list=data_type_list, suffix_list=[''])
     elif function == 'build_state_sequence':
-            build_state_sequence(data_source, data_type_list, [
-                                 "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
-            build_state_sequence(data_source, data_type_list, [
-                                 "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before', '.after'])
-            build_state_sequence(data_source, data_type_list, [
-                                 "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after'])
+        build_state_sequence(data_source, data_type_list, [
+                             "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
+        build_state_sequence(data_source, data_type_list, [
+                             "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before', '.after'])
+        build_state_sequence(data_source, data_type_list, [
+                             "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after'])
+    elif function == 'merge_feature':
+        merge_feature('./data/user_list/', './data/feature/state/state_origin/anger_fear_joy_sadness',
+                      data_type_list=data_type_list, suffix_list=['.before', '.after'])

@@ -1,12 +1,12 @@
+import numpy as np
+import json
+from random import seed, shuffle
+import tensorflow as tf
+from official.nlp.bert import tokenization
 import os
 import logging
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
-from official.nlp.bert import tokenization
-import tensorflow as tf
-from random import seed, shuffle
-import json
-import numpy as np
 
 
 class DataLoader(object):
@@ -129,8 +129,10 @@ class DataLoaderForReddit(object):
 
         return (text_ids, text_mask, segement_ids), id
 
+
 class DataLoaderForFeature(object):
-    def __init__(self, feature_type, feature_name, train_suffix='all', test_suffix='all', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']], cross_validation=False, data_size=[1510, 216, 432]):
+    def __init__(self, feature_type, feature_name, train_suffix='', test_suffix='', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']],
+                 cross_validation=False, data_size=[1510, 216, 432]):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
         self.data_size = data_size
@@ -144,63 +146,56 @@ class DataLoaderForFeature(object):
         self.build_dataset(self.data_type_list, self.data_size)
 
     def build_dataset(self, data_type_list, data_size):
-        data = []
-        split_data = [[[], []], [[], []], [[], []]]
+        data = [[], [], []]
+        split_data = [[[], []] for _ in range(3)]
         for type_index, data_type in enumerate(data_type_list):
-            data.append([])
             for type in data_type:
                 user_list = []
                 user_list_file = './data/user_list/' + type + '_user_list'
                 user_feature_folder = './data/feature/' + self._feature_type + '/' + type
                 with open(user_list_file, mode='r', encoding='utf8') as fp:
                     for line in fp.readlines():
-                        user, _ = line.strip().split(' [info] ')
+                        user = line.strip().split(' [info] ')[0]
                         user_list.append(user)
                 seed(123)
                 shuffle(user_list)
+                split_number = 0
                 for i, number in enumerate(data_size):
-                    for index, user in user_list[split_number: split_number + number]:
+                    for index, user in enumerate(user_list[split_number: split_number + number]):
                         if i == 0:
                             suffix = self._train_suffix
                         else:
                             suffix = self._test_suffix
-                    if suffix == 'all':
-                        suffix_list = ['./before', '.after']
-                    else:
-                        suffix_list = [suffix]
-                    for suffix in suffix_list:
-                        feature_file = user + suffix + '.npy'       
+                        feature_file = user + suffix + '.npy'
                         feature_path = os.path.join(
-                            user_tf_idf_folder, tf_idf_file)
-                        feature = np.load(tf_idf_path)
-                        data[type_index].append(feature)
-        if self._cross_validation:
-            data_size = len(data[0])
-            fold_data = [[[], []] for _ in range(5)]
-            for data_list in data:
-                data_size = min(data_size, len(data_list))
-            one_fold_data_size = int(data_size / 5)
-            for type, single_type_data in enumerate(data):
-                seed(123)
-                shuffle(single_type_data)
-                temp = [single_type_data[i * one_fold_data_size:(
-                    i + 1) * one_fold_data_size] for i in range(0, 5)]
-                for index, single_fold_data in enumerate(temp):
-                        for prob in single_fold_data:
-                            fold_data[index][0].append(prob.flatten())
-                            fold_data[index][1].append(type)
-            self.fold_data = fold_data
-        else:
-            split_number = 0
-            for i, number in enumerate(data_size):
-                for type, single_type_data in enumerate(data):
-                    seed(123)
-                    shuffle(single_type_data)
-                    for prob in single_type_data[split_number: split_number + number]:
-                        split_data[i][0].append(prob.flatten())
-                        split_data[i][1].append(type)
-                split_number += number
-            self.train_dataset, self.valid_dataset, self.test_dataset = split_data
+                            user_feature_folder, feature_file)
+                        feature = np.load(feature_path)
+                        data[i].append((feature.flatten(), type_index))
+                    split_number += number
+
+        for i, item in enumerate(data):
+            shuffle(item)
+            for data_point in item:
+                split_data[i][0].append(data_point[0])
+                split_data[i][1].append(data_point[1])
+        self.train_dataset, self.valid_dataset, self.test_dataset = split_data
+        # if self._cross_validation:
+        #     data_size = len(data[0])
+        #     fold_data = [[[], []] for _ in range(5)]
+        #     for data_list in data:
+        #         data_size = min(data_size, len(data_list))
+        #     one_fold_data_size = int(data_size / 5)
+        #     for type, single_type_data in enumerate(data):
+        #         seed(123)
+        #         shuffle(single_type_data)
+        #         temp = [single_type_data[i * one_fold_data_size:(
+        #             i + 1) * one_fold_data_size] for i in range(0, 5)]
+        #         for index, single_fold_data in enumerate(temp):
+        #                 for prob in single_fold_data:
+        #                     fold_data[index][0].append(prob.flatten())
+        #                     fold_data[index][1].append(type)
+        #     self.fold_data = fold_data
+
 
 class DataLoaderForState(object):
     def __init__(self, data_type_list=['bipolar', 'depression', 'background'], data_size=[200, 100, 100]):
@@ -252,11 +247,9 @@ class DataLoaderForState(object):
         self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
 
-
-
 def test():
-    data_loader = DataLoaderForTransProb(
-        emotion_list=["anger", "fear", "joy", "sadness"])
+    data_loader = DataLoaderForFeature(
+        'state/state_trans', 'anger_fear_joy_sadness', data_type_list=[['bipolar'], ['depression']], data_size=[200, 100, 100])
     print('test')
     # from config import get_config
     # from util import prepare_dirs_and_logger
