@@ -131,7 +131,7 @@ class DataLoaderForReddit(object):
 
 
 class DataLoaderForFeature(object):
-    def __init__(self, feature_type, feature_name, train_suffix='', test_suffix='', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']],
+    def __init__(self, data_source, feature_type, feature_name, train_suffix='', test_suffix='', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']],
                  cross_validation=False, data_size=[1510, 216, 432]):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
@@ -143,6 +143,7 @@ class DataLoaderForFeature(object):
         self._cross_validation = cross_validation
         self._train_suffix = train_suffix
         self._test_suffix = test_suffix
+        self._data_source = data_source
         self.build_dataset(self.data_type_list, self.data_size)
 
     def build_dataset(self, data_type_list, data_size):
@@ -151,8 +152,8 @@ class DataLoaderForFeature(object):
         for type_index, data_type in enumerate(data_type_list):
             for type in data_type:
                 user_list = []
-                user_list_file = './data/user_list/' + type + '_user_list'
-                user_feature_folder = './data/feature/' + self._feature_type + '/' + type
+                user_list_file = './'+self._data_source+'/user_list/' + type + '_user_list'
+                user_feature_folder = './'+self._data_source+'/feature/' + self._feature_type + '/' + type
                 with open(user_list_file, mode='r', encoding='utf8') as fp:
                     for line in fp.readlines():
                         user = line.strip().split(' [info] ')[0]
