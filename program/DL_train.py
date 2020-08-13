@@ -16,7 +16,7 @@ def train(config, Model):
     prepare_dirs_and_logger(config)
     if config.task in ['train', 'roc_curve', 'test']:
         data_loader = DataLoader(config)
-    elif config.task in ['label', 'predict', 'encode']:
+    elif config.task in ['label_emotion', 'predict', 'encode']:
         data_loader = DataLoaderForReddit(config)
     model = Model(config, data_loader)
 
