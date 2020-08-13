@@ -176,11 +176,11 @@ def main():
     train_suffix = ''
     test_suffix = ''
 
-    # feature_name = "anger_fear_joy_sadness"
-    # model_name = 'all-emotions'
-    # print(model_name)
-    # train_trans_prob(model, feature_name, train_suffix, test_suffix, model_path, model_name,
-    #                  load_model, cross_validation, processing_numer, random_number)
+    feature_name = "anger_fear_joy_sadness"
+    model_name = 'all-emotions'
+    print(model_name)
+    train_trans_prob(model, feature_name, train_suffix, test_suffix, model_path, model_name,
+                     load_model, cross_validation, processing_numer, random_number)
 
     feature_name = "joy_sadness"
     model_name = 'joy-sadness'
