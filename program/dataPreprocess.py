@@ -38,7 +38,13 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path, suffix_list
     for i, user in enumerate(user_set):
         for suffix in suffix_list:
             file_name = os.path.join(data_path_list, user + suffix)
+            record_file = user + suffix + ".tfrecord"
+            record_file = os.path.join(record_path, record_file)
             if not os.path.exists(file_name):
+                if suffix == '.after':
+                    print(user)
+                continue
+            if os.path.exists(record_file):
                 continue
             with open(file_name, mode='r', encoding='utf8') as fp:
                 data = dict()
@@ -52,8 +58,6 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path, suffix_list
                             text_data[id] = text
                     except json.decoder.JSONDecodeError:
                         pass
-            record_file = user+suffix+".tfrecord"
-            record_file = os.path.join(record_path, record_file)
             writer = tf.io.TFRecordWriter(record_file)
             for id, feature in data.items():
                 for sentence_feature in feature:
