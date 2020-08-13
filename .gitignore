@@ -17,3 +17,4 @@ data/TFRecord/*
 data_pretraining/*
 
 temp/*
+data/reddit_back/*
