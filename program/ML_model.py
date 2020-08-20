@@ -73,7 +73,6 @@ class MLModel(object):
             self.test()
             if change_mark:
                 self._save_model()
-
         else:
             print('accuracy : %.3f' % self._best_model['metrics']['accuracy'])
 
