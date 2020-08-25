@@ -1,12 +1,13 @@
+import logging
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
 from config import get_config
 from util import prepare_dirs_and_logger, save_config
 from data import DataLoader, DataLoaderForReddit
 from DL_model import BertModel
 import warnings
-import logging
-import os
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
 
 
 warnings.filterwarnings('ignore')
