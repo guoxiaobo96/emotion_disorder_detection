@@ -5,10 +5,11 @@ import math
 from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
 from nltk.stem.porter import PorterStemmer
+from nltk.corpus import stopwords
 from multiprocessing import Pool
 import os
 
-DEBUG = False
+DEBUG = True
 
 
 def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
@@ -86,7 +87,7 @@ def _build_state(data_source, data_type, window, gap, suffix_list):
     user_list = []
     with open(user_list_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
-            user, _ = line.strip().split(' [info] ')
+            user = line.strip().split(' [info] ')[0]
             user_list.append(user)
 
 
@@ -273,6 +274,9 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
 
 def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
     stemmer = PorterStemmer()
+    stop_words_set = set(stopwords.words('english'))
+    stop_words_set.update(
+        ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
     idf = dict()
     record = dict()
     total_page = 0
@@ -303,6 +307,8 @@ def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
                             text = value['text'].strip().split(' ')
                             for word in text:
                                 try:
+                                    if word.lower() in stop_words_set:
+                                        continue
                                     word = stemmer.stem(word.lower())
                                     if word not in word_map:
                                         word_map[word] = word_index
@@ -381,7 +387,7 @@ if __name__ == '__main__':
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--root_dir', type=str)
     parser.add_argument('--task', choices=[
-                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state_trans')
+                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state')
     parser.add_argument('--window_size', type=int, default=28)
     parser.add_argument('--step_size', type=float, default=12)
 
@@ -392,12 +398,11 @@ if __name__ == '__main__':
     window_size = args.window_size
     step_size = args.step_size
 
-    data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
-
+    # data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
     function = args.task
     os.chdir(root_dir)
     if function == 'build_state':
-        build_state(data_source, data_type_list, window=window_size *
+        build_state(data_source, ['background'], window=window_size *
                     60 * 60, gap=step_size * 60 * 60, suffix_list=['.before', '.after'])
 
     elif function == 'build_state_trans':
