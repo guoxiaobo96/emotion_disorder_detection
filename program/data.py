@@ -2,6 +2,7 @@ import numpy as np
 import json
 from random import seed, shuffle
 import tensorflow as tf
+from multiprocessing import Pool
 from official.nlp.bert import tokenization
 import os
 import logging
@@ -161,18 +162,26 @@ class DataLoaderForFeature(object):
                 seed(123)
                 shuffle(user_list)
                 split_number = 0
-                for i, number in enumerate(data_size):
-                    for index, user in enumerate(user_list[split_number: split_number + number]):
-                        if i == 0:
-                            suffix = self._train_suffix
-                        else:
-                            suffix = self._test_suffix
-                        feature_file = user + suffix + '.npy'
-                        feature_path = os.path.join(
-                            user_feature_folder, feature_file)
-                        feature = np.load(feature_path)
-                        data[i].append((feature.flatten(), type_index))
-                    split_number += number
+                result_list = []
+                with Pool(processes=10) as pool:
+                    for i, number in enumerate(data_size):
+                        for index, user in enumerate(user_list[split_number: split_number + number]):
+                            if data_type == 'background':
+                                suffix = ''
+                            else:
+                                if i == 0:
+                                    suffix = self._train_suffix
+                                else:
+                                    suffix = self._test_suffix
+                            result = pool.apply_async(func=self._read_data, args=(user, suffix, user_feature_folder, i))
+                            result_list.append(result)
+                        split_number += number
+                    pool.close()
+                    pool.join()
+
+                for result in result_list:
+                    data_split, feature = result.get()
+                    data[data_split].append((feature.flatten(), type_index))
 
         for i, item in enumerate(data):
             shuffle(item)
@@ -180,23 +189,13 @@ class DataLoaderForFeature(object):
                 split_data[i][0].append(data_point[0])
                 split_data[i][1].append(data_point[1])
         self.train_dataset, self.valid_dataset, self.test_dataset = split_data
-        # if self._cross_validation:
-        #     data_size = len(data[0])
-        #     fold_data = [[[], []] for _ in range(5)]
-        #     for data_list in data:
-        #         data_size = min(data_size, len(data_list))
-        #     one_fold_data_size = int(data_size / 5)
-        #     for type, single_type_data in enumerate(data):
-        #         seed(123)
-        #         shuffle(single_type_data)
-        #         temp = [single_type_data[i * one_fold_data_size:(
-        #             i + 1) * one_fold_data_size] for i in range(0, 5)]
-        #         for index, single_fold_data in enumerate(temp):
-        #                 for prob in single_fold_data:
-        #                     fold_data[index][0].append(prob.flatten())
-        #                     fold_data[index][1].append(type)
-        #     self.fold_data = fold_data
 
+    def _read_data(self, user, suffix, user_feature_folder, data_split):
+        feature_file = user + suffix + '.npz'
+        feature_path = os.path.join(
+            user_feature_folder, feature_file)
+        feature = np.load(feature_path)['data']
+        return data_split, feature
 
 class DataLoaderForState(object):
     def __init__(self, data_type_list=['bipolar', 'depression', 'background'], data_size=[200, 100, 100]):

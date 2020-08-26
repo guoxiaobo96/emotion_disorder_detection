@@ -3,13 +3,15 @@ import numpy as np
 import json
 import math
 from scipy.spatial.distance import euclidean
+from gensim.corpora.dictionary import Dictionary
+from gensim.models import TfidfModel
 from fastdtw import fastdtw
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 from multiprocessing import Pool
 import os
 
-DEBUG = True
+DEBUG = False
 
 
 def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
@@ -162,11 +164,12 @@ def build_state_trans(data_source, data_type_list, emotion_list, emotion_state_n
     if DEBUG:
         for data_type in data_type_list:
             _build_state_trans(data_source, data_type, emotion_list,
-                            emotion_state_number, suffix_list,)
+                               emotion_state_number, suffix_list,)
     else:
         with Pool(processes=len(data_type_list)) as pool:
             for data_type in data_type_list:
-                pool.apply_async(func=_build_state_trans, args=(data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
+                pool.apply_async(func=_build_state_trans, args=(
+                    data_source, data_type, emotion_list, emotion_state_number, suffix_list,))
             pool.close()
             pool.join()
 
@@ -214,130 +217,130 @@ def _build_state_trans(data_source, data_type, emotion_list, emotion_state_numbe
                 else:
                     for state_next in range(state_number):
                         state_prob[state_prev][state_next] /= sum
-            state_trans_file = user + suffix + '.npy'
+            state_trans_file = user + suffix + '.npz'
             target_file = os.path.join(
                 user_state_trans_folder, state_trans_file)
-            np.save(target_file, state_prob)
+            np.savez_compressed(target_file, data=state_prob)
 
 
 def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix_list=['']):
-    if not os.path.exists(record_path):
-        os.makedirs(record_path)
-    idf = dict()
-    record = dict()
-    total_page = 0
-    word_map = dict()
+    
+    for data_type in data_type_list:
+        if not os.path.exists(os.path.join(record_path,data_type)):
+            os.makedirs(os.path.join(record_path, data_type))
+    if not os.path.exists(os.path.join(record_path, 'dict')):
+        os.makedirs(os.path.join(record_path, 'dict'))
+    dict_file = os.path.join(os.path.join(record_path, 'dict'), 'dict_'+'_'.join(suffix_list))
 
-    # results = []
-    # for data_type in data_type_list:
-    #     result = _build_tfidf(user_file_folder, data_path,
-    #                           data_type, suffix_list)
-    #     results.append(result)
+    user_data = dict()
+    for data_type in data_type_list:
+        _, single_user_list = _read_user_list(
+            user_file_folder, data_path, data_type)
+        for user in single_user_list:
+            user_data[user] = {'data_type': data_type}
 
-    with Pool(processes=len(data_type_list)) as pool:
-        results = []
-        for data_type in data_type_list:
-            result = pool.apply_async(func=_build_tfidf, args=(
-                user_file_folder, data_path, data_type, suffix_list,))
-            results.append(result)
-        pool.close()
-        pool.join()
-
-    word_index = 0
-    for result in results:
-        try:
-            data_type, record_single, idf_single, word_map_single, total_page_single = result.get()
-        except AttributeError:
-            data_type, record_single, idf_single, word_map_single, total_page_single = result
-        record[data_type] = record_single
-        for key, value in idf_single.items():
-            if key not in idf:
-                idf[key] = 0
-            idf[key] += value
-        for key, value in word_map_single.items():
-            if key not in word_map:
-                word_map[key] = word_index
-                word_index += 1
-        total_page += total_page_single
-
+    cleaned_text_full = []
+    result_list = []
     with Pool(processes=10) as pool:
-        for data_type, value in record.items():
-            record_folder = os.path.join(record_path, data_type)
-            if not os.path.exists(record_folder):
-                os.makedirs(record_folder)
-            for user, v in value.items():
-                pool.apply_async(func=_build_tfidf_write, args=(
-                    data_type, user, v, word_map, total_page, idf, record_folder,))
+        for user, value in user_data.items():
+            result = pool.apply_async(func=_build_tfidf_clean, args=(
+                value['data_type'], data_path, user, suffix_list,))
+            result_list.append(result)
         pool.close()
         pool.join()
+    for result in result_list:
+        _, user, cleaned_text = result.get()
+        cleaned_text_full.append(cleaned_text)
+        user_data[user]['cleaned_text'] = cleaned_text
+    dictionary = Dictionary(cleaned_text_full)
+    dictionary.filter_extremes(no_above=0.95)
+
+    result_list = []
+    corpous_full = []
+    with Pool(processes=10) as pool:
+        for user, value in user_data.items():
+            result = pool.apply_async(func=_build_tfidf_doc2bow, args=(dictionary, user, value['cleaned_text']))
+            result_list.append(result)
+        pool.close()
+        pool.join()
+    for result in result_list:
+        user, corpous = result.get()
+        user_data[user]['corpous'] = corpous
+        corpous_full.append(corpous)
+    tfidf_model = TfidfModel(corpous_full,dictionary=dictionary)
+        
+
+    for user, value in user_data.items():
+        _build_tfidf_write(record_path, tfidf_model, user, value)
+    # with Pool(processes=10) as pool:
+    #     for key, value in user_data.items():
+    #         pool.apply_async(func=_build_tfidf_write, args=(record_path, tfidf_model, key, value))
+    #     pool.close()
+    #     pool.join()
+
+    dictionary.save_as_text(dict_file)
 
 
-def _build_tfidf(user_file_folder, data_path, data_type, suffix_list):
-    stemmer = PorterStemmer()
-    stop_words_set = set(stopwords.words('english'))
-    stop_words_set.update(
-        ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
-    idf = dict()
-    record = dict()
-    total_page = 0
-    word_map = dict()
-    word_index = 0
-
+def _read_user_list(user_file_folder, data_path, data_type):
     user_set = set()
     user_file = os.path.join(user_file_folder, data_type) + '_user_list'
     data_folder = os.path.join(data_path, data_type)
     with open(user_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
             user_set.add(line.split(' [info] ')[0])
-    for index, user in enumerate(user_set):
-        for suffix in suffix_list:
-            file_name = os.path.join(data_folder, user + suffix)
-            if not os.path.exists(file_name):
-                continue
-            total_page += 1
-            single_page_word_count = 0
-            file_name = os.path.join(data_folder, user + suffix)
-            term_frequency = dict()
-            with open(file_name, mode='r', encoding='utf8') as fp:
-                for line in fp.readlines():
-                    try:
-                        for id, value in json.loads(line.strip()).items():
-                            if value['text'] == '':
-                                continue
-                            text = value['text'].strip().split(' ')
-                            for word in text:
-                                try:
-                                    if word.lower() in stop_words_set:
-                                        continue
-                                    word = stemmer.stem(word.lower())
-                                    if word not in word_map:
-                                        word_map[word] = word_index
-                                        word_index += 1
-                                    single_page_word_count += 1
-                                    if word not in term_frequency:
-                                        term_frequency[word] = 0
-                                        if word not in idf:
-                                            idf[word] = 0
-                                        idf[word] += 1
-                                    term_frequency[word] += 1
-                                except RecursionError:
+
+    return data_type, user_set
+
+
+def _build_tfidf_clean(data_type, data_folder, user, suffix_list):
+    stemmer = PorterStemmer()
+    stop_words_set = set(stopwords.words('english'))
+    stop_words_set.update(
+        ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
+    data_folder = os.path.join(data_folder, data_type)
+    cleaned_text = []
+    for suffix in suffix_list:
+        file_name = os.path.join(data_folder, user + suffix)
+        if not os.path.exists(file_name):
+            continue
+        with open(file_name, mode='r', encoding='utf8') as fp:
+            for line in fp.readlines():
+                try:
+                    for id, value in json.loads(line.strip()).items():
+                        if value['text'] == '':
+                            continue
+                        text = value['text'].strip().split(' ')
+
+                        for word in text:
+                            word = word.replace('.', '').replace(
+                                ',', '').replace('?', '')
+                            try:
+                                if word.lower() in stop_words_set:
                                     continue
-                    except json.decoder.JSONDecodeError:
-                        pass
-            record[user + suffix] = {
-                'tf': term_frequency, 'word_count': single_page_word_count}
-    return data_type, record, idf, word_map, total_page
+                                word = stemmer.stem(word.lower())
+                                cleaned_text.append(word)
+                            except RecursionError:
+                                continue
+                except json.decoder.JSONDecodeError:
+                    pass
+
+    return data_type, user, cleaned_text
 
 
-def _build_tfidf_write(data_type, user, v, word_map, total_page, idf, record_folder):
-    tf_idf = np.zeros(len(word_map), dtype='float')
-    total_word = v['word_count']
-    for word, term_frequency in v['tf'].items():
-        index = word_map[word]
-        tf_idf[index] = term_frequency / total_word * \
-            math.log(total_page + 1 / (idf[word] + 1))
-    record_file = os.path.join(record_folder, user)
-    np.save(record_file, tf_idf)
+def _build_tfidf_doc2bow(dictionary, user, user_data):
+    corpus = dictionary.doc2bow(user_data)
+    return user, corpus
+
+
+def _build_tfidf_write(record_path, tfidf_model, user, user_data):
+    len_vectorize = len(tfidf_model.term_lens)
+    tf_idf = tfidf_model[user_data['corpous']]
+    tf_idf_vectorize = np.zeros(len_vectorize)
+    for key, value in tf_idf:
+        tf_idf_vectorize[int(key)] = value
+    record_folder = os.path.join(record_path, user_data['data_type'])
+    record_file = os.path.join(record_folder, user+'.npz')
+    np.savez_compressed(record_file, data=tf_idf_vectorize)
 
 
 def merge_feature(user_file_folder, data_path, data_type_list, suffix_list):
@@ -387,7 +390,7 @@ if __name__ == '__main__':
                         'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--root_dir', type=str)
     parser.add_argument('--task', choices=[
-                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state')
+                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state_trans')
     parser.add_argument('--window_size', type=int, default=28)
     parser.add_argument('--step_size', type=float, default=12)
 
@@ -398,12 +401,12 @@ if __name__ == '__main__':
     window_size = args.window_size
     step_size = args.step_size
 
-    # data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
+    data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
     function = args.task
     os.chdir(root_dir)
     if function == 'build_state':
-        build_state(data_source, ['background'], window=window_size *
-                    60 * 60, gap=step_size * 60 * 60, suffix_list=['.before', '.after'])
+        build_state(data_source, data_type_list, window=window_size *
+                    60 * 60, gap=step_size * 60 * 60, suffix_list=['.before', '.after', ''])
 
     elif function == 'build_state_trans':
         build_state_trans(data_source, data_type_list, [
@@ -414,7 +417,7 @@ if __name__ == '__main__':
             "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after', ''])
     elif function == 'build_tfidf':
         build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
-                    data_type_list=data_type_list, suffix_list=['.before', '.after'])
+                    data_type_list=data_type_list, suffix_list=[''])
         # build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
         #             data_type_list=data_type_list, suffix_list=[''])
     elif function == 'build_state_sequence':
