@@ -219,7 +219,4 @@ class RandomForest(MLModel):
             self._hyper_parameters_list.append(hyper_parameters)
 
     def _build_model(self, hyper_parameters, random_state):
-        if self._multi_processing:
-            self.model = ensemble.RandomForestClassifier(**hyper_parameters)
-        else:
-            self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_jobs=3)
+        self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_jobs=3)
