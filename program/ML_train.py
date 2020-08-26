@@ -245,7 +245,7 @@ def main():
     feature_name = 'tf_idf'
     model = RandomForest
     model_path = './log/RF'
-    load_model = False
+    load_model = True
     train_suffix = ''
     test_suffix = ''
 
