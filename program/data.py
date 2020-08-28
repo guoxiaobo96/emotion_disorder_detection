@@ -166,7 +166,7 @@ class DataLoaderForFeature(object):
                 with Pool(processes=10) as pool:
                     for i, number in enumerate(data_size):
                         for index, user in enumerate(user_list[split_number: split_number + number]):
-                            if data_type == 'background':
+                            if type == 'background':
                                 suffix = ''
                             else:
                                 if i == 0:
