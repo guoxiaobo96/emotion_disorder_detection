@@ -19,3 +19,4 @@ data_pretraining/*
 temp/*
 data/reddit_back/*
 data/background/*
+log/RF_back/*

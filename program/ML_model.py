@@ -16,7 +16,6 @@ class MLModel(object):
         if not os.path.exists(model_path):
             os.mkdir(model_path)
         self._metrics_list = metrics_list
-        self._metrics = dict()
         self._best_model = {'metrics': dict(), 'hyper_parameters': dict()}
         self._generate_hyper_parameters()
         self._load_data(data_loader)
@@ -57,7 +56,7 @@ class MLModel(object):
                     continue
                 temp_best_acc = max(
                     metrics['accuracy'], temp_best_acc)
-                if 'accuracy' not in self._best_model['metrics'] or metrics['accuracy'] > self._best_model['metrics']['accuracy']:
+                if 'accuracy' not in self._best_model['metrics'] or metrics['accuracy'] >= self._best_model['metrics']['accuracy']:
                     change_mark = True
                     self.model = model
                     if self._verbose:
@@ -99,10 +98,10 @@ class MLModel(object):
             data = self._data.test_dataset
         feature, label = data
         label_pred = self.model.predict(feature)
-        self._calculate_metrics(label_pred, label)
-        for key, value in self._metrics.items():
+        metrics = self._calculate_metrics(label_pred, label)
+        for key, value in metrics.items():
             self._best_model['metrics'][key] = value
-        print('accuracy : %.3f' % self._metrics['accuracy'])
+        print('accuracy : %.3f' % metrics['accuracy'])
 
     def _generate_hyper_parameters(self):
         pass
@@ -111,17 +110,18 @@ class MLModel(object):
         pass
 
     def _calculate_metrics(self, pred, ground):
+        _metrics = dict()
         if 'accuracy' in self._metrics_list:
-            self._metrics['accuracy'] = accuracy_score(ground, pred)
+            _metrics['accuracy'] = accuracy_score(ground, pred)
         if 'micro_f1_score' in self._metrics_list:
-            self._metrics['micro_f1_score'] = f1_score(
+            _metrics['micro_f1_score'] = f1_score(
                 ground, pred, average='micro')
         if 'macro_f1_score' in self._metrics_list:
-            self._metrics['macro_f1_score'] = f1_score(
+            _metrics['macro_f1_score'] = f1_score(
                 ground, pred, average='macro')
         if 'confusion' in self._metrics_list:
-            self._metrics['confusion_matrix'] = confusion_matrix(ground, pred)
-        return self._metrics
+            _metrics['confusion_matrix'] = confusion_matrix(ground, pred)
+        return _metrics
 
     def _load_data(self, data_loader):
         self._data = data_loader
@@ -219,4 +219,4 @@ class RandomForest(MLModel):
             self._hyper_parameters_list.append(hyper_parameters)
 
     def _build_model(self, hyper_parameters, random_state):
-        self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_jobs=3)
+        self.model = ensemble.RandomForestClassifier(**hyper_parameters)
