@@ -397,8 +397,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_source', choices=[
                         'data', 'data_small'], type=str, default='data')
-    parser.add_argument('--data_type', choices=[
-                        'background', 'anxiety', 'bipolar', 'depression'], type=str, default='anxiety')
     parser.add_argument('--root_dir', type=str)
     parser.add_argument('--task', choices=[
                         'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state_trans')
@@ -408,7 +406,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     root_dir = args.root_dir
     data_source = args.data_source
-    keywords = args.data_type
     window_size = args.window_size
     step_size = args.step_size
 
@@ -417,15 +414,15 @@ if __name__ == '__main__':
     os.chdir(root_dir)
     if function == 'build_state':
         build_state(data_source, data_type_list, window=window_size *
-                    60 * 60, gap=step_size * 60 * 60, suffix_list=['.before','.after'])
+                    60 * 60, gap=step_size * 60 * 60, suffix_list=['',''])
 
     elif function == 'build_state_trans':
         build_state_trans(data_source, data_type_list, [
-            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before'])
+            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=[''])
         build_state_trans(data_source, data_type_list, [
-            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=['.before'])
+            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=[''])
         build_state_trans(data_source, data_type_list, [
-            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before'])
+            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=[''])
     elif function == 'build_tfidf':
         build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
                     data_type_list=data_type_list, suffix_list=['.after'])

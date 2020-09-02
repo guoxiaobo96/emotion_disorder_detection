@@ -214,14 +214,18 @@ def main():
 
     cross_validation=False
     load_model=True
-    processing_numer=10
+    processing_numer=8
     random_number=20
-    data_source='data'
-    model=RandomForest
-    model_path='./log/RF'
+    data_source = 'data'
+
+    model=SVM
+    model_path = './log/SVM'
+    
+    # model=RandomForest
+    # model_path='./log/RF'
     train_suffix=args.train_suffix
     test_suffix = args.test_suffix
-    data_size = [1050, 200, 249]
+    data_size = [693, 132, 132]
     
     if args.analysis_task == 'state':
         feature_name="anger_fear_joy_sadness"

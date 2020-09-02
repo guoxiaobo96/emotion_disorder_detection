@@ -6,7 +6,7 @@ program/temp.py
 
 log/*/*/log/*
 log/*/*/model/*
-log/*/*/tf-idf_model
+log/*/*/*_model
 
 data_small/reddit/*
 data_small/feature/*
