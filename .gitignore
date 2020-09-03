@@ -6,11 +6,13 @@ program/temp.py
 
 log/*/*/log/*
 log/*/*/model/*
-log/*/*/*_model
+log/*/*/*
 
 data_small/reddit/*
 data_small/feature/*
 data_small/TFRecord/*
+data_test/*
+
 data/reddit/*
 data/feature/*
 data/TFRecord/*

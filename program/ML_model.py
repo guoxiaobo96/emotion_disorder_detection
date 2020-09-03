@@ -3,14 +3,15 @@ warnings.filterwarnings("ignore")
 import itertools
 import random
 import os
+import numpy as np
 import pickle
 
 from sklearn import linear_model, svm, ensemble
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, roc_auc_score
 from multiprocessing import Pool
 
 class MLModel(object):
-    def __init__(self, data_loader, model_path, model_name, metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion'], multi_processing=True, load_model = False, verbose=False, cross_validation = False):
+    def __init__(self, data_loader, model_path, model_name, import_metric = 'accuracy', metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion','roc_auc'], multi_processing=True, load_model = False, verbose=False, cross_validation = False):
         self._model_path = model_path
         self._model_name = model_name
         if not os.path.exists(model_path):
@@ -23,6 +24,7 @@ class MLModel(object):
         self._load_model_mark = load_model
         self._verbose = verbose
         self._cross_validation = cross_validation
+        self._metric = import_metric
 
 
     def fit(self, processing_number=1, random_number=3):
@@ -55,8 +57,8 @@ class MLModel(object):
                 if metrics is None:
                     continue
                 temp_best_acc = max(
-                    metrics['accuracy'], temp_best_acc)
-                if 'accuracy' not in self._best_model['metrics'] or metrics['accuracy'] >= self._best_model['metrics']['accuracy']:
+                    metrics[self._metric], temp_best_acc)
+                if self._metric not in self._best_model['metrics'] or metrics[self._metric] >= self._best_model['metrics'][self._metric]:
                     change_mark = True
                     self.model = model
                     if self._verbose:
@@ -73,7 +75,7 @@ class MLModel(object):
             if change_mark:
                 self._save_model()
         else:
-            print('accuracy : %.3f' % self._best_model['metrics']['accuracy'])
+            print('%s is : %.3f' % (self._metric, self._best_model['metrics'][self._metric]))
 
     
 
@@ -88,8 +90,9 @@ class MLModel(object):
             data = self._data.valid_dataset
         feature, label = data
         label_pred = self.model.predict(feature)
+        label_pred_socre = self.model.predict_proba(feature)
         if not self._cross_validation:
-            return self._calculate_metrics(label_pred, label)
+            return self._calculate_metrics(label_pred, label_pred_socre, label)
         else:
             return label_pred, label
 
@@ -98,10 +101,11 @@ class MLModel(object):
             data = self._data.test_dataset
         feature, label = data
         label_pred = self.model.predict(feature)
-        metrics = self._calculate_metrics(label_pred, label)
+        label_pred_socre = self.model.predict_proba(feature)
+        metrics = self._calculate_metrics(label_pred, label_pred_socre, label)
         for key, value in metrics.items():
             self._best_model['metrics'][key] = value
-        print('accuracy : %.3f' % metrics['accuracy'])
+        print('%s is  %.3f' % (self._metric, metrics[self._metric]))
 
     def _generate_hyper_parameters(self):
         pass
@@ -109,7 +113,7 @@ class MLModel(object):
     def _build_model(self, hyper_parameters, random_state):
         pass
 
-    def _calculate_metrics(self, pred, ground):
+    def _calculate_metrics(self, pred, pred_score, ground):
         _metrics = dict()
         if 'accuracy' in self._metrics_list:
             _metrics['accuracy'] = accuracy_score(ground, pred)
@@ -121,6 +125,11 @@ class MLModel(object):
                 ground, pred, average='macro')
         if 'confusion' in self._metrics_list:
             _metrics['confusion_matrix'] = confusion_matrix(ground, pred)
+        if 'roc_auc' in self._metrics_list:
+            if len(pred_score[0]) > 2:
+                _metrics['roc_auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
+            else:
+                _metrics['roc_auc'] = roc_auc_score(ground, pred_score[:,1])
         return _metrics
 
     def _load_data(self, data_loader):
@@ -219,4 +228,4 @@ class RandomForest(MLModel):
             self._hyper_parameters_list.append(hyper_parameters)
 
     def _build_model(self, hyper_parameters, random_state):
-        self.model = ensemble.RandomForestClassifier(**hyper_parameters)
+        self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_estimators=100)

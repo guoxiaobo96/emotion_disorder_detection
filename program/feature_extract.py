@@ -10,6 +10,7 @@ from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 from multiprocessing import Pool
 import os
+from config import get_config
 
 DEBUG = False
 
@@ -25,8 +26,13 @@ def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
         with open(user_list_file, mode='r', encoding='utf8') as fp:
             for line in fp.readlines():
                 user = line.strip().split(' [info] ')[0]
+                if user in user_list:
+                    print("The %s appeared in %s and %s" %(user, user_list[user], data_type))
                 user_list[user] = data_type
+
     # for user, data_type in user_list.items():
+    #     if user == 'starter_kit':
+    #         print('test')
     #     _build_state(user, data_source, data_type, window, gap, suffix_list)
 
     with Pool(processes=10) as pool:
@@ -48,6 +54,7 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
         try:
             user_info_file = os.path.join(user_text_folder, user + suffix)
             if not os.path.exists(user_info_file):
+                print(user)
                 continue
             state_info_file = os.path.join(
                 user_state_folder, user + suffix)
@@ -206,6 +213,8 @@ def _build_state_trans(user, data_source, data_type, emotion_list, emotion_state
                     for i, s in enumerate(state):
                         state_int += emotion_state_number[i] * s
                     state_int += 1
+                # elif state_list[-1] == 0:
+                #     continue
                 state_list.append(state_int)
 
         for i, state in enumerate(state_list[1:]):
@@ -256,7 +265,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         user_data[user]['cleaned_text'] = cleaned_text
     dictionary = Dictionary(cleaned_text_full)
     dictionary.filter_extremes(no_above=0.95)
-    
+
     print("Dictionary finish")
 
     result_list = []
@@ -280,7 +289,8 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     #     _build_tfidf_write(record_path, tfidf_model, user, value)
     with Pool(processes=10) as pool:
         for key, value in user_data.items():
-            pool.apply_async(func=_build_tfidf_write, args=(record_path, tfidf_model, key, value))
+            pool.apply_async(func=_build_tfidf_write, args=(
+                record_path, tfidf_model, key, value))
         pool.close()
         pool.join()
 
@@ -387,47 +397,41 @@ def _merge_feature(user, data_folder, suffix_list):
 
 
 if __name__ == '__main__':
-    # label_list = ["anger","anticipation","disgust","fear","joy","sadness","surprise","trust"]
-    # data_type = 'balanced'
-    # for label_index,label in enumerate(label_list):
-    #     os.chdir('/home/xiaobo/emotion_disorder_detection/data/pre-training/tweet_multi_emotion')
-    #     build_binary_tfrecord(['./2018-tweet-emotion-train.txt', './2018-tweet-emotion-valid.txt',
-    #                     './2018-tweet-emotion-test.txt'], '../../TFRecord/tweet_'+label+'/'+data_type,label_index,balanced=True)
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--data_source', choices=[
-                        'data', 'data_small'], type=str, default='data')
-    parser.add_argument('--root_dir', type=str)
-    parser.add_argument('--task', choices=[
-                        'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str, default='build_state_trans')
-    parser.add_argument('--window_size', type=int, default=28)
-    parser.add_argument('--step_size', type=float, default=12)
+    config, _ = get_config()
+    root_dir = config.root_dir
+    data_dir = config.data_dir 
+    data_source = config.data_dir
+    window_size = config.window_size
+    step_size = config.step_size
 
-    args = parser.parse_args()
-    root_dir = args.root_dir
-    data_source = args.data_source
-    window_size = args.window_size
-    step_size = args.step_size
-
-    data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
-    function = args.task
+    data_type_list = ['bipolar', 'depression', 'background']
+    function = config.feature_task
     os.chdir(root_dir)
     if function == 'build_state':
+        suffix_list = ['']
         build_state(data_source, data_type_list, window=window_size *
-                    60 * 60, gap=step_size * 60 * 60, suffix_list=['',''])
+                    60 * 60, gap=step_size * 60 * 60, suffix_list=suffix_list)
+        build_state_trans(data_source, data_type_list, [
+            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=suffix_list)
+        build_state_trans(data_source, data_type_list, [
+            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=suffix_list)
+        build_state_trans(data_source, data_type_list, [
+            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=suffix_list)
 
     elif function == 'build_state_trans':
+        suffix_list = ['']
         build_state_trans(data_source, data_type_list, [
-            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=[''])
+            "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=suffix_list)
         build_state_trans(data_source, data_type_list, [
-            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=[''])
+            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=suffix_list)
         build_state_trans(data_source, data_type_list, [
-            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=[''])
+            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=suffix_list)
     elif function == 'build_tfidf':
-        build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
+        build_tfidf('./'+data_dir+'/user_list/', './'+data_dir+'/reddit/', './'+data_dir+'/feature/content/tf_idf',
                     data_type_list=data_type_list, suffix_list=['.after'])
-        build_tfidf('./data/user_list/', './data/reddit/', './data/feature/content/tf_idf',
-                            data_type_list=data_type_list, suffix_list=[''])
+        build_tfidf('./'+data_dir+'/user_list/', './'+data_dir+'/reddit/', './'+data_dir+'/feature/content/tf_idf',
+                    data_type_list=data_type_list, suffix_list=[''])
     elif function == 'build_state_sequence':
         build_state_sequence(data_source, data_type_list, [
                              "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
@@ -436,5 +440,5 @@ if __name__ == '__main__':
         build_state_sequence(data_source, data_type_list, [
                              "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=['.before', '.after'])
     elif function == 'merge_feature':
-        merge_feature('./data/user_list/', './data/feature/state/state_origin/anger_fear_joy_sadness',
+        merge_feature('./'+data_dir+'/user_list/', './'+data_dir+'/feature/state/state_origin/anger_fear_joy_sadness',
                       data_type_list=data_type_list, suffix_list=['.before', '.after'])

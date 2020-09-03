@@ -184,6 +184,7 @@ class DataLoaderForFeature(object):
                     data[data_split].append((feature.flatten(), type_index))
 
         for i, item in enumerate(data):
+            seed(123)
             shuffle(item)
             for data_point in item:
                 split_data[i][0].append(data_point[0])
@@ -191,60 +192,15 @@ class DataLoaderForFeature(object):
         self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
     def _read_data(self, user, suffix, user_feature_folder, data_split):
-        feature_file = user + suffix + '.npz'
+        # feature_file = user + suffix + '.npz'
+        # feature_path = os.path.join(
+        #     user_feature_folder, feature_file)
+        # feature = np.load(feature_path)['data']
+        feature_file = user + suffix + '.npy'
         feature_path = os.path.join(
             user_feature_folder, feature_file)
-        feature = np.load(feature_path)['data']
+        feature = np.load(feature_path)
         return data_split, feature
-
-class DataLoaderForState(object):
-    def __init__(self, data_type_list=['bipolar', 'depression', 'background'], data_size=[200, 100, 100]):
-        self.data_type_list = data_type_list
-        self.class_number = len(data_type_list)
-        self.data_size = data_size
-        self.train_dataset = []
-        self.valid_dataset = []
-        self.test_dataset = []
-        self.build_dataset(self.data_type_list, self.data_size)
-
-    def build_dataset(self, data_type_list, data_size):
-        data = []
-        split_data = [[[], []], [[], []], [[], []]]
-        for type_index, data_type in enumerate(data_type_list):
-            data.append([])
-            for type in data_type:
-                user_list = []
-                user_list_file = './data/user_list/' + type + '_user_list'
-                user_state_folder = './data/state/' + type
-                with open(user_list_file, mode='r', encoding='utf8') as fp:
-                    for line in fp.readlines():
-                        user, _ = line.strip().split(' [info] ')
-                        user_list.append(user)
-                for index, user in enumerate(user_list):
-                    state_list = []
-                    state_prob = np.array(
-                        [[0.0 for _ in range(17)] for i in range(17)])
-                    user_state_path = os.path.join(user_state_folder, user)
-                    with open(user_state_path, mode='r', encoding='utf8') as fp:
-                        for line in fp.readlines():
-                            state = [int(s) for s in line.strip().split(',')]
-                            state_int = 0
-                            if state != [-1, -1, -1, -1]:
-                                for i, s in enumerate(state):
-                                    state_int += pow(2, i) * s
-                                state_int += 1
-                            state_list.append([state_int])
-                    data[type_index].append(state_list)
-        split_number = 0
-        for i, number in enumerate(data_size):
-            for type, single_type_data in enumerate(data):
-                seed(123)
-                shuffle(single_type_data)
-                for state in single_type_data[split_number: split_number + number]:
-                    split_data[i][0].append(state)
-                    split_data[i][1].append(type)
-            split_number += number
-        self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
 
 def test():
