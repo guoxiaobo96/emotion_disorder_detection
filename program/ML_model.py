@@ -125,11 +125,11 @@ class MLModel(object):
                 ground, pred, average='macro')
         if 'confusion' in self._metrics_list:
             _metrics['confusion_matrix'] = confusion_matrix(ground, pred)
-        if 'roc_auc' in self._metrics_list:
-            if len(pred_score[0]) > 2:
-                _metrics['roc_auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
-            else:
-                _metrics['roc_auc'] = roc_auc_score(ground, pred_score[:,1])
+        # if 'roc_auc' in self._metrics_list:
+        #     if len(pred_score[0]) > 2:
+        #         _metrics['roc_auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
+        #     else:
+        #         _metrics['roc_auc'] = roc_auc_score(ground, pred_score[:,1])
         return _metrics
 
     def _load_data(self, data_loader):

@@ -12,6 +12,7 @@ data_small/reddit/*
 data_small/feature/*
 data_small/TFRecord/*
 data_test/*
+data_back/*
 
 data/reddit/*
 data/feature/*

@@ -247,8 +247,8 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     for data_type in data_type_list:
         _, single_user_list = _read_user_list(
             user_file_folder, data_path, data_type, suffix_list)
-        for user in single_user_list:
-            user_data[user] = {'data_type': data_type}
+        for user, split_type in single_user_list.items():
+            user_data[user] = {'data_type': data_type,'split_type':split_type}
 
     cleaned_text_full = []
     result_list = []
@@ -261,8 +261,9 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         pool.join()
     for result in result_list:
         _, user, cleaned_text = result.get()
-        cleaned_text_full.append(cleaned_text)
         user_data[user]['cleaned_text'] = cleaned_text
+        if user_data[user]['split_type'] in ['train', 'valid']:
+            cleaned_text_full.append(cleaned_text)
     dictionary = Dictionary(cleaned_text_full)
     dictionary.filter_extremes(no_above=0.95)
 
@@ -287,7 +288,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
 
     # for user, value in user_data.items():
     #     _build_tfidf_write(record_path, tfidf_model, user, value)
-    with Pool(processes=10) as pool:
+    with Pool(processes=4) as pool:
         for key, value in user_data.items():
             pool.apply_async(func=_build_tfidf_write, args=(
                 record_path, tfidf_model, key, value))
@@ -298,7 +299,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
 
 
 def _read_user_list(user_file_folder, data_path, data_type, suffix_list):
-    user_set = set()
+    user_dict = dict()
     user_file = os.path.join(user_file_folder, data_type) + '_user_list'
     data_folder = os.path.join(data_path, data_type)
     if data_type == 'background':
@@ -306,10 +307,11 @@ def _read_user_list(user_file_folder, data_path, data_type, suffix_list):
     with open(user_file, mode='r', encoding='utf8') as fp:
         for line in fp.readlines():
             user = line.split(' [info] ')[0]
+            split_type = line.strip().split(' [info] ')[-1]
             for suffix in suffix_list:
-                user_set.add(user+suffix)
+                user_dict[user+suffix] = split_type
 
-    return data_type, user_set
+    return data_type, user_dict
 
 
 def _build_tfidf_clean(data_type, data_folder, user):
@@ -317,6 +319,8 @@ def _build_tfidf_clean(data_type, data_folder, user):
     stop_words_set = set(stopwords.words('english'))
     stop_words_set.update(
         ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
+    stop_words_set.update(
+        ['bipolar', 'anxiety', 'depression', 'emotion', 'emotional','disorder'])
     data_folder = os.path.join(data_folder, data_type)
     cleaned_text = []
 
@@ -405,11 +409,11 @@ if __name__ == '__main__':
     window_size = config.window_size
     step_size = config.step_size
 
-    data_type_list = ['bipolar', 'depression', 'background']
+    data_type_list = ['bipolar', 'depression', 'background', 'anxiety']
     function = config.feature_task
     os.chdir(root_dir)
     if function == 'build_state':
-        suffix_list = ['']
+        suffix_list = ['.before']
         build_state(data_source, data_type_list, window=window_size *
                     60 * 60, gap=step_size * 60 * 60, suffix_list=suffix_list)
         build_state_trans(data_source, data_type_list, [
@@ -429,9 +433,9 @@ if __name__ == '__main__':
             "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=suffix_list)
     elif function == 'build_tfidf':
         build_tfidf('./'+data_dir+'/user_list/', './'+data_dir+'/reddit/', './'+data_dir+'/feature/content/tf_idf',
-                    data_type_list=data_type_list, suffix_list=['.after'])
-        build_tfidf('./'+data_dir+'/user_list/', './'+data_dir+'/reddit/', './'+data_dir+'/feature/content/tf_idf',
-                    data_type_list=data_type_list, suffix_list=[''])
+                    data_type_list=data_type_list, suffix_list=['.before'])
+        # build_tfidf('./'+data_dir+'/user_list/', './'+data_dir+'/reddit/', './'+data_dir+'/feature/content/tf_idf',
+        #             data_type_list=data_type_list, suffix_list=[''])
     elif function == 'build_state_sequence':
         build_state_sequence(data_source, data_type_list, [
                              "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=['.before', '.after'])
