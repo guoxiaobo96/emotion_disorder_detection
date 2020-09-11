@@ -61,7 +61,7 @@ misc_arg = add_argument_group('Misc')
 train_arg.add_argument('--task', type=str, default='label_emotion')
 misc_arg.add_argument('--model_name', type=str, default='weighted')
 misc_arg.add_argument('--root_dir', type=str,
-                      default='/home/xiaobo/emotion_disorder_detection')
+                      default='/data/xiaobo/emotion_disorder_detection')
 misc_arg.add_argument('--log_dir', type=str, default='log')
 misc_arg.add_argument('--load_path', type=str, default='tweet_anger/best')
 misc_arg.add_argument('--emotion_type', type=str, default='anger')
