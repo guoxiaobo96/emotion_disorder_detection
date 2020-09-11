@@ -9,6 +9,10 @@ import pickle
 from sklearn import linear_model, svm, ensemble
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, roc_auc_score
 from multiprocessing import Pool
+import statsmodels.api as sm
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class MLModel(object):
     def __init__(self, data_loader, model_path, model_name, import_metric = 'accuracy', metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion','roc_auc'], multi_processing=True, load_model = False, verbose=False, cross_validation = False):
@@ -26,11 +30,14 @@ class MLModel(object):
         self._cross_validation = cross_validation
         self._metric = import_metric
 
+        self._window = data_loader.window
+        self._gap = data_loader.gap
+
 
     def fit(self, processing_number=1, random_number=3):
         if not self._cross_validation and self._load_model_mark and os.path.exists(os.path.join(self._model_path, self._model_name + '_model')):
             change_mark = False
-            self._load_model()
+            self._load_model(from_best=True)
             self._best_model['metrics'] = self._valid()
         for index, hyper_parameters in enumerate(self._hyper_parameters_list):
             results = []
@@ -70,14 +77,11 @@ class MLModel(object):
                     self._best_model['hyper_parameters']['random_seed'] = random_seed
                     self._save_model()
         if not self._cross_validation:
-            self._load_model()
+            self._load_model(from_best=not change_mark)
             self.test()
-            if change_mark:
-                self._save_model()
+            self._save_model()
         else:
             print('%s is : %.3f' % (self._metric, self._best_model['metrics'][self._metric]))
-
-    
 
     def _train_model(self, data):
         try:
@@ -125,30 +129,43 @@ class MLModel(object):
                 ground, pred, average='macro')
         if 'confusion' in self._metrics_list:
             _metrics['confusion_matrix'] = confusion_matrix(ground, pred)
-        # if 'roc_auc' in self._metrics_list:
-        #     if len(pred_score[0]) > 2:
-        #         _metrics['roc_auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
-        #     else:
-        #         _metrics['roc_auc'] = roc_auc_score(ground, pred_score[:,1])
+        if 'roc_auc' in self._metrics_list:
+            if len(pred_score[0]) > 2:
+                _metrics['roc_auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
+            else:
+                _metrics['roc_auc'] = roc_auc_score(ground, pred_score[:,1])
         return _metrics
 
     def _load_data(self, data_loader):
         self._data = data_loader
 
-    def _load_model(self):
-        with open(os.path.join(self._model_path, self._model_name+'_model'), "rb") as fp:
+    def _load_model(self, from_best=False):
+        if self._window != 0 and self._gap != 0 and from_best==False:
+            model_path = os.path.join(self._model_path, str(self._window) + '_' + str(self._gap))
+        else:
+            model_path = self._model_path
+
+        with open(os.path.join(model_path, self._model_name+'_model'), "rb") as fp:
             self.model = pickle.load(fp)
 
     def _save_model(self):
-        json_file = os.path.join(self._model_path, self._model_name + '_result')
+        if self._window != 0 and self._gap != 0:
+            model_path = os.path.join(self._model_path, str(self._window) + '_' + str(self._gap))
+        else:
+            model_path = self._model_path
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+        json_file = os.path.join(model_path, self._model_name + '_result')
         
-        model_file = os.path.join(self._model_path, self._model_name + '_model')
+        model_file = os.path.join(model_path, self._model_name + '_model')
 
         with open(json_file, mode='w', encoding='utf8') as fp:
             for key, value in self._best_model['metrics'].items():
                 fp.write(key + ' : ' + str(value) + '\n')
             for key, value in self._best_model['hyper_parameters'].items():
                 fp.write(key + ' : ' + str(value) + '\n')
+            fp.write('window : ' + str(self._window) + '\n')
+            fp.write('gap : ' + str(self._gap) + '\n')
         if not self._cross_validation:
             with open(model_file, mode='wb') as fp:
                 pickle.dump(self.model, fp, protocol=4)
@@ -184,6 +201,57 @@ class MLModel(object):
                 metrics = None
         return (metrics, self.model, random_seed)
 
+    def _build_analysis_model(self):
+        pass
+
+    def analysis(self):
+        self._build_analysis_model()
+        if self._window != 0 and self._gap != 0:
+            model_path = os.path.join(self._model_path, str(self._window) + '_' + str(self._gap))
+        else:
+            model_path = self._model_path
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+
+        train_feature, train_label = self._data.train_dataset
+        valid_feature, valid_label = self._data.valid_dataset
+        test_feature, test_label = self._data.test_dataset
+
+        train_dataset = pd.DataFrame(train_feature)
+        train_dataset['label'] = np.array(train_label)
+        valid_dataset = pd.DataFrame(valid_feature)
+        valid_dataset['label'] = np.array(valid_label)
+        test_dataset = pd.DataFrame(test_feature)
+        test_dataset['label'] = np.array(test_label)
+
+        # train_dataset = pd.concat(self._data.train_dataset, keys=['feature','label'], axis=1)
+        # valid_dataset = pd.concat(self._data.train_dataset, keys=['feature','label'], axis=1)
+        # test_dataset = pd.concat(self._data.test_dataset, keys=['feature','label'], axis=1)
+        
+        data = pd.concat([train_dataset, valid_dataset, test_dataset])
+        data = data.sample(frac=1)
+
+        label = data[['label']]
+        feature = data.drop(columns=['label'])
+        feature = sm.add_constant(feature, has_constant='add')
+        model = self._analysis_model(label, feature.astype(float)).fit(maxiter=200)
+
+        summary = model.summary2()
+        summary = summary.tables[1]
+        importance = np.array(summary['P>|z|'])[1:]
+        importance = np.where(importance > 0.05,1,importance)
+        # importance =  1 - importance
+        importance = importance.reshape((17, 17))
+        sns.heatmap(importance, vmin=0, vmax=1)
+        plt.show()
+        
+
+
+        report_file = os.path.join(model_path, self._model_name + '_analysis')
+        with open(report_file, mode='w') as fp:
+            fp.write(model.summary().as_text())
+
+
 class LogisticRegressionCV(MLModel):
     
     def _generate_hyper_parameters(self):
@@ -200,6 +268,9 @@ class LogisticRegressionCV(MLModel):
     def _build_model(self, hyper_parameters, random_state):
         self.model=linear_model.LogisticRegressionCV(
             random_state=random_state, max_iter=1000, **hyper_parameters)
+
+    def _build_analysis_model(self):
+        self._analysis_model = sm.Logit
 
 class SVM(MLModel):
     def _generate_hyper_parameters(self):
@@ -229,3 +300,4 @@ class RandomForest(MLModel):
 
     def _build_model(self, hyper_parameters, random_state):
         self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_estimators=100)
+

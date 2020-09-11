@@ -38,8 +38,9 @@ parser.add_argument('--train_suffix', choices=[
                     '.before', '.after', ''], type=str, default='')
 parser.add_argument('--test_suffix', choices=[
                     '.before', '.after', ''], type=str, default='')
-parser.add_argument('--analysis_task', choices=['tfidf', 'state'], type=str)
+parser.add_argument('--analysis_task', choices=['tfidf', 'state','analysis_state'], type=str)
 data_arg.add_argument('--load_model', type=_str2bool, default=False)
+parser.add_argument('--model', choices=['SVM','logReg','RF'], type=str)
 
 
 

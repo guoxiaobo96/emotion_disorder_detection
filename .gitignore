@@ -13,6 +13,7 @@ data_small/feature/*
 data_small/TFRecord/*
 data_test/*
 data_back/*
+data_new/*
 
 data/reddit/*
 data/feature/*
@@ -24,3 +25,4 @@ data/reddit_back/*
 data/background/*
 
 log_back/*
+temp.py

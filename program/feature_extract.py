@@ -89,6 +89,7 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
                 curve_state.append(state)
                 start_time += gap
             with open(state_info_file, mode='w', encoding='utf8') as fp:
+                fp.write("window : %d,gap : %d\n" % (window/3600, gap/3600))
                 for state in curve_state:
                     fp.write(str(state[0]) + ',' + str(state[1]) +
                              ',' + str(state[2]) + ',' + str(state[3]) + '\n')
@@ -178,7 +179,7 @@ def build_state_trans(data_source, data_type_list, emotion_list, emotion_state_n
                 user_list[user] = data_type
     # for user, data_type in user_list.items():
     #     _build_state_trans(user, data_source, data_type, emotion_list,
-    #                            emotion_state_number, suffix_list,)
+    #                            emotion_state_number, suffix_list)
 
     with Pool(processes=10) as pool:
         for user, data_type in user_list.items():
@@ -205,17 +206,23 @@ def _build_state_trans(user, data_source, data_type, emotion_list, emotion_state
         user_state_path = os.path.join(user_state_folder, user + suffix)
         if not os.path.exists(user_state_path):
             continue
+        window = 0
+        gap = 0
         with open(user_state_path, mode='r', encoding='utf8') as fp:
             for line in fp.readlines():
-                state = [int(s) for s in line.strip().split(',')]
-                state_int = 0
-                if state != [-1, -1, -1, -1]:
-                    for i, s in enumerate(state):
-                        state_int += emotion_state_number[i] * s
-                    state_int += 1
-                # elif state_list[-1] == 0:
-                #     continue
-                state_list.append(state_int)
+                if window == 0 and gap == 0:
+                    window = int(line.strip().split(',')[0].split(' : ')[1])
+                    gap = int(line.strip().split(',')[1].split(' : ')[1])
+                else:
+                    state = [int(s) for s in line.strip().split(',')]
+                    state_int = 0
+                    if state != [-1, -1, -1, -1]:
+                        for i, s in enumerate(state):
+                            state_int += emotion_state_number[i] * s
+                        state_int += 1
+                    # elif state_list[-1] == 0:
+                    #     continue
+                    state_list.append(state_int)
 
         for i, state in enumerate(state_list[1:]):
             state_prob[state_list[i - 1]][state] += 1.0
@@ -230,7 +237,9 @@ def _build_state_trans(user, data_source, data_type, emotion_list, emotion_state
         state_trans_file = user + suffix + '.npz'
         target_file = os.path.join(
             user_state_trans_folder, state_trans_file)
-        np.savez_compressed(target_file, data=state_prob)
+        window = np.array([window])
+        gap = np.array([gap])
+        np.savez_compressed(target_file, data=state_prob, window=window, gap=gap)
 
 
 def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix_list=['']):
@@ -248,7 +257,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         _, single_user_list = _read_user_list(
             user_file_folder, data_path, data_type, suffix_list)
         for user, split_type in single_user_list.items():
-            user_data[user] = {'data_type': data_type,'split_type':split_type}
+            user_data[user] = {'data_type': data_type, 'split_type': split_type}
 
     cleaned_text_full = []
     result_list = []
@@ -271,27 +280,26 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
 
     result_list = []
     corpous_full = []
-    with Pool(processes=10) as pool:
-        for user, value in user_data.items():
-            result = pool.apply_async(func=_build_tfidf_doc2bow, args=(
-                dictionary, user, value['cleaned_text']))
-            result_list.append(result)
-        pool.close()
-        pool.join()
-    for result in result_list:
-        user, corpous = result.get()
+    for user, value in user_data.items():
+        user, corpous = _build_tfidf_doc2bow(dictionary, user, value['cleaned_text'])
         user_data[user]['corpous'] = corpous
         corpous_full.append(corpous)
     tfidf_model = TfidfModel(corpous_full, dictionary=dictionary)
 
     print('Label Finish')
 
-    # for user, value in user_data.items():
-    #     _build_tfidf_write(record_path, tfidf_model, user, value)
-    with Pool(processes=4) as pool:
-        for key, value in user_data.items():
+    split_data = dict()
+    for user, value in user_data.items():
+        if value['data_type'] not in split_data:
+            split_data[value['data_type']] = dict()
+        split_data[value['data_type']][user]=value
+
+    # for _, data in split_data.items():
+    #     _build_tfidf_write(record_path, tfidf_model, data)
+    with Pool(processes=len(split_data)) as pool:
+        for _, data in split_data.items():
             pool.apply_async(func=_build_tfidf_write, args=(
-                record_path, tfidf_model, key, value))
+                record_path, tfidf_model, data))
         pool.close()
         pool.join()
 
@@ -357,15 +365,16 @@ def _build_tfidf_doc2bow(dictionary, user, user_data):
     return user, corpus
 
 
-def _build_tfidf_write(record_path, tfidf_model, user, user_data):
-    len_vectorize = len(tfidf_model.term_lens)
-    tf_idf = tfidf_model[user_data['corpous']]
-    tf_idf_vectorize = np.zeros(len_vectorize)
-    for key, value in tf_idf:
-        tf_idf_vectorize[int(key)] = value
-    record_folder = os.path.join(record_path, user_data['data_type'])
-    record_file = os.path.join(record_folder, user+'.npz')
-    np.savez_compressed(record_file, data=tf_idf_vectorize)
+def _build_tfidf_write(record_path, tfidf_model, user_data):
+    for user,data in user_data.items():
+        len_vectorize = len(tfidf_model.term_lens)
+        tf_idf = tfidf_model[data['corpous']]
+        tf_idf_vectorize = np.zeros(len_vectorize)
+        for key, value in tf_idf:
+            tf_idf_vectorize[int(key)] = value
+        record_folder = os.path.join(record_path, data['data_type'])
+        record_file = os.path.join(record_folder, user+'.npz')
+        np.savez_compressed(record_file, data=tf_idf_vectorize)
 
 
 def merge_feature(user_file_folder, data_path, data_type_list, suffix_list):
@@ -424,7 +433,7 @@ if __name__ == '__main__':
             "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=suffix_list)
 
     elif function == 'build_state_trans':
-        suffix_list = ['']
+        suffix_list = ['.before']
         build_state_trans(data_source, data_type_list, [
             "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=suffix_list)
         build_state_trans(data_source, data_type_list, [

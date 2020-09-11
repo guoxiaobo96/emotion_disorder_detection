@@ -133,10 +133,9 @@ class DataLoaderForReddit(object):
 
 class DataLoaderForFeature(object):
     def __init__(self, data_source, feature_type, feature_name, train_suffix='', test_suffix='', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']],
-                 cross_validation=False, data_size=[1510, 216, 432]):
+                 cross_validation=False):
         self.data_type_list = data_type_list
         self.class_number = len(data_type_list)
-        self.data_size = data_size
         self.train_dataset = []
         self.valid_dataset = []
         self.test_dataset = []
@@ -145,9 +144,9 @@ class DataLoaderForFeature(object):
         self._train_suffix = train_suffix
         self._test_suffix = test_suffix
         self._data_source = data_source
-        self.build_dataset(self.data_type_list, self.data_size)
+        self.build_dataset(self.data_type_list)
 
-    def build_dataset(self, data_type_list, data_size):
+    def build_dataset(self, data_type_list):
         data = [[], [], []]
         split_data = [[[], []] for _ in range(3)]
         for type_index, data_type in enumerate(data_type_list):
@@ -191,7 +190,9 @@ class DataLoaderForFeature(object):
                     pool.join()
 
                 for result in result_list:
-                    data_split, feature = result.get()
+                    data_split, feature, window, gap = result.get()
+                    self.window = window
+                    self.gap = gap
                     if data_split == 'train':
                         data[0].append((feature.flatten(), type_index))
                     elif data_split == 'valid':
@@ -208,88 +209,22 @@ class DataLoaderForFeature(object):
         self.train_dataset, self.valid_dataset, self.test_dataset = split_data
 
     def _read_data(self, user, suffix, user_feature_folder, data_split):
+        window = 0
+        gap = 0
         feature_file = user + suffix + '.npz'
         feature_path = os.path.join(
             user_feature_folder, feature_file)
-        feature = np.load(feature_path)['data']
+        data = np.load(feature_path)
+        feature = data['data']
+        if 'window' in data:
+            window = data['window'].tolist()[0]
+        if 'gap' in data:
+            gap = data['gap'].tolist()[0]
         # feature_file = user + suffix + '.npy'
         # feature_path = os.path.join(
         #     user_feature_folder, feature_file)
         # feature = np.load(feature_path)
-        return data_split, feature
-
-
-class DataLoaderForFeatureOld(object):
-    def __init__(self, data_source, feature_type, feature_name, train_suffix='', test_suffix='', data_type_list=[['bipolar'], ['depression'], ['anxiety'], ['background']],
-                 cross_validation=False, data_size=[1510, 216, 432]):
-        self.data_type_list = data_type_list
-        self.class_number = len(data_type_list)
-        self.data_size = data_size
-        self.train_dataset = []
-        self.valid_dataset = []
-        self.test_dataset = []
-        self._feature_type = feature_type + '/' + feature_name
-        self._cross_validation = cross_validation
-        self._train_suffix = train_suffix
-        self._test_suffix = test_suffix
-        self._data_source = data_source
-        self.build_dataset(self.data_type_list, self.data_size)
-
-    def build_dataset(self, data_type_list, data_size):
-        data = [[], [], []]
-        split_data = [[[], []] for _ in range(3)]
-        for type_index, data_type in enumerate(data_type_list):
-            for type in data_type:
-                user_list = []
-                user_list_file = './'+self._data_source+'/user_list/' + type + '_user_list'
-                user_feature_folder = './'+self._data_source + \
-                    '/feature/' + self._feature_type + '/' + type
-                with open(user_list_file, mode='r', encoding='utf8') as fp:
-                    for line in fp.readlines():
-                        user = line.strip().split(' [info] ')[0]
-                        user_list.append(user)
-                seed(123)
-                shuffle(user_list)
-                split_number = 0
-                result_list = []
-                with Pool(processes=10) as pool:
-                    for i, number in enumerate(data_size):
-                        for index, user in enumerate(user_list[split_number: split_number + number]):
-                            if data_type == 'background':
-                                suffix = ''
-                            else:
-                                if i == 0:
-                                    suffix = self._train_suffix
-                                else:
-                                    suffix = self._test_suffix
-                            result = pool.apply_async(func=self._read_data, args=(
-                                user, suffix, user_feature_folder, i))
-                            result_list.append(result)
-                        split_number += number
-                    pool.close()
-                    pool.join()
-                for result in result_list:
-                    data_split, feature = result.get()
-                    data[data_split].append((feature.flatten(), type_index))
-
-        for i, item in enumerate(data):
-            seed(123)
-            shuffle(item)
-            for data_point in item:
-                split_data[i][0].append(data_point[0])
-                split_data[i][1].append(data_point[1])
-        self.train_dataset, self.valid_dataset, self.test_dataset = split_data
-
-    def _read_data(self, user, suffix, user_feature_folder, data_split):
-        feature_file = user + suffix + '.npz'
-        feature_path = os.path.join(
-            user_feature_folder, feature_file)
-        feature = np.load(feature_path)['data']
-        # feature_file = user + suffix + '.npy'
-        # feature_path = os.path.join(
-        #     user_feature_folder, feature_file)
-        # feature = np.load(feature_path)
-        return data_split, feature
+        return data_split, feature, window, gap
 
 
 def test():

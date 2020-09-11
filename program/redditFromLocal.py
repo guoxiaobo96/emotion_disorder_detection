@@ -34,7 +34,7 @@ anxiety_banned_list = ['bipolar', 'depression']
 
 
 data_path_list = ['f:/reddit/comments', 'f:/reddit/submissions']
-user_list_folder = './data/user_list'
+user_list_folder = './data_back/user_list'
 
 
 class Zreader:
@@ -232,7 +232,6 @@ def remove_duplicate_user(user_list_folder, user_file_list):
 
 
 def get_data(data_path_list, user_list_folder, user_file_list, target_folder, checked_file):
-    lock = Manager().Lock()
     checked_file_list = set()
     target_folder_list = []
     with open(checked_file, mode='r') as fp:
@@ -248,7 +247,7 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
         user_info.append(user_info_single)
         target_folder_list.append(os.path.join(target_folder, data_type))
         if not os.path.exists(os.path.join(target_folder, data_type)):
-            os.mkdir(os.path.join(target_folder, data_type))
+            os.makedirs(os.path.join(target_folder, data_type))
 
     data_file_list = dict()
 
@@ -266,8 +265,16 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
 
             data_file_list[time_period].append(os.path.join(data_path, file))
     time_list = sorted(data_file_list.keys())
+    results = []
+    # for time_period in time_list:
+    #     for file in data_file_list[time_period]:
+    #         if file in checked_file_list:
+    #             continue
+    #         result = _get_data_single_file(file, user_info, target_folder_list, checked_file)
+    #         results.append(result)
+
+    lock = Manager().Lock()
     with Pool(processes=6) as pool:
-        results = []
         for time_period in time_list:
             for file in data_file_list[time_period]:
                 if file in checked_file_list:
@@ -281,7 +288,7 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
             result.get()
 
 
-def _get_data_single_file(file, user_info, target_folder_list, checked_file, lock):
+def _get_data_single_file(file, user_info, target_folder_list, checked_file, lock=None):
     if file.endswith('.bz2'):
         fp = bz2.open(file, mode='r')
     elif file.endswith('.zst'):
@@ -291,10 +298,13 @@ def _get_data_single_file(file, user_info, target_folder_list, checked_file, loc
     else:
         print('File type error with %s' % file)
     start_time = time.time()
+    results = list()
     if file.endswith('.zst'):
         for line in fp.readlines():
             try:
-                _get_data_single_line(line, user_info, target_folder_list, lock)
+                result = _get_data_single_line(line, user_info, target_folder_list, lock)
+                if result is not None:
+                    results.append(result)
             except:
                 continue
     else:
@@ -303,15 +313,24 @@ def _get_data_single_file(file, user_info, target_folder_list, checked_file, loc
             if not line:
                 break
             try:
-                _get_data_single_line(line, user_info, target_folder_list. lock)
+                result = _get_data_single_line(line, user_info, target_folder_list, lock)
+                if result is not None:
+                    results.append(result)
             except:
                 continue
-    lock.acquire()
+    if lock is not None:
+        lock.acquire()
+    for result in results:
+        target_path = result['path']
+        write_data = result['data']
+        with open(target_path, mode='a') as fp:
+            fp.write(json.dumps(write_data) + '\n')
     with open(checked_file, mode='a') as fp:
         fp.write(file + '\n')
     print("%s finished at %s with %d seconds" % (file, time.strftime(
         "%H:%M:%S", time.localtime()), time.time() - start_time))
-    lock.release()
+    if lock is not None:
+        lock.release()
 
 
 def _get_data_single_line(line, user_info, target_folder_list, lock):
@@ -337,13 +356,22 @@ def _get_data_single_line(line, user_info, target_folder_list, lock):
             write_data = {id: {"text": text, "subreddit": subreddit,
                                "time": time_stamp, "permalink": permalink}}
             target_path = os.path.join(target_folder_list[index], user)
-            if time_stamp < user_info_single[user]['time']:
+            if user_info_single[user]['time'] == '0':
+                target_path = target_path
+            elif time_stamp < user_info_single[user]['time']:
                 target_path += '.before'
             else:
                 target_path += '.after'
-            with open(target_path, mode='a') as fp:
-                fp.write(json.dumps(write_data) + '\n')
-            break
+
+            return {'path':target_path,'data':write_data}
+            # if lock is not None:
+            #     lock.acquire()
+            # with open(target_path, mode='a') as fp:
+            #     fp.write(json.dumps(write_data) + '\n')
+            # if lock is not None:
+            #     lock.release()
+            # break
+    return None
 
 
 def read_user_list(user_list_folder, keyword):
@@ -534,7 +562,7 @@ def main():
     # get_background_user(data_path_list, user_list_folder, [
     #                     'bipolar_user_list_full', 'anxiety_user_list_full', 'depression_user_list_full'], './temp/checked_file')
     get_data(data_path_list, user_list_folder, [
-             'background_user_list_full'], './data/reddit', './temp/checked_file')
+             'background_user_list_back'], './data_new/reddit', './temp/checked_file')
 
 
 if __name__ == '__main__':
