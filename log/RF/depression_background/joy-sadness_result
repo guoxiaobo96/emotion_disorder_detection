@@ -1,8 +1,0 @@
-accuracy : 0.7743055555555556
-micro_f1_score : 0.7743055555555556
-macro_f1_score : 0.7742979968411365
-confusion_matrix : [[332 100]
- [ 95 337]]
-criterion : entropy
-max_features : auto
-random_seed : 6

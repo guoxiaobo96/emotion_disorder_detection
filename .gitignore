@@ -6,11 +6,15 @@ program/temp.py
 
 log/*/*/log/*
 log/*/*/model/*
-log/*/*/tf-idf_model
+log/*/*/*
 
 data_small/reddit/*
 data_small/feature/*
 data_small/TFRecord/*
+data_test/*
+data_back/*
+data_new/*
+
 data/reddit/*
 data/feature/*
 data/TFRecord/*
@@ -19,3 +23,6 @@ data_pretraining/*
 temp/*
 data/reddit_back/*
 data/background/*
+
+log_back/*
+temp.py
