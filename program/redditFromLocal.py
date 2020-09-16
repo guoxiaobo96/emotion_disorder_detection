@@ -266,6 +266,7 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
             data_file_list[time_period].append(os.path.join(data_path, file))
     time_list = sorted(data_file_list.keys())
     results = []
+
     # for time_period in time_list:
     #     for file in data_file_list[time_period]:
     #         if file in checked_file_list:
@@ -284,8 +285,6 @@ def get_data(data_path_list, user_list_folder, user_file_list, target_folder, ch
                 results.append(result)
         pool.close()
         pool.join()
-        for result in results:
-            result.get()
 
 
 def _get_data_single_file(file, user_info, target_folder_list, checked_file, lock=None):
@@ -555,14 +554,14 @@ def main():
     #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], 'checked_file')
     # remove_duplicate_user(user_list_folder, [
     #                       'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'])
-    # get_data(data_path_list, user_list_folder, [
-    #          'bipolar_user_list', 'anxiety_user_list', 'depression_user_list'], './data/full_reddit', 'checked_file')
+    get_data(data_path_list, user_list_folder, [
+             'bipolar_user_list_back', 'anxiety_user_list_back', 'depression_user_list_back'], './data_new/reddit', './temp/checked_file')
     # get_popular_subreddit('./data/full_reddit',
     #                       ['anxiety', 'bipolar', 'depression'], 'checked_file')
     # get_background_user(data_path_list, user_list_folder, [
     #                     'bipolar_user_list_full', 'anxiety_user_list_full', 'depression_user_list_full'], './temp/checked_file')
-    get_data(data_path_list, user_list_folder, [
-             'background_user_list_back'], './data_new/reddit', './temp/checked_file')
+    # get_data(data_path_list, user_list_folder, [
+    #          'background_user_list_back'], './data_new/reddit', './temp/checked_file')
 
 
 if __name__ == '__main__':

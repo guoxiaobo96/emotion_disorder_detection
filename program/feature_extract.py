@@ -10,6 +10,7 @@ from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 from multiprocessing import Pool
 import os
+import string
 from config import get_config
 
 DEBUG = False
@@ -31,8 +32,6 @@ def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
                 user_list[user] = data_type
 
     # for user, data_type in user_list.items():
-    #     if user == 'starter_kit':
-    #         print('test')
     #     _build_state(user, data_source, data_type, window, gap, suffix_list)
 
     with Pool(processes=10) as pool:
@@ -54,7 +53,7 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
         try:
             user_info_file = os.path.join(user_text_folder, user + suffix)
             if not os.path.exists(user_info_file):
-                print(user)
+                print("%d doesn't exists" % user_info_file)
                 continue
             state_info_file = os.path.join(
                 user_state_folder, user + suffix)
@@ -66,7 +65,7 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
                     for key in info:
                         value = info[key]
                         states = [value["anger"], value["fear"],
-                                  value["joy"], value["sadness"]]
+                                    value["joy"], value["sadness"]]
                         state_list[int(value['time'])] = [
                             min(int(state), 1) for state in states]
             time_list = sorted(state_list.keys())
@@ -92,7 +91,7 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
                 fp.write("window : %d,gap : %d\n" % (window/3600, gap/3600))
                 for state in curve_state:
                     fp.write(str(state[0]) + ',' + str(state[1]) +
-                             ',' + str(state[2]) + ',' + str(state[3]) + '\n')
+                                ',' + str(state[2]) + ',' + str(state[3]) + '\n')
         except IndexError:
             print(user)
             continue
@@ -271,7 +270,7 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     for result in result_list:
         _, user, cleaned_text = result.get()
         user_data[user]['cleaned_text'] = cleaned_text
-        if user_data[user]['split_type'] in ['train', 'valid']:
+        if user_data[user]['split_type'] in ['train']:
             cleaned_text_full.append(cleaned_text)
     dictionary = Dictionary(cleaned_text_full)
     dictionary.filter_extremes(no_above=0.95)
@@ -283,7 +282,8 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     for user, value in user_data.items():
         user, corpous = _build_tfidf_doc2bow(dictionary, user, value['cleaned_text'])
         user_data[user]['corpous'] = corpous
-        corpous_full.append(corpous)
+        if user_data[user]['split_type'] in ['train']:
+            corpous_full.append(corpous)
     tfidf_model = TfidfModel(corpous_full, dictionary=dictionary)
 
     print('Label Finish')
@@ -345,8 +345,10 @@ def _build_tfidf_clean(data_type, data_folder, user):
                         text = value['text'].strip().split(' ')
 
                         for word in text:
-                            word = word.replace('.', '').replace(
-                                ',', '').replace('?', '')
+                            table = str.maketrans('', '', string.punctuation)
+                            word = word.translate(table)
+                            word = word.replace('“', '').replace(
+                                '’', '').replace('”', '').replace('‘', '')
                             try:
                                 if word.lower() in stop_words_set:
                                     continue
@@ -418,7 +420,7 @@ if __name__ == '__main__':
     window_size = config.window_size
     step_size = config.step_size
 
-    data_type_list = ['bipolar', 'depression', 'background', 'anxiety']
+    data_type_list = ['bipolar', 'depression', 'anxiety', 'background']
     function = config.feature_task
     os.chdir(root_dir)
     if function == 'build_state':

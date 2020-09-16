@@ -15,21 +15,20 @@ def train_trans_prob(model_type, data_source, feature_name, train_suffix, test_s
     if cross_validation:
         model_name = model_name + '_cross_validation'
     feature_type = 'state/state_trans'
-    # print('multi-class : ')
-    # data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[['bipolar'], ['depression'], ['anxiety'], [
-    #     'background']], cross_validation=cross_validation)
-    # model = model_type(data_loader, model_path=model_path + '/bipolar_depression_anxiety_background', model_name=model_name,
-    #                    load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
-    # model.fit(processing_number=processing_number, random_number=random_number)
-    # print('\n')
+    print('multi-class : ')
+    data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[['bipolar'], ['depression'], ['anxiety'], [
+        'background']], cross_validation=cross_validation)
+    model = model_type(data_loader, model_path=model_path + '/bipolar_depression_anxiety_background', model_name=model_name,
+                       load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
+    model.fit(processing_number=processing_number, random_number=random_number)
+    print('\n')
 
     print('bipolar : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
                                        data_type_list=[['bipolar'], ['background']], cross_validation=cross_validation)
     model = model_type(data_loader, model_path=model_path + '/bipolar_background', model_name=model_name,
                        load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
-    # model.fit(processing_number=processing_number, random_number=random_number)
-    model.analysis()
+    model.fit(processing_number=processing_number, random_number=random_number)
     print('\n')
 
     print('depression : ')
@@ -71,6 +70,7 @@ def train_trans_prob(model_type, data_source, feature_name, train_suffix, test_s
     #                    load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
     # model.fit(processing_number=processing_number, random_number=random_number)
     # print('\n')
+
 
 def analysis_trans_prob(model_type, data_source, feature_name, train_suffix, test_suffix, model_path, model_name, load_model, cross_validation, processing_number=1, random_number=3, multi_processing=True):
     if not os.path.exists(model_path):
@@ -135,7 +135,6 @@ def analysis_trans_prob(model_type, data_source, feature_name, train_suffix, tes
     # print('\n')
 
 
-
 def train_trans_seq(model_type, emotion_list, model_path, model_name, load_model, cross_validation, processing_number=1, random_number=3, multi_processing=True):
     if not os.path.exists(model_path):
         os.mkdir(model_path)
@@ -191,7 +190,7 @@ def train_tf_idf(model_type, data_source, feature_name, train_suffix, test_suffi
 
     print('multi-class : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name, train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[['bipolar'], ['depression'], ['anxiety'],
-                                                                                                                                                    ['background']], cross_validation=cross_validation, data_size=data_size)
+                                                                                                                                                    ['background']], cross_validation=cross_validation)
     model = model_type(data_loader, model_path=model_path + '/bipolar_depression_anxiety_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
     model.fit(processing_number=processing_number,
@@ -200,7 +199,7 @@ def train_tf_idf(model_type, data_source, feature_name, train_suffix, test_suffi
 
     print('bipolar : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name, train_suffix=train_suffix, test_suffix=test_suffix,  data_type_list=[['bipolar'], [
-        'background']], cross_validation=cross_validation, data_size=data_size)
+        'background']], cross_validation=cross_validation)
     model = model_type(data_loader, model_path=model_path + '/bipolar_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
     model.fit(processing_number=processing_number,
@@ -209,7 +208,7 @@ def train_tf_idf(model_type, data_source, feature_name, train_suffix, test_suffi
 
     print('depression : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name,  train_suffix=train_suffix, test_suffix=test_suffix,
-                                       data_type_list=[['depression'], ['background']], cross_validation=cross_validation, data_size=data_size)
+                                       data_type_list=[['depression'], ['background']], cross_validation=cross_validation)
     model = model_type(data_loader, model_path=model_path + '/depression_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
     model.fit(processing_number=processing_number,
@@ -218,7 +217,7 @@ def train_tf_idf(model_type, data_source, feature_name, train_suffix, test_suffi
 
     print('anxiety : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name,  train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[
-        ['anxiety'], ['background']], cross_validation=cross_validation, data_size=data_size)
+        ['anxiety'], ['background']], cross_validation=cross_validation)
     model = model_type(data_loader, model_path=model_path + '/anxiety_background',
                        model_name=model_name, load_model=load_model, multi_processing=multi_processing, cross_validation=cross_validation)
     model.fit(processing_number=processing_number,
@@ -271,10 +270,10 @@ def main():
     data_source = config.data_dir
 
     if config.model == 'SVM':
-        model=SVM
+        model = SVM
         model_path = './log/SVM'
     elif config.model == 'logReg':
-        model=LogisticRegressionCV
+        model = LogisticRegressionCV
         model_path = './log/logReg'
     elif config.model == 'RF':
         model = RandomForest
@@ -324,7 +323,7 @@ def main():
         model_name = 'all-emotions'
         print(model_name)
         analysis_trans_prob(model, data_source, feature_name, train_suffix, test_suffix, model_path, model_name,
-                         load_model, cross_validation, processing_numer, random_number)        
+                            load_model, cross_validation, processing_numer, random_number)
     elif config.analysis_task == 'tfidf':
         random_number = 3
         processing_numer = 1
