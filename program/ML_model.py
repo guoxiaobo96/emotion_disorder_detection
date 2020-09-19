@@ -301,3 +301,16 @@ class RandomForest(MLModel):
     def _build_model(self, hyper_parameters, random_state):
         self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_estimators=100)
 
+class ExtraTrees(MLModel):
+    def _generate_hyper_parameters(self):
+        criterion_list = ['gini', 'entropy']
+        max_features_list = ['auto', 'log2']
+        
+        self._hyper_parameters_list = list()
+
+        for data in itertools.product(criterion_list, max_features_list):
+            hyper_parameters = {'criterion': data[0], 'max_features': data[1]}
+            self._hyper_parameters_list.append(hyper_parameters)
+
+    def _build_model(self, hyper_parameters, random_state):
+        self.model = ensemble.ExtraTreesClassifier(**hyper_parameters, n_estimators=250)

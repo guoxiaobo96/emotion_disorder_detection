@@ -10,7 +10,10 @@ import argparse
 import numpy as np
 import re
 import json
+import sys
 import math
+import random
+from datetime import datetime
 from scipy.spatial.distance import euclidean
 
 from fastdtw import fastdtw
@@ -357,5 +360,4 @@ if __name__ == '__main__':
                             './data/reddit/' + keywords, './data/TFRecord/reddit_data/' + keywords)
     elif function == 'build_binary_tfrecod':
         pass
-    elif function == 'build_multi_class_tfrecord':
-        pass
+

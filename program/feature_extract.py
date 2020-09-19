@@ -11,9 +11,112 @@ from nltk.corpus import stopwords
 from multiprocessing import Pool
 import os
 import string
+import random
+from datetime import datetime
+import sys
 from config import get_config
 
 DEBUG = False
+
+def filter_data(config):
+    start_time = config.start_time
+    end_time = config.end_time
+    data_type_list = ['anxiety', 'bipolar', 'depression', 'background']
+    source_data_folder = './data_back/reddit'
+    target_data_folder = './data/reddit'
+    user_folder = './data_back/user_list'
+    target_user_folder = './data/user_list'
+    start_time = datetime.strptime(start_time, "%Y-%m")
+    end_time = datetime.strptime(end_time, "%Y-%m")
+
+    number = config.min_number
+    count = sys.maxsize
+
+    all_data = dict()
+    user_dict = dict()
+
+    for data_type in data_type_list:
+        user_dict[data_type] = dict()
+        all_data[data_type] = dict()
+        user_list = list()
+        user_file = os.path.join(user_folder, data_type + '_user_list')
+        source_data_file = os.path.join(source_data_folder, data_type)
+
+        with open(user_file, mode='r', encoding='utf8') as fp:
+            for line in fp.readlines():
+                user = line.split(' [info] ')[0]
+                user_list.append(user)
+                user_dict[data_type][user] = line.strip()
+
+        if data_type != 'background':
+            suffix = '.before'
+        else:
+            suffix = ''
+
+        for index, user in enumerate(user_list):
+            data = list()
+            source_user_data = os.path.join(source_data_file, user + suffix)
+            with open(source_user_data, mode='r', encoding='utf8') as fp:
+                for line in fp.readlines():
+                    temp = json.loads(line.strip())
+                    for _, value in temp.items():
+                        local_time = datetime.fromtimestamp(
+                            (int(value['time'])))
+                        local_time = datetime.strftime(local_time, "%Y-%m")
+                        local_time = datetime.strptime(local_time, "%Y-%m")
+                        if local_time > end_time or local_time < start_time:
+                            continue
+                        else:
+                            data.append(temp)
+            if len(data) > number:
+                all_data[data_type][user] = data
+            else:
+                user_dict[data_type].pop(user)
+    
+    for _, type_data in all_data.items():
+        count = min(count, len(type_data))
+    train_number = int(0.7 * count)
+    valid_number = int(0.15 * count)
+    test_number = int(0.15 * count)
+
+    if not os.path.exists(target_user_folder):
+        os.makedirs(target_user_folder)
+    for data_type in data_type_list:
+        if data_type != 'background':
+            suffix = '.before'
+        else:
+            suffix = ''
+        target_data_file = os.path.join(target_data_folder, data_type)
+        if not os.path.exists(target_data_file):
+            os.makedirs(target_data_file)
+        random.seed(123)
+        user_list = list(user_dict[data_type].keys())
+        random.shuffle(user_list)
+        train_set = set(user_list[:train_number])
+        valid_set = set(user_list[train_number: train_number + valid_number])
+        test_set = set(
+            user_list[train_number + valid_number: train_number + valid_number + test_number])
+
+        with open(os.path.join(target_user_folder, data_type + '_user_list'), mode='w', encoding='utf8') as fp:
+            for user, data in user_dict[data_type].items():
+                if user in train_set:
+                    data += ' [info] train'
+                elif user in valid_set:
+                    data += ' [info] valid'
+                elif user in test_set:
+                    data += ' [info] test'
+                else:
+                    continue
+                fp.write(data + '\n')
+        for user, _ in user_dict[data_type].items():
+            if user in train_set or user in valid_set or user in test_set:
+                target_user_data = os.path.join(target_data_file, user+suffix)
+                with open(target_user_data, mode='w', encoding='utf8') as fp:
+                    for item in all_data[data_type][user]:
+                        fp.write(json.dumps(item)+'\n')
+
+    print("\nThe number of training is %d and the number is validation is %d" %
+          (int(0.7 * count), int(0.15 * count)))
 
 
 def build_state(data_source, data_type_list, window, gap, suffix_list=['']):
@@ -87,6 +190,7 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
                     state = [min(s, 1) for s in state]
                 curve_state.append(state)
                 start_time += gap
+
             with open(state_info_file, mode='w', encoding='utf8') as fp:
                 fp.write("window : %d,gap : %d\n" % (window/3600, gap/3600))
                 for state in curve_state:
@@ -326,9 +430,7 @@ def _build_tfidf_clean(data_type, data_folder, user):
     stemmer = PorterStemmer()
     stop_words_set = set(stopwords.words('english'))
     stop_words_set.update(
-        ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}'])
-    stop_words_set.update(
-        ['bipolar', 'anxiety', 'depression', 'emotion', 'emotional','disorder'])
+        ['bipolar', 'anxiety', 'depression', 'emotion', 'emotional','disorder','lamictal','manic'])
     data_folder = os.path.join(data_folder, data_type)
     cleaned_text = []
 
@@ -347,8 +449,8 @@ def _build_tfidf_clean(data_type, data_folder, user):
                         for word in text:
                             table = str.maketrans('', '', string.punctuation)
                             word = word.translate(table)
-                            word = word.replace('“', '').replace(
-                                '’', '').replace('”', '').replace('‘', '')
+                            word = word.replace('  ',' ').replace('“', '').replace(
+                                '’', '').replace('”', '').replace('‘', '').replace('  ',' ').replace('\t','')
                             try:
                                 if word.lower() in stop_words_set:
                                     continue
@@ -429,10 +531,10 @@ if __name__ == '__main__':
                     60 * 60, gap=step_size * 60 * 60, suffix_list=suffix_list)
         build_state_trans(data_source, data_type_list, [
             "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=suffix_list)
-        build_state_trans(data_source, data_type_list, [
-            "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=suffix_list)
-        build_state_trans(data_source, data_type_list, [
-            "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=suffix_list)
+        # build_state_trans(data_source, data_type_list, [
+        #     "anger", "fear"], emotion_state_number=[1, 2, 0, 0], suffix_list=suffix_list)
+        # build_state_trans(data_source, data_type_list, [
+        #     "joy", "sadness"], emotion_state_number=[0, 0, 1, 2], suffix_list=suffix_list)
 
     elif function == 'build_state_trans':
         suffix_list = ['.before']
@@ -457,3 +559,5 @@ if __name__ == '__main__':
     elif function == 'merge_feature':
         merge_feature('./'+data_dir+'/user_list/', './'+data_dir+'/feature/state/state_origin/anger_fear_joy_sadness',
                       data_type_list=data_type_list, suffix_list=['.before', '.after'])
+    elif function == 'filter_data':
+        filter_data(config)

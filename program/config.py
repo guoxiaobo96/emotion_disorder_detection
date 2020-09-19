@@ -28,7 +28,7 @@ data_arg.add_argument('--data_dir',choices=['data', 'data_small', 'data_test'], 
 # Feature
 data_arg = add_argument_group('Feature')
 data_arg.add_argument('--feature_task', choices=[
-    'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature'], type=str)
+    'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature', 'filter_data'], type=str)
 parser.add_argument('--window_size', type=int, default=26)
 parser.add_argument('--step_size', type=float, default=12)
 parser.add_argument('--min_number', type=float, default=0)
@@ -43,7 +43,7 @@ parser.add_argument('--test_suffix', choices=[
                     '.before', '.after', ''], type=str, default='')
 parser.add_argument('--analysis_task', choices=['tfidf', 'state','analysis_state'], type=str)
 data_arg.add_argument('--load_model', type=_str2bool, default=False)
-parser.add_argument('--model', choices=['SVM','logReg','RF'], type=str)
+parser.add_argument('--model', choices=['SVM','logReg','RF','ET'], type=str)
 
 
 

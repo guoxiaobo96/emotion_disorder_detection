@@ -11,7 +11,7 @@ log/*/*/*
 data_small/reddit/*
 data_small/feature/*
 data_small/TFRecord/*
-data_test/*
+data_*/*
 data_back/*
 data_new/*
 
@@ -30,4 +30,3 @@ temp.py
 shell/*
 data_split/*
 program_new/*
-data - 副本/*
