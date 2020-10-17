@@ -1,6 +1,7 @@
 import numpy as np
 import json
 from random import seed, shuffle
+from gensim.corpora import Dictionary
 import tensorflow as tf
 from multiprocessing import Pool
 from official.nlp.bert import tokenization
@@ -199,6 +200,8 @@ class DataLoaderForFeature(object):
                         data[1].append((feature.flatten(), type_index))
                     elif data_split == 'test':
                         data[2].append((feature.flatten(), type_index))
+                    else:
+                        data[2].append((feature.flatten(), type_index))
 
         for i, item in enumerate(data):
             seed(123)
@@ -228,8 +231,7 @@ class DataLoaderForFeature(object):
 
 
 def test():
-    data_loader = DataLoaderForFeature(
-        'state/state_trans', 'anger_fear_joy_sadness', data_type_list=[['bipolar'], ['depression']], data_size=[200, 100, 100])
+    data_loader = DataLoaderForFeature('data_test', 'content', 'tf_idf', data_type_list=[['bipolar'], ['depression']])
     print('test')
     # from config import get_config
     # from util import prepare_dirs_and_logger
