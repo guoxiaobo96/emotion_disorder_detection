@@ -189,8 +189,16 @@ def _build_state(user, data_source, data_type, window, gap, suffix_list):
                         break
                 if not mark:
                     state = [-1, -1, -1, -1]
+                elif state == [0, 0, 0, 0]:
+                    state = [0,0,0,0]
                 else:
-                    state = [min(s, 1) for s in state]
+                    dominant = np.max(np.array(state))
+                    if dominant > 1:
+                        for i in range(4):
+                            if state[i] != dominant:
+                                state[i] = 0
+                            else:
+                                state[i] = 1
                 curve_state.append(state)
                 start_time += gap
 
@@ -327,7 +335,7 @@ def build_state_trans(data_source, data_type_list, emotion_list, emotion_state_n
 
 def _build_state_trans(user, data_source, data_type, emotion_list, emotion_state_number, suffix_list):
     filter_list = []
-    state_number = pow(2, len(emotion_list)) + 1
+    state_number = len(emotion_list) + 2
     user_state_folder = './'+data_source + \
         '/feature/state/state_origin/anger_fear_joy_sadness/' + data_type
     user_state_trans_folder = './'+data_source+'/feature/state/state_trans/' + \
@@ -352,17 +360,36 @@ def _build_state_trans(user, data_source, data_type, emotion_list, emotion_state
                     gap = int(line.strip().split(',')[1].split(' : ')[1])
                 else:
                     state = [int(s) for s in line.strip().split(',')]
-                    state_int = 0
-                    if state != [-1, -1, -1, -1]:
-                        for i, s in enumerate(state):
-                            state_int += emotion_state_number[i] * s
-                        state_int += 1
                     # elif state_list[-1] == 0:
                     #     continue
-                    state_list.append(state_int)
+                    state_list.append(state)
 
         for i, state in enumerate(state_list[1:]):
-            state_prob[state_list[i - 1]][state] += 1.0
+            new_state = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+
+
+            old_state = state_list[i]
+            if state == [-1, -1, -1, -1]:
+                new_state[0] += 1
+            elif state == [0, 0, 0, 0]:
+                new_state[1] += 1
+            else:
+                state = np.array(state, dtype=float) / np.array(state).sum()
+                for j, s in enumerate(state):
+                    new_state[j+2] = s
+
+            
+            if old_state == [-1, -1, -1, -1]:
+                for k, v in new_state.items():
+                    state_prob[0][k] += v
+            elif old_state == [0, 0, 0, 0]:
+                for k, v in new_state.items():
+                    state_prob[1][k] += v
+            else:
+                for index, s in enumerate(old_state):
+                    if s == 1:
+                        for k, v in new_state.items():
+                            state_prob[index+2][k] += v
         for state_prev in range(state_number):
             sum = np.sum(state_prob[state_prev])
             if sum == 0:
@@ -372,8 +399,8 @@ def _build_state_trans(user, data_source, data_type, emotion_list, emotion_state
                 for state_next in range(state_number):
                     state_prob[state_prev][state_next] /= sum
         for id in filter_list:
-            row = int(id / 17)
-            column = id % 17
+            row = int(id / 6)
+            column = id % 6
             state_prob[row][column] = 0.0
         state_trans_file = user + suffix + '.npz'
         target_file = os.path.join(
@@ -667,8 +694,8 @@ if __name__ == '__main__':
     if function == 'build_state':
         suffix_list = ['.before']
         # suffix_list = ['']
-        build_state(data_source, data_type_list, window=window_size *
-                    60 * 60, gap=step_size * 60 * 60, suffix_list=suffix_list)
+        # build_state(data_source, data_type_list, window=window_size *
+        #             60 * 60, gap=step_size * 60 * 60, suffix_list=suffix_list)
         build_state_trans(data_source, data_type_list, [
             "anger", "fear", "joy", "sadness"], emotion_state_number=[1, 2, 4, 8], suffix_list=suffix_list)
         # build_state_trans(data_source, data_type_list, [
