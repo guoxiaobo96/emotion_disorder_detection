@@ -23,6 +23,9 @@ data/reddit_back/*
 data/background/*
 
 temp.py
+<<<<<<< HEAD
+data/*
+=======
 
 shell/*
 data_split/*
@@ -31,3 +34,4 @@ analysis*/*/*
 background/waqaskhan786.npy
 log_inverse/*
 related_work/*
+>>>>>>> 7bf58130a9c72fdb8b093da88b5768f84b4c0ddf

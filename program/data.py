@@ -110,15 +110,16 @@ class DataLoaderForReddit(object):
             for line in fp.readlines():
                 self._user_list.append(line.split(' [info] ')[0])
         for user in self._user_list:
-            suffix_list = ['before', 'after']
+            # suffix_list = ['.before', '.after','']
+            suffix_list = ['.before']
             for suffix in suffix_list:
                 file_name = os.path.join(
-                    self._data_path, user + '.' + suffix + ".tfrecord")
+                    self._data_path, user  + suffix + ".tfrecord")
                 if os.path.exists(file_name):
                     label_dataset = tf.data.TFRecordDataset(file_name)
                     label_dataset = label_dataset.map(
                         self._parse_data_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-                    self.label_dataset[user + '.' + suffix] = label_dataset.batch(
+                    self.label_dataset[user  + suffix] = label_dataset.batch(
                         self._config.batch_size, drop_remainder=False)
 
     def _parse_data_function(self, data):

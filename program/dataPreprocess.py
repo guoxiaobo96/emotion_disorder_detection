@@ -25,9 +25,9 @@ from nltk.stem.porter import PorterStemmer
 bert_model_dir = '/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16'
 
 
-def build_text_tfrecord(user_file_list, data_path_list, record_path, suffix_list = ['.before', '.after']):
+def build_text_tfrecord(user_file_list, data_path_list, record_path, suffix_list = ['.before', '.after','']):
     if not os.path.exists(record_path):
-        os.mkdir(record_path)
+        os.makedirs(record_path)
     max_seq = 142
     user_set = set()
     bert_vocab_file = os.path.join(bert_model_dir, 'vocab.txt')
@@ -44,8 +44,6 @@ def build_text_tfrecord(user_file_list, data_path_list, record_path, suffix_list
             record_file = user + suffix + ".tfrecord"
             record_file = os.path.join(record_path, record_file)
             if not os.path.exists(file_name):
-                if suffix == '.after':
-                    print(user)
                 continue
             if os.path.exists(record_file):
                 continue
@@ -357,7 +355,7 @@ if __name__ == '__main__':
     os.chdir(root_dir)
     if function == 'build_text_tfrecord':
         build_text_tfrecord('./data/user_list/' + keywords + '_user_list',
-                            './data/reddit/' + keywords, './data/TFRecord/reddit_data/' + keywords)
+                            './data/reddit/' + keywords, './data/TFRecord/reddit_data/' + keywords,suffix_list=['.before',''])
     elif function == 'build_binary_tfrecod':
         pass
 

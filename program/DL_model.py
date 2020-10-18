@@ -139,7 +139,7 @@ class BertModel(object):
                     item = json.dumps(item)
                     fp.write(item + '\n')
             count += 1
-            if count % 500 == 0:
+            if count % 200 == 0:
                 print(count)
 
     def encode(self, target_dir, source_dir, data=None, steps=None):
@@ -154,7 +154,7 @@ class BertModel(object):
         count = 0
         for user, text_data in data.items():
             write_data = dict()
-            target_file = os.path.join(target_dir, user)+'.npy'
+            target_file = os.path.join(target_dir, user) + '.npy'
             source_file = os.path.join(source_dir, user)
             if os.path.exists(target_file):
                 count += 1
@@ -164,10 +164,12 @@ class BertModel(object):
                 for line in fp.readlines():
                     try:
                         for id, value in json.loads(line.strip()).items():
-                            user_data[id] = {'time': value['time']}
+                            user_data[id] = value
+                            if 'encode' in user_data[id]:
+                                user_data[id]['encode'] = []
                     except json.decoder.JSONDecodeError:
                         pass
-            for item in text_data:
+            for i, item in enumerate(text_data):
                 sentence, id_list = item
                 encoded_text = self.model(sentence).numpy()
                 id_list = id_list.numpy()
@@ -175,7 +177,7 @@ class BertModel(object):
                     id = id.decode('utf8')
                     if 'encode' not in user_data[id]:
                         user_data[id]['encode'] = []
-                    user_data[id]['encode'].append(encoded_text[index])
+                    user_data[id]['encode'].append(encoded_text[index].tolist())
             for key, value in user_data.items():
                 try:
                     encode_list = np.mean(np.array(value['encode']), axis=0)
@@ -188,6 +190,10 @@ class BertModel(object):
                 final_data.append(write_data[time])
             final_data = np.array(final_data)
             np.save(target_file, final_data)
+            with open(source_file, mode='w', encoding='utf8') as fp:
+                for key,value in user_data.items():
+                    item = json.dumps({key:value})
+                    fp.write(item + '\n')
             count += 1
             if count % 500 == 0:
                 print(count)

@@ -2,7 +2,11 @@ import logging
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
+<<<<<<< HEAD
+from dl_config import get_config
+=======
 from config_ml import get_config
+>>>>>>> 7bf58130a9c72fdb8b093da88b5768f84b4c0ddf
 from util import prepare_dirs_and_logger, save_config
 from data import DataLoader, DataLoaderForReddit
 from DL_model import BertModel

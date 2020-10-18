@@ -19,7 +19,7 @@ def add_argument_group(name):
 # Data
 data_arg = add_argument_group('Data')
 data_arg.add_argument('--data_dir', type=str, default='./data/TFRecord')
-data_arg.add_argument('--target_dir', type=str, default='./data/reddit')
+data_arg.add_argument('--target_dir', type=str, default='./data/feature/content/bert')
 data_arg.add_argument('--source_dir', type=str, default='./data/reddit')
 # data_arg.add_argument('--dataset', type=str, default='tweet_trust')
 # data_arg.add_argument('--data_type',type=str,default='balanced')
@@ -63,7 +63,7 @@ misc_arg.add_argument('--model_name', type=str, default='weighted')
 misc_arg.add_argument('--root_dir', type=str,
                       default='/home/xiaobo/emotion_disorder_detection')
 misc_arg.add_argument('--log_dir', type=str, default='log')
-misc_arg.add_argument('--load_path', type=str, default='tweet_anger/best')
+misc_arg.add_argument('--load_path', type=str, default='')
 misc_arg.add_argument('--emotion_type', type=str, default='anger')
 misc_arg.add_argument('--gpu_id', type=str, default='1')
 misc_arg.add_argument('--bert_model_dir', type=str,
@@ -75,5 +75,6 @@ def get_config():
     config, unparsed = parser.parse_known_args()
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = config.gpu_id
+    os.chdir(config.root_dir)
 
     return config, unparsed
