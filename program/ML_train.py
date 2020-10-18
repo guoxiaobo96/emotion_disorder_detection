@@ -166,32 +166,41 @@ def test_model(model_type, data_source, feature_type, feature_name, train_suffix
 
     print('multi-class : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[['background'], ['bipolar'], ['depression'], ['anxiety']])
+    # model = model_type(data_loader, model_path=model_path + '/background_bipolar_depression_anxiety', model_name=model_name, import_metric=import_metric,
+    #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
     model = model_type(data_loader, model_path=model_path + '/background_bipolar_depression_anxiety', model_name=model_name, import_metric=import_metric,
-                       load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
+                       load_model=load_model, multi_processing=multi_processing)
     model.test(data_loader.test_dataset)
     print('\n')
 
     print('bipolar : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
                                        data_type_list=[['background'], ['bipolar']])
+    # model = model_type(data_loader, model_path=model_path + '/background_bipolar', model_name=model_name, import_metric=import_metric,
+    #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
     model = model_type(data_loader, model_path=model_path + '/background_bipolar', model_name=model_name, import_metric=import_metric,
-                       load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
+                       load_model=load_model, multi_processing=multi_processing)
+
     model.test(data_loader.test_dataset)
     print('\n')
 
     print('depression : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
                                        data_type_list=[['background'], ['depression']])
+    # model = model_type(data_loader, model_path=model_path + '/background_depression', model_name=model_name, import_metric=import_metric,
+    #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
     model = model_type(data_loader, model_path=model_path + '/background_depression', model_name=model_name, import_metric=import_metric,
-                       load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
+                       load_model=load_model, multi_processing=multi_processing)
     model.test(data_loader.test_dataset)
     print('\n')
 
     print('anxiety : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
                                        data_type_list=[['background'], ['anxiety']])
+    # model = model_type(data_loader, model_path=model_path + '/background_anxiety', model_name=model_name, import_metric=import_metric,
+    #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
     model = model_type(data_loader, model_path=model_path + '/background_anxiety', model_name=model_name, import_metric=import_metric,
-                       load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
+                       load_model=load_model, multi_processing=multi_processing)
     model.test(data_loader.test_dataset)
     print('\n')
 

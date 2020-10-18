@@ -28,7 +28,7 @@ data_arg.add_argument('--data_dir',choices=['data', 'data_small', 'data_test','d
 # Feature
 data_arg = add_argument_group('Feature')
 data_arg.add_argument('--feature_task', choices=[
-    'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature', 'filter_data'], type=str)
+    'build_state', 'build_state_trans', 'build_tfidf', 'build_state_sequence', 'merge_feature', 'filter_data', 'build_lda'], type=str)
 parser.add_argument('--window_size', type=int, default=2)
 parser.add_argument('--step_size', type=float, default=1)
 parser.add_argument('--min_number', type=float, default=0)

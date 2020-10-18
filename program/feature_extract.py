@@ -5,6 +5,7 @@ import math
 from scipy.spatial.distance import euclidean
 from gensim.corpora.dictionary import Dictionary
 from gensim.models import TfidfModel
+from gensim.models.ldamulticore import LdaMulticore
 from fastdtw import fastdtw
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
@@ -302,17 +303,17 @@ def build_state_trans(data_source, data_type_list, emotion_list, emotion_state_n
     for i in range(len(feature_dict) * len(feature_dict)):
         row = int(i / len(feature_dict))
         column = i % len(feature_dict)
-        emotions_trans.append('->'.join([feature_dict[row], feature_dict[column]]))
-    dict_file = './' + data_source + '/feature/state/state_trans/'+'_'.join(emotion_list) + '/dict'
+        emotions_trans.append(
+            '->'.join([feature_dict[row], feature_dict[column]]))
+    dict_file = './' + data_source + '/feature/state/state_trans/' + \
+        '_'.join(emotion_list) + '/dict'
     if not os.path.exists(dict_file):
         os.makedirs(dict_file)
-    dict_file = os.path.join(dict_file, 'dict')   
+    dict_file = os.path.join(dict_file, 'dict')
     with open(dict_file, encoding='utf8', mode='w') as fp:
         for item in emotions_trans:
             fp.write(item+'\n')
-    
 
-        
     # for user, data_type in user_list.items():
     #     _build_state_trans(user, data_source, data_type, emotion_list,
     #                        emotion_state_number, suffix_list)
@@ -394,11 +395,11 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     dict_file = os.path.join(os.path.join(
         record_path, 'dict'), 'dict_' + '_'.join(suffix_list))
     tfidf_file = os.path.join(os.path.join(
-    record_path, 'dict'), 'tfidf_'+'_'.join(suffix_list))
+        record_path, 'dict'), 'tfidf_'+'_'.join(suffix_list))
 
     user_data = dict()
     for data_type in data_type_list:
-        count = 0 
+        count = 0
         _, single_user_list = _read_user_list(
             user_file_folder, data_path, data_type, suffix_list)
         for user, split_type in single_user_list.items():
@@ -412,13 +413,13 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
 
     with Pool(processes=10) as pool:
         for user, value in user_data.items():
-            result = pool.apply_async(func=_build_tfidf_clean, args=(
+            result = pool.apply_async(func=_clean_data, args=(
                 value['data_type'], data_path, user))
             result_list.append(result)
         pool.close()
         pool.join()
     # for user, value in user_data.items():
-    #     result = _build_tfidf_clean(value['data_type'], data_path, user)
+    #     result = _clean_data(value['data_type'], data_path, user)
     #     result_list.append(result)
 
     cleaned_text_full = list()
@@ -434,12 +435,12 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
                                    ['data_type']].append(cleaned_text)
             cleaned_text_full.append(cleaned_text)
     if load_model:
-        dictionary = Dictionary().load_from_text('./data_test/feature/content/tf_idf/dict/dict_.before')
+        dictionary = Dictionary().load_from_text(
+            './data_test/feature/content/tf_idf/dict/dict_.before')
     else:
         for key, value in cleaned_text_full_dict.items():
             dictionary_dict[key] = Dictionary(value)
             # dictionary_dict[key].filter_extremes(no_above=0.95, no_below=5, keep_n=None)
-
 
         bad_tokens = []
         dictionary = Dictionary(cleaned_text_full)
@@ -467,23 +468,21 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         # for i in index:
         #     print(temp[i])
 
-
-
         # bad_tokens = set(dictionary.token2id.keys()) - dictionary_words_set
         # bad_tokens = list(bad_tokens)
 
         all_type_tokens = ['remov', 'bipolar', 'anxieti', 'manic',
-                        'diagnos', 'depress', 'medic', 'med', 'hypoman', 'mania', 'disord', 'diagnosi', 'mental', 'stabl', 'pdoc', 'hospit']
+                           'diagnos', 'depress', 'medic', 'med', 'hypoman', 'mania', 'disord', 'diagnosi', 'mental', 'stabl', 'pdoc', 'hospit']
         bipoalr_bad_tokens = ['remov', 'bipolar', 'anxieti', 'manic', 'diagnos', 'depress',
-                            'medic', 'med', 'psychiatrist', 'disord', 'prescrib', 'therapist', 'diagnosi', 'ii']
+                              'medic', 'med', 'psychiatrist', 'disord', 'prescrib', 'therapist', 'diagnosi', 'ii']
         anxiety_bad_tokens = ['remov', 'anxieti', 'diagnos',
-                            'medic', 'karma', 'panic', 'disord']
+                              'medic', 'karma', 'panic', 'disord']
         bipoalr_depression_bad_tokens = ['bipolar', 'mania', 'lithium', 'disorder',
-                                        'med', 'mood', 'lamict', 'manic', 'medic', 'diagnosi', 'episod',
-                                        'hypomania', 'psychot', 'psychosi', 'psychiatrist', 'depakot', 'seroquel', 'stabil']
+                                         'med', 'mood', 'lamict', 'manic', 'medic', 'diagnosi', 'episod',
+                                         'hypomania', 'psychot', 'psychosi', 'psychiatrist', 'depakot', 'seroquel', 'stabil']
         bipoalr_anxiety_bad_tokens = ['bipolar', 'hypoman', 'anxieti', 'manic', 'mania', 'episod',
-                                    'psychot', 'lamict', 'psychiatrist', 'med', 'psych', 'diagnosi', 'hypomania', 'lithium',
-                                    'diagnos', 'depress', 'disord', 'suicid', 'ii', 'bpd']
+                                      'psychot', 'lamict', 'psychiatrist', 'med', 'psych', 'diagnosi', 'hypomania', 'lithium',
+                                      'diagnos', 'depress', 'disord', 'suicid', 'ii', 'bpd']
         anxiety_depression_bad_tokens = [
             'anxieti', 'depress', 'remov', 'suicid', 'attack', 'anxiou']
         strange_tokens = []
@@ -504,7 +503,6 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
 
     print("Dictionary finish")
 
-
     result_list = []
     corpous_full = []
     for user, value in user_data.items():
@@ -514,11 +512,10 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
         if user_data[user]['split_type'] in ['train']:
             corpous_full.append(corpous)
     if load_model:
-        tfidf_model = TfidfModel().load('./data_test/feature/content/tf_idf/dict/tfidf_.before')
+        tfidf_model = TfidfModel().load(
+            './data_test/feature/content/tf_idf/dict/tfidf_.before')
     else:
         tfidf_model = TfidfModel(corpous_full, dictionary=dictionary)
-
-
 
     print('Label Finish')
 
@@ -539,7 +536,6 @@ def build_tfidf(user_file_folder, data_path, record_path, data_type_list, suffix
     if not load_model:
         dictionary.save_as_text(dict_file)
         tfidf_model.save(tfidf_file)
-        
 
 
 def _read_user_list(user_file_folder, data_path, data_type, suffix_list):
@@ -556,50 +552,6 @@ def _read_user_list(user_file_folder, data_path, data_type, suffix_list):
                 user_dict[user+suffix] = split_type
 
     return data_type, user_dict
-
-
-def _build_tfidf_clean(data_type, data_folder, user):
-    stemmer = PorterStemmer()
-    stop_words_set = set(stopwords.words('english'))
-    stop_words_set.update([''])
-    # stop_words_set.update(
-    #     ['bipolar', 'anxiety', 'depression', 'emotion', 'emotional', 'disorder', 'lamictal', 'manic', 'depress', 'episod', 'hospital', 'mental', 'suicide', 'medic', 'mdecial', 'worry', ''])
-    data_folder = os.path.join(data_folder, data_type)
-    cleaned_text = []
-
-    file_name = os.path.join(data_folder, user)
-    if not os.path.exists(file_name):
-        print(user)
-    else:
-        with open(file_name, mode='r', encoding='utf8') as fp:
-            for line in fp.readlines():
-                try:
-                    for id, value in json.loads(line.strip()).items():
-                        if value['text'] == '':
-                            continue
-                        text = value['text'].strip().split(' ')
-
-                        for word in text:
-                            table = str.maketrans('', '', string.punctuation)
-                            word = word.translate(table)
-                            word = word.replace('  ', ' ').replace('“', '').replace(
-                                '’', '').replace('”', '').replace('‘', '').replace('  ', ' ').replace('\t', '')
-                            number_pattern = re.compile(r'\d+\.?\d*')
-                            word = re.sub(number_pattern, '[number]', word)
-                            word = word.lstrip()
-                            if word.startswith('[number]') and word != '[number]':
-                                word = word.replace('[number]', '')
-                            try:
-                                if word.lower() in stop_words_set:
-                                    continue
-                                word = stemmer.stem(word.lower())
-                                cleaned_text.append(word)
-                            except RecursionError:
-                                continue
-                except json.decoder.JSONDecodeError:
-                    pass
-
-    return data_type, user, cleaned_text
 
 
 def _build_tfidf_doc2bow(dictionary, user, user_data):
@@ -649,6 +601,183 @@ def _merge_feature(user, data_folder, suffix_list):
     with open(os.path.join(data_folder, user), mode='w', encoding='utf8') as fp:
         for item in data:
             fp.write(item + '\n')
+
+
+def build_lda(user_file_folder, data_path, record_path, data_type_list, suffix_list, load_model=False):
+    for data_type in data_type_list:
+        if not os.path.exists(os.path.join(record_path, data_type)):
+            os.makedirs(os.path.join(record_path, data_type))
+    if not os.path.exists(os.path.join(record_path, 'dict')):
+        os.makedirs(os.path.join(record_path, 'dict'))
+    dict_file = os.path.join(os.path.join(
+        record_path, 'dict'), 'dict_' + '_'.join(suffix_list))
+    model_file = os.path.join(os.path.join(
+        record_path, 'dict'), 'lda_'+'_'.join(suffix_list))
+
+    user_data = dict()
+    for data_type in data_type_list:
+        count = 0
+        _, single_user_list = _read_user_list(
+            user_file_folder, data_path, data_type, suffix_list)
+        for user, split_type in single_user_list.items():
+            user_data[user] = {'data_type': data_type,
+                               'split_type': split_type}
+            # count += 1
+            # if count > 30:
+            #     break
+    result_list = []
+
+    with Pool(processes=10) as pool:
+        for user, value in user_data.items():
+            result = pool.apply_async(func=_clean_data, args=(
+                value['data_type'], data_path, user))
+            result_list.append(result)
+        pool.close()
+        pool.join()
+    # for user, value in user_data.items():
+    #     result = _clean_data(value['data_type'], data_path, user)
+    #     result_list.append(result)
+
+    cleaned_text_full = list()
+    cleaned_text_full_dict = dict()
+    dictionary_dict = dict()
+    for result in result_list:
+        _, user, cleaned_text = result.get()
+        if user_data[user]['data_type'] not in cleaned_text_full_dict:
+            cleaned_text_full_dict[user_data[user]['data_type']] = list()
+        user_data[user]['cleaned_text'] = cleaned_text
+        cleaned_text_full_dict[user_data[user]
+                               ['data_type']].append(cleaned_text)
+        cleaned_text_full.append(cleaned_text)
+    if load_model:
+        dictionary = Dictionary().load_from_text(
+            './data/feature/content/lda/dict/dict_.before')
+    else:
+        bad_tokens = []
+        dictionary = Dictionary(cleaned_text_full)
+        dictionary.filter_extremes(no_above=0.95, no_below=5, keep_n=None)
+
+        all_type_tokens = ['remov', 'bipolar', 'anxieti', 'manic',
+                           'diagnos', 'depress', 'medic', 'med', 'hypoman', 'mania', 'disord', 'diagnosi', 'mental', 'stabl', 'pdoc', 'hospit']
+        bipoalr_bad_tokens = ['remov', 'bipolar', 'anxieti', 'manic', 'diagnos', 'depress',
+                              'medic', 'med', 'psychiatrist', 'disord', 'prescrib', 'therapist', 'diagnosi', 'ii']
+        anxiety_bad_tokens = ['remov', 'anxieti', 'diagnos',
+                              'medic', 'karma', 'panic', 'disord']
+        bipoalr_depression_bad_tokens = ['bipolar', 'mania', 'lithium', 'disorder',
+                                         'med', 'mood', 'lamict', 'manic', 'medic', 'diagnosi', 'episod',
+                                         'hypomania', 'psychot', 'psychosi', 'psychiatrist', 'depakot', 'seroquel', 'stabil']
+        bipoalr_anxiety_bad_tokens = ['bipolar', 'hypoman', 'anxieti', 'manic', 'mania', 'episod',
+                                      'psychot', 'lamict', 'psychiatrist', 'med', 'psych', 'diagnosi', 'hypomania', 'lithium',
+                                      'diagnos', 'depress', 'disord', 'suicid', 'ii', 'bpd']
+        anxiety_depression_bad_tokens = [
+            'anxieti', 'depress', 'remov', 'suicid', 'attack', 'anxiou']
+        strange_tokens = []
+
+        bad_tokens.extend(all_type_tokens)
+        bad_tokens.extend(bipoalr_bad_tokens)
+        bad_tokens.extend(anxiety_bad_tokens)
+        bad_tokens.extend(bipoalr_depression_bad_tokens)
+        bad_tokens.extend(bipoalr_anxiety_bad_tokens)
+        bad_tokens.extend(anxiety_depression_bad_tokens)
+        bad_tokens.extend(strange_tokens)
+
+        bad_ids = [k for k, v in dictionary.items() if v in bad_tokens]
+        dictionary.filter_tokens(bad_ids=bad_ids)
+
+    print("Dictionary finish")
+
+    result_list = []
+    corpous_full = []
+    for user, value in user_data.items():
+        user, corpous = _build_tfidf_doc2bow(
+            dictionary, user, value['cleaned_text'])
+        user_data[user]['corpous'] = corpous
+        corpous_full.append(corpous)
+    if load_model:
+        lda_model = TfidfModel().load('./data/feature/content/lda/dict/tfidf_.before')
+    else:
+        random_seed = random.seed(123)
+        lda_model = LdaMulticore(corpous_full, num_topics=100, id2word=dictionary,
+                                 workers=6, passes=1, random_state=random_seed)
+
+    print('LDA Model Finish')
+
+    split_data = dict()
+    for user, value in user_data.items():
+        if value['data_type'] not in split_data:
+            split_data[value['data_type']] = dict()
+        split_data[value['data_type']][user] = value
+
+    # for _, data in split_data.items():
+    #     _build_lda_write(record_path, lda_model, data)
+    with Pool(processes=len(split_data)) as pool:
+        for _, data in split_data.items():
+            pool.apply_async(func=_build_lda_write, args=(
+                record_path, lda_model, data))
+        pool.close()
+        pool.join()
+    if not load_model:
+        dictionary.save_as_text(dict_file)
+        lda_model.save(model_file)
+
+
+def _build_lda_write(record_path, lda_model, user_data):
+    for user, data in user_data.items():
+        lda = [0.0 for _ in range(lda_model.num_topics)]
+        lda_topic = lda_model.get_document_topics(data['corpous'])
+        for item in lda_topic:
+            lda[item[0]] = item[1]
+        lda = np.exp(lda) / \
+            np.sum(np.exp(lda), axis=0)
+        record_folder = os.path.join(record_path, data['data_type'])
+        record_file = os.path.join(record_folder, user + '.npz')
+        window = np.array([0])
+        gap = np.array([0])
+        np.savez_compressed(record_file, data=lda, window=window, gap=gap)
+
+
+def _clean_data(data_type, data_folder, user):
+    stemmer = PorterStemmer()
+    stop_words_set = set(stopwords.words('english'))
+    stop_words_set.update([''])
+    # stop_words_set.update(
+    #     ['bipolar', 'anxiety', 'depression', 'emotion', 'emotional', 'disorder', 'lamictal', 'manic', 'depress', 'episod', 'hospital', 'mental', 'suicide', 'medic', 'mdecial', 'worry', ''])
+    data_folder = os.path.join(data_folder, data_type)
+    cleaned_text = []
+
+    file_name = os.path.join(data_folder, user)
+    if not os.path.exists(file_name):
+        print(user)
+    else:
+        with open(file_name, mode='r', encoding='utf8') as fp:
+            for line in fp.readlines():
+                try:
+                    for id, value in json.loads(line.strip()).items():
+                        if value['text'] == '':
+                            continue
+                        text = value['text'].strip().split(' ')
+
+                        for word in text:
+                            table = str.maketrans('', '', string.punctuation)
+                            word = word.translate(table)
+                            word = word.replace('  ', ' ').replace('“', '').replace(
+                                '’', '').replace('”', '').replace('‘', '').replace('  ', ' ').replace('\t', '')
+                            number_pattern = re.compile(r'\d+\.?\d*')
+                            word = re.sub(number_pattern, '[number]', word)
+                            word = word.lstrip()
+                            if word.startswith('[number]') and word != '[number]':
+                                word = word.replace('[number]', '')
+                            try:
+                                if word.lower() in stop_words_set:
+                                    continue
+                                word = stemmer.stem(word.lower())
+                                cleaned_text.append(word)
+                            except RecursionError:
+                                continue
+                except json.decoder.JSONDecodeError:
+                    pass
+
+    return data_type, user, cleaned_text
 
 
 if __name__ == '__main__':
@@ -703,3 +832,6 @@ if __name__ == '__main__':
                       data_type_list=data_type_list, suffix_list=['.before', '.after'])
     elif function == 'filter_data':
         filter_data(config)
+    elif function == 'build_lda':
+        build_lda('./'+data_dir+'/user_list/', './'+data_dir+'/reddit/', './'+data_dir+'/feature/content/lda',
+                  data_type_list=data_type_list, suffix_list=['.before'])
