@@ -45,26 +45,11 @@ parser.add_argument('--model', choices=['SVM','logReg','RF'], type=str)
 
 
 # Misc
-<<<<<<< HEAD
-misc_arg = add_argument_group('Misc')
-train_arg.add_argument('--task', type=str, default='label_emotion')
-misc_arg.add_argument('--model_name', type=str, default='weighted')
-misc_arg.add_argument('--root_dir', type=str,
-                      default='/data/xiaobo/emotion_disorder_detection')
-misc_arg.add_argument('--log_dir', type=str, default='log')
-misc_arg.add_argument('--load_path', type=str, default='tweet_anger/best')
-misc_arg.add_argument('--emotion_type', type=str, default='anger')
-misc_arg.add_argument('--gpu_id', type=str, default='1')
-misc_arg.add_argument('--bert_model_dir', type=str,
-                      default='/home/xiaobo/pretrained_models/bert/wwm_cased_L-24_H-1024_A-16')
-misc_arg.add_argument('--is_debug', type=_str2bool, default=False)
-=======
 data_arg = add_argument_group('Misc')
 data_arg.add_argument('--pretrained_model_path', type=str,
                       default='/home/xiaobo/pretrained_models')
 data_arg.add_argument('--gpu_id', type=str, default='1')
 data_arg.add_argument('--is_debug', type=_str2bool, default=False)
->>>>>>> 078b33d2a86d7c9c86e358ac375b20e06eceb4ec
 
 
 def get_config():
