@@ -20,7 +20,7 @@ def _str2bool(v):
 
 def train_model(model_type, data_source, feature_type, feature_name, train_suffix, test_suffix, model_path, model_name, import_metric, load_model, cross_validation, processing_number=1, random_number=20, multi_processing=True):
     if not os.path.exists(model_path):
-        os.mkdir(model_path)
+        os.makedirs(model_path)
     if cross_validation:
         model_name = model_name + '_cross_validation'
     print('multi-class : ')
@@ -164,14 +164,14 @@ def test_model(model_type, data_source, feature_type, feature_name, train_suffix
     if not os.path.exists(model_path):
         os.mkdir(model_path)
 
-    print('multi-class : ')
-    data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[['background'], ['bipolar'], ['depression'], ['anxiety']])
+    # print('multi-class : ')
+    # data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix, data_type_list=[['background'], ['bipolar'], ['depression'], ['anxiety']])
+    # # model = model_type(data_loader, model_path=model_path + '/background_bipolar_depression_anxiety', model_name=model_name, import_metric=import_metric,
+    # #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
     # model = model_type(data_loader, model_path=model_path + '/background_bipolar_depression_anxiety', model_name=model_name, import_metric=import_metric,
-    #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
-    model = model_type(data_loader, model_path=model_path + '/background_bipolar_depression_anxiety', model_name=model_name, import_metric=import_metric,
-                       load_model=load_model, multi_processing=multi_processing)
-    model.test(data_loader.test_dataset)
-    print('\n')
+    #                    load_model=load_model, multi_processing=multi_processing)
+    # model.test(data_loader.test_dataset)
+    # print('\n')
 
     print('bipolar : ')
     data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
@@ -194,15 +194,15 @@ def test_model(model_type, data_source, feature_type, feature_name, train_suffix
     model.test(data_loader.test_dataset)
     print('\n')
 
-    print('anxiety : ')
-    data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
-                                       data_type_list=[['background'], ['anxiety']])
+    # print('anxiety : ')
+    # data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
+    #                                    data_type_list=[['background'], ['anxiety']])
+    # # model = model_type(data_loader, model_path=model_path + '/background_anxiety', model_name=model_name, import_metric=import_metric,
+    # #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
     # model = model_type(data_loader, model_path=model_path + '/background_anxiety', model_name=model_name, import_metric=import_metric,
-    #                    load_model=load_model, multi_processing=multi_processing, metrics_list=['accuracy'])
-    model = model_type(data_loader, model_path=model_path + '/background_anxiety', model_name=model_name, import_metric=import_metric,
-                       load_model=load_model, multi_processing=multi_processing)
-    model.test(data_loader.test_dataset)
-    print('\n')
+    #                    load_model=load_model, multi_processing=multi_processing)
+    # model.test(data_loader.test_dataset)
+    # print('\n')
 
     # print('bipolar-depression : ')
     # data_loader = DataLoaderForFeature(data_source, feature_type, feature_name=feature_name, train_suffix=train_suffix, test_suffix=test_suffix,
@@ -264,7 +264,7 @@ def main():
 
     if config.analysis_task == 'state':
         feature_type = 'state/state_trans'
-        random_number = 3
+        random_number = 20
         feature_name = "anger_fear_joy_sadness"
         model_name = 'all-emotions'
         print(model_name)
