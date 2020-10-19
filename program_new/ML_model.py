@@ -23,7 +23,7 @@ class MLModel(object):
             os.makedirs(model_path)
         self._metrics_list = metrics_list
         self._best_model = {'metrics': dict(), 'hyper_parameters': dict()}
-        self._generate_hyper_parameters()
+        self._generate_hyper_parameters(model_name)
         self._load_data(data_loader)
         self._multi_processing = multi_processing
         self.load_model_mark = load_model
@@ -273,18 +273,22 @@ class SVM(MLModel):
         self.model = svm.SVC(**hyper_parameters)
 
 class RandomForest(MLModel):
-    def _generate_hyper_parameters(self):
+    def _generate_hyper_parameters(self, model_name):
         criterion_list = ['gini', 'entropy']
         max_features_list = ['auto', 'log2']
+        if model_name == 'all-emotion':
+            estimator_num_list = [i * 10 for i in range(5, 25)]
+        else:
+             estimator_num_list = [100]
         
         self._hyper_parameters_list = list()
 
-        for data in itertools.product(criterion_list, max_features_list):
-            hyper_parameters = {'criterion': data[0], 'max_features': data[1]}
+        for data in itertools.product(criterion_list, max_features_list, estimator_num_list):
+            hyper_parameters = {'criterion': data[0], 'max_features': data[1],'n_estimators':data[2]}
             self._hyper_parameters_list.append(hyper_parameters)
 
     def _build_model(self, hyper_parameters, random_state):
-        self.model = ensemble.RandomForestClassifier(**hyper_parameters, n_estimators=100,class_weight='balanced')
+        self.model = ensemble.RandomForestClassifier(**hyper_parameters, class_weight='balanced')
 
 def test():
     data_train = DataLoaderForFeature('tfidf', '2016-2016', '2016', exlusice_time='', valid=True)
