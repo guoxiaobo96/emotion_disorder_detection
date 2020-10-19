@@ -27,8 +27,6 @@ data/*
 
 shell/*
 data_split/*
-analysis*/*/*
-background/waqaskhan786.npy
 log_inverse/*
 related_work/*
 program_new/__pycache__/*
