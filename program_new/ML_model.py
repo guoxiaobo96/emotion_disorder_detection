@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 
 from sklearn import linear_model, svm, ensemble
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, roc_auc_score
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, roc_auc_score, recall_score, precision_score
 from multiprocessing import Pool
 import statsmodels.api as sm
 import pandas as pd
@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from data import DataLoaderForFeature
 
 class MLModel(object):
-    def __init__(self, data_loader, model_path, model_name, import_metric = 'accuracy', metrics_list=['accuracy', 'micro_f1_score', 'macro_f1_score', 'confusion','roc_auc'], multi_processing=True, load_model = False, verbose=False):
+    def __init__(self, data_loader, model_path, model_name, import_metric='f1_score', metrics_list=['accuracy', 'f1_score', 'recall', 'roc_auc', 'precision'], multi_processing=True, load_model=False, verbose=False):
         self._model_path = model_path
         self._model_name = model_name
         if not os.path.exists(model_path):
@@ -101,7 +101,7 @@ class MLModel(object):
         for key, value in metrics.items():
             self._best_model['metrics'][key] = value
         # print('%s is  %.3f' % (self._metric, metrics[self._metric]))
-        return metrics[self._metric]
+        return metrics
 
     def _generate_hyper_parameters(self):
         pass
@@ -113,19 +113,34 @@ class MLModel(object):
         _metrics = dict()
         if 'accuracy' in self._metrics_list:
             _metrics['accuracy'] = accuracy_score(ground, pred)
-        if 'micro_f1_score' in self._metrics_list:
-            _metrics['micro_f1_score'] = f1_score(
-                ground, pred, average='micro')
-        if 'macro_f1_score' in self._metrics_list:
-            _metrics['macro_f1_score'] = f1_score(
-                ground, pred, average='macro')
+        if 'f1_score' in self._metrics_list:
+            if len(pred_score[0]) > 2:
+                _metrics['f1_score'] = f1_score(ground, pred, average='macro')
+            else:
+                _metrics['f1_score'] = f1_score(ground, pred)
         if 'confusion' in self._metrics_list:
-            _metrics['confusion_matrix'] = confusion_matrix(ground, pred)
+            _metrics['confusion_matrix'] = confusion_matrix(ground, pred).tolist()
         if 'roc_auc' in self._metrics_list:
             if len(pred_score[0]) > 2:
-                _metrics['roc_auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
+                try:
+                    _metrics['auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
+                except ValueError:
+                    ground.append(2)
+                    pred_score = np.append(pred_score, np.array([np.array([0, 0, 1.0, 0])]), axis=0)
+                    _metrics['auc'] = roc_auc_score(ground, pred_score, multi_class='ovr')
+                    ground = ground[:-1]
             else:
-                _metrics['roc_auc'] = roc_auc_score(ground, pred_score[:,1])
+                _metrics['auc'] = roc_auc_score(ground, pred_score[:, 1])
+        if 'recall' in self._metrics_list:
+            if len(pred_score[0]) > 2:
+                _metrics['recall'] = recall_score(ground, pred, average='macro')
+            else:
+                _metrics['recall'] = recall_score(ground, pred)
+        if 'precision' in self._metrics_list:
+            if len(pred_score[0]) > 2:
+                _metrics['precision'] = precision_score(ground, pred, average='macro')
+            else:
+                _metrics['precision'] = precision_score(ground, pred)
         return _metrics
 
     def _load_data(self, data_loader):

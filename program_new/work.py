@@ -15,8 +15,8 @@ from config import get_config
 import string
 
 dataset = './data_split'
-original_dataset = './data_back'
-original_reddit_dataset = './data_back/reddit_back'
+original_dataset = '/data/xiaobo/emotion_disorder_detection/data'
+original_reddit_dataset = '/data/xiaobo/emotion_disorder_detection/data/reddit'
 reddit_dataset = './data_split/reddit'
 feature_dataset = './data_split/feature'
 data_type_list = ['background','anxiety', 'depression', 'bipolar']
@@ -48,38 +48,37 @@ def split_user():
         train_user_list = []
         user_list_file = os.path.join(
             original_user_list_folder, data_type + '_user_list')
+        count = 0
         with open(user_list_file, mode='r', encoding='utf8') as fp:
             for line in fp.readlines():
                 user = line.strip().split(' [info] ')[0]
                 original_data[data_type][user] = line.strip()
-        original_reddit_folder = os.path.join(
-            original_reddit_dataset, data_type)
-        for user, value in original_data[data_type].items():
-            year_list = set()
-            user_file = os.path.join(original_reddit_folder, user + suffix)
-            single_data = dict()
-            with open(user_file, mode='r', encoding='utf8') as fp:
-                for line in fp.readlines():
-                    temp = json.loads(line.strip())
-                    for _, value in temp.items():
-                        time_stamp = datetime.fromtimestamp(
-                            (int(value['time'])))
-                        local_time = datetime.strftime(time_stamp, "%Y")
-                        if int(local_time) < 2011:
-                            continue
-                        year_list.add(local_time)
-                        # single_data[int(value['time'])] = value
+                # count += 1
+                # if count > 30:
+                #     break
+        original_reddit_folder = os.path.join(original_reddit_dataset, data_type)
 
-            if len(year_list)==0:
-                continue
-            # time_list = sorted(single_data.keys())
-            # target_user_file = os.path.join(target_data_folder, user)
-            # with open(target_user_file, mode='w', encoding='utf8') as fp:
-            #     for time in time_list:
-            #         fp.write(json.dumps(single_data[time]) + '\n')
-            full_user_list.append({'user': user, 'data_type': data_type})
-            for year in year_list:
-                data[str(year)][data_type].append(user)
+        # for user, value in original_data[data_type].items():
+        #     user, data_type, year_list = _split_user(data_type, original_reddit_folder, user, suffix)
+            
+        #     full_user_list.append({'user': user, 'data_type': data_type})
+        #     for year in year_list:
+        #         data[str(year)][data_type].append(user)
+
+        result_list = []
+        with Pool(processes=10) as pool:
+            for user, value in original_data[data_type].items():
+                result = pool.apply_async(func=_split_user, args=(data_type, original_reddit_folder, user, suffix,))
+                result_list.append(result)
+            pool.close()
+            pool.join()
+        for result in result_list:
+            user, data_type, year_list = result.get()
+            if user is not None:
+                full_user_list.append({'user': user, 'data_type': data_type})
+                for year in year_list:
+                    data[str(year)][data_type].append(user)
+
     for year, year_data in data.items():
         user_file = os.path.join(target_user_list_folder, year)
         with open(user_file, mode='w', encoding='utf8') as fp:
@@ -92,6 +91,24 @@ def split_user():
         for item in full_user_list:
             fp.write(json.dumps(item) + '\n')
 
+def _split_user(data_type, original_reddit_folder, user, suffix):
+    year_list = set()
+    user_file = os.path.join(original_reddit_folder, user + suffix)
+    single_data = dict()
+    with open(user_file, mode='r', encoding='utf8') as fp:
+        for line in fp.readlines():
+            temp = json.loads(line.strip())
+            for _, value in temp.items():
+                time_stamp = datetime.fromtimestamp(
+                    (int(value['time'])))
+                local_time = datetime.strftime(time_stamp, "%Y")
+                if int(local_time) < 2011 or 'encode' not in value:
+                    continue
+                year_list.add(local_time)
+    if len(year_list)==0:
+        return None, None,None
+    else:
+        return user, data_type, year_list
 
 def build_state(window=2, gap=1):
     user_data = dict()
@@ -261,15 +278,15 @@ def build_tfidf():
         tfidf_model = TfidfModel(corpous, dictionary=dictionary_dict[year])
         tfidf_model_dict[year] = tfidf_model
 
-    # for data_type, user_data in full_data.items():
-    #     _write_tfidf(data_type, user_data, tfidf_model_dict, tfidf_feature_path)
-    with Pool(processes=4) as pool:
-        for data_type, user_data in full_data.items():
-            result = pool.apply_async(func=_write_tfidf, args=(
-                data_type, user_data, tfidf_model_dict, tfidf_feature_path,))
-            result_list.append(result)
-        pool.close()
-        pool.join()
+    for data_type, user_data in full_data.items():
+        _write_tfidf(data_type, user_data, tfidf_model_dict, tfidf_feature_path)
+    # with Pool(processes=4) as pool:
+    #     for data_type, user_data in full_data.items():
+    #         result = pool.apply_async(func=_write_tfidf, args=(
+    #             data_type, user_data, tfidf_model_dict, tfidf_feature_path,))
+    #         result_list.append(result)
+    #     pool.close()
+    #     pool.join()
 
 
 def _build_tfidf(data_type, user_list):
@@ -466,13 +483,15 @@ def _build_bert(data_type, user_list):
     if not os.path.exists(user_fature_folder):
         os.makedirs(user_fature_folder)
 
-    for user in user_list:
+    for index, user in enumerate(user_list):
         feature = dict()
         if data_type != 'background':
             user_info_file = os.path.join(user_text_folder, user + '.before')
         else:
             user_info_file = os.path.join(user_text_folder, user)
         feature_info_file = os.path.join(user_fature_folder, user)
+        if os.path.exists(feature_info_file+'.npz'):
+            continue
         curve_state = dict()
         state_list = dict()
         with open(user_info_file, mode='r', encoding='utf8') as fp:
@@ -483,8 +502,9 @@ def _build_bert(data_type, user_list):
                     year = datetime.strftime(time, "%Y")
                     if year not in state_list:
                         state_list[year] = []
-                    state = np.mean(np.array(value['encode']),axis=0)
-                    state_list[year].append(state)
+                    if 'encode' in value:
+                        state = np.mean(np.array(value['encode']), axis=0)
+                        state_list[year].append(state)
         for year, states in state_list.items():
             feature[year] = np.mean(state_list[year], axis=0)
         window = np.array([0])
@@ -497,8 +517,8 @@ def _build_bert(data_type, user_list):
 #     print('test')
 
 if __name__ == '__main__':
-    split_user()
-    # build_bert()
+    # split_user()
+    build_bert()
     # build_tfidf()
     # build_state()
     # test()
