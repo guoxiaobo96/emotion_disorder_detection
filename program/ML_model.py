@@ -182,51 +182,54 @@ class MLModel(object):
             data = self._data.test_dataset
         model = self.model
         feature, label = data
-        label_pred_socre = model.predict_proba(feature)
-        if label_pred_socre.shape[1] == 2:
-            label_pred_socre = label_pred_socre[:,1]
-            auc = roc_auc_score(label, label_pred_socre)
-            fpr, tpr, _ = roc_curve(label, label_pred_socre, pos_label=1)
-        else:
-            fpr_list = []
-            tpr_list = []
-            thresholds_list = []
-            for i in range(1, label_pred_socre.shape[1]):
-                fpr, tpr, thresholds = roc_curve(label,label_pred_socre[:,i], pos_label=i)
-                fpr_list.append(fpr.tolist())
-                tpr_list.append(tpr.tolist())
-                thresholds_list.append(thresholds.tolist())
-            common_thresholds = []
-            for threshold in thresholds_list[0]:
-                mark = True
-                for all_threshold in thresholds_list:
-                    if threshold not in all_threshold:
-                        mark = False
-                        break
-                if mark:
-                    common_thresholds.append(threshold)
-            fpr = [0.0]
-            tpr = [0.0]
-            for threshold in common_thresholds:
-                fpr_temp = 0
-                tpr_temp = 0
-                for index in range(label_pred_socre.shape[1] - 1):
-                    fpr_temp += fpr_list[index][thresholds_list[index].index(threshold)]
-                    tpr_temp += tpr_list[index][thresholds_list[index].index(threshold)]
-                fpr.append(fpr_temp / (label_pred_socre.shape[1] - 1))
-                tpr.append(tpr_temp / (label_pred_socre.shape[1] - 1))
+
+        temp = model.decision_path(feature)
+        print('test')
+        # label_pred_socre = model.predict_proba(feature)
+        # if label_pred_socre.shape[1] == 2:
+        #     label_pred_socre = label_pred_socre[:,1]
+        #     auc = roc_auc_score(label, label_pred_socre)
+        #     fpr, tpr, _ = roc_curve(label, label_pred_socre, pos_label=1)
+        # else:
+        #     fpr_list = []
+        #     tpr_list = []
+        #     thresholds_list = []
+        #     for i in range(1, label_pred_socre.shape[1]):
+        #         fpr, tpr, thresholds = roc_curve(label,label_pred_socre[:,i], pos_label=i)
+        #         fpr_list.append(fpr.tolist())
+        #         tpr_list.append(tpr.tolist())
+        #         thresholds_list.append(thresholds.tolist())
+        #     common_thresholds = []
+        #     for threshold in thresholds_list[0]:
+        #         mark = True
+        #         for all_threshold in thresholds_list:
+        #             if threshold not in all_threshold:
+        #                 mark = False
+        #                 break
+        #         if mark:
+        #             common_thresholds.append(threshold)
+        #     fpr = [0.0]
+        #     tpr = [0.0]
+        #     for threshold in common_thresholds:
+        #         fpr_temp = 0
+        #         tpr_temp = 0
+        #         for index in range(label_pred_socre.shape[1] - 1):
+        #             fpr_temp += fpr_list[index][thresholds_list[index].index(threshold)]
+        #             tpr_temp += tpr_list[index][thresholds_list[index].index(threshold)]
+        #         fpr.append(fpr_temp / (label_pred_socre.shape[1] - 1))
+        #         tpr.append(tpr_temp / (label_pred_socre.shape[1] - 1))
                 
                 
-            fpr = np.array(fpr)
-            tpr = np.array(tpr)
+        #     fpr = np.array(fpr)
+        #     tpr = np.array(tpr)
             
                 
-        record = dict()
-        record[label_name+'_'+feature_type] = dict()
-        record[label_name+'_'+feature_type]['fpr'] = fpr.tolist()
-        record[label_name+'_'+feature_type]['tpr'] = tpr.tolist()
-        with open('./analysis/conclusion', mode='a', encoding='utf8') as fp:
-            fp.write(json.dumps(record)+'\n')
+        # record = dict()
+        # record[label_name+'_'+feature_type] = dict()
+        # record[label_name+'_'+feature_type]['fpr'] = fpr.tolist()
+        # record[label_name+'_'+feature_type]['tpr'] = tpr.tolist()
+        # with open('./analysis/conclusion', mode='a', encoding='utf8') as fp:
+        #     fp.write(json.dumps(record)+'\n')
 
         # if feature_type == 'tfidf':
         #     dictionary = Dictionary.load_from_text(dict_file)
