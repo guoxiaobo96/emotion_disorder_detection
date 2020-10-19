@@ -215,7 +215,7 @@ class DataLoaderForFeature(object):
     def _read_data(self, user, suffix, user_feature_folder, data_split):
         window = 0
         gap = 0
-        feature_file = user + suffix + '.npz'
+        feature_file = user + suffix + '.npz'   
         feature_path = os.path.join(
             user_feature_folder, feature_file)
         data = np.load(feature_path)

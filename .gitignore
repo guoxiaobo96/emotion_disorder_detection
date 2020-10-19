@@ -30,3 +30,4 @@ data_split/*
 log_inverse/*
 related_work/*
 program_new/__pycache__/*
+log*/*
